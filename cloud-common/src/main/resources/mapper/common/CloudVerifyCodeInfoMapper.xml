@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.luckycloud.mapper.common.CloudVerifyCodeInfoMapper">
+
+    <resultMap id="BaseResultMap" type="org.luckycloud.domain.common.CloudVerifyCodeInfoDO">
+            <id property="verifyId" column="VERIFY_ID" jdbcType="VARCHAR"/>
+            <result property="verifyCode" column="VERIFY_CODE" jdbcType="CHAR"/>
+            <result property="userId" column="USER_ID" jdbcType="VARCHAR"/>
+            <result property="userIp" column="USER_IP" jdbcType="VARCHAR"/>
+            <result property="verifyType" column="VERIFY_TYPE" jdbcType="CHAR"/>
+            <result property="sendTime" column="SEND_TIME" jdbcType="TIMESTAMP"/>
+            <result property="expireTime" column="EXPIRE_TIME" jdbcType="INTEGER"/>
+            <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+            <result property="status" column="STATUS" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        VERIFY_ID,VERIFY_CODE,USER_ID,
+        USER_IP,VERIFY_TYPE,SEND_TIME,
+        EXPIRE_TIME,CREATE_TIME,UPDATE_TIME,
+        STATUS
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_verify_code_info
+        where  VERIFY_ID = #{verifyId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from cloud_verify_code_info
+        where  VERIFY_ID = #{verifyId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" keyColumn="VERIFY_ID" keyProperty="verifyId" parameterType="org.luckycloud.domain.common.CloudVerifyCodeInfoDO" useGeneratedKeys="true">
+        insert into cloud_verify_code_info
+        ( VERIFY_ID,VERIFY_CODE,USER_ID
+        ,USER_IP,VERIFY_TYPE,SEND_TIME
+        ,EXPIRE_TIME,CREATE_TIME,UPDATE_TIME
+        ,STATUS)
+        values (#{verifyId,jdbcType=VARCHAR},#{verifyCode,jdbcType=CHAR},#{userId,jdbcType=VARCHAR}
+        ,#{userIp,jdbcType=VARCHAR},#{verifyType,jdbcType=CHAR},#{sendTime,jdbcType=TIMESTAMP}
+        ,#{expireTime,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP}
+        ,#{status,jdbcType=CHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="VERIFY_ID" keyProperty="verifyId" parameterType="org.luckycloud.domain.common.CloudVerifyCodeInfoDO" useGeneratedKeys="true">
+        insert into cloud_verify_code_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="verifyId != null">VERIFY_ID,</if>
+                <if test="verifyCode != null">VERIFY_CODE,</if>
+                <if test="userId != null">USER_ID,</if>
+                <if test="userIp != null">USER_IP,</if>
+                <if test="verifyType != null">VERIFY_TYPE,</if>
+                <if test="sendTime != null">SEND_TIME,</if>
+                <if test="expireTime != null">EXPIRE_TIME,</if>
+                <if test="createTime != null">CREATE_TIME,</if>
+                <if test="updateTime != null">UPDATE_TIME,</if>
+                <if test="status != null">STATUS,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="verifyId != null">VERIFY_ID = #{verifyId,jdbcType=VARCHAR},</if>
+                <if test="verifyCode != null">VERIFY_CODE = #{verifyCode,jdbcType=CHAR},</if>
+                <if test="userId != null">USER_ID = #{userId,jdbcType=VARCHAR},</if>
+                <if test="userIp != null">USER_IP = #{userIp,jdbcType=VARCHAR},</if>
+                <if test="verifyType != null">VERIFY_TYPE = #{verifyType,jdbcType=CHAR},</if>
+                <if test="sendTime != null">SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},</if>
+                <if test="expireTime != null">EXPIRE_TIME = #{expireTime,jdbcType=INTEGER},</if>
+                <if test="createTime != null">CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="status != null">STATUS = #{status,jdbcType=CHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.common.CloudVerifyCodeInfoDO">
+        update cloud_verify_code_info
+        <set>
+                <if test="verifyCode != null">
+                    VERIFY_CODE = #{verifyCode,jdbcType=CHAR},
+                </if>
+                <if test="userId != null">
+                    USER_ID = #{userId,jdbcType=VARCHAR},
+                </if>
+                <if test="userIp != null">
+                    USER_IP = #{userIp,jdbcType=VARCHAR},
+                </if>
+                <if test="verifyType != null">
+                    VERIFY_TYPE = #{verifyType,jdbcType=CHAR},
+                </if>
+                <if test="sendTime != null">
+                    SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="expireTime != null">
+                    EXPIRE_TIME = #{expireTime,jdbcType=INTEGER},
+                </if>
+                <if test="createTime != null">
+                    CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateTime != null">
+                    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="status != null">
+                    STATUS = #{status,jdbcType=CHAR},
+                </if>
+        </set>
+        where   VERIFY_ID = #{verifyId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.common.CloudVerifyCodeInfoDO">
+        update cloud_verify_code_info
+        set
+            VERIFY_CODE =  #{verifyCode,jdbcType=CHAR},
+            USER_ID =  #{userId,jdbcType=VARCHAR},
+            USER_IP =  #{userIp,jdbcType=VARCHAR},
+            VERIFY_TYPE =  #{verifyType,jdbcType=CHAR},
+            SEND_TIME =  #{sendTime,jdbcType=TIMESTAMP},
+            EXPIRE_TIME =  #{expireTime,jdbcType=INTEGER},
+            CREATE_TIME =  #{createTime,jdbcType=TIMESTAMP},
+            UPDATE_TIME =  #{updateTime,jdbcType=TIMESTAMP},
+            STATUS =  #{status,jdbcType=CHAR}
+        where   VERIFY_ID = #{verifyId,jdbcType=VARCHAR}
+    </update>
+</mapper>

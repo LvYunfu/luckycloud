@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.luckycloud.mapper.user.CloudRoleInfoMapper">
+
+    <resultMap id="BaseResultMap" type="org.luckycloud.domain.user.CloudRoleInfoDO">
+            <id property="roleId" column="ROLE_ID" jdbcType="VARCHAR"/>
+            <result property="roleName" column="ROLE_NAME" jdbcType="VARCHAR"/>
+            <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+            <result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+            <result property="status" column="STATUS" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ROLE_ID,ROLE_NAME,CREATE_TIME,
+        UPDATE_TIME,DESCRIPTION,STATUS
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_role_info
+        where  ROLE_ID = #{roleId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from cloud_role_info
+        where  ROLE_ID = #{roleId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" keyColumn="ROLE_ID" keyProperty="roleId" parameterType="org.luckycloud.domain.user.CloudRoleInfoDO" useGeneratedKeys="true">
+        insert into cloud_role_info
+        ( ROLE_ID,ROLE_NAME,CREATE_TIME
+        ,UPDATE_TIME,DESCRIPTION,STATUS
+        )
+        values (#{roleId,jdbcType=VARCHAR},#{roleName,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}
+        ,#{updateTime,jdbcType=TIMESTAMP},#{description,jdbcType=VARCHAR},#{status,jdbcType=CHAR}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="ROLE_ID" keyProperty="roleId" parameterType="org.luckycloud.domain.user.CloudRoleInfoDO" useGeneratedKeys="true">
+        insert into cloud_role_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="roleId != null">ROLE_ID,</if>
+                <if test="roleName != null">ROLE_NAME,</if>
+                <if test="createTime != null">CREATE_TIME,</if>
+                <if test="updateTime != null">UPDATE_TIME,</if>
+                <if test="description != null">DESCRIPTION,</if>
+                <if test="status != null">STATUS,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="roleId != null">ROLE_ID = #{roleId,jdbcType=VARCHAR},</if>
+                <if test="roleName != null">ROLE_NAME = #{roleName,jdbcType=VARCHAR},</if>
+                <if test="createTime != null">CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="description != null">DESCRIPTION = #{description,jdbcType=VARCHAR},</if>
+                <if test="status != null">STATUS = #{status,jdbcType=CHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.user.CloudRoleInfoDO">
+        update cloud_role_info
+        <set>
+                <if test="roleName != null">
+                    ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateTime != null">
+                    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="description != null">
+                    DESCRIPTION = #{description,jdbcType=VARCHAR},
+                </if>
+                <if test="status != null">
+                    STATUS = #{status,jdbcType=CHAR},
+                </if>
+        </set>
+        where   ROLE_ID = #{roleId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.user.CloudRoleInfoDO">
+        update cloud_role_info
+        set
+            ROLE_NAME =  #{roleName,jdbcType=VARCHAR},
+            CREATE_TIME =  #{createTime,jdbcType=TIMESTAMP},
+            UPDATE_TIME =  #{updateTime,jdbcType=TIMESTAMP},
+            DESCRIPTION =  #{description,jdbcType=VARCHAR},
+            STATUS =  #{status,jdbcType=CHAR}
+        where   ROLE_ID = #{roleId,jdbcType=VARCHAR}
+    </update>
+</mapper>

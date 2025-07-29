@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: cloud-security
+
+jwt:
+  secret: luckycloud
+  expiration: 86400  # 24小时
