@@ -41,11 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             username = jwtTokenUtil.extractUsername(jwt);
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (jwtTokenUtil.validateToken(jwt, createUserDetails(username, jwt))) {
+         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(jwt, createUserDetails(username, jwt)))) {
                 List<SimpleGrantedAuthority> authorities = jwtTokenUtil.extractAuthorities(jwt).stream()
                         .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                        .toList();
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         username, null, authorities);
@@ -62,4 +62,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .collect(Collectors.toList());
         return new User(username, "", authorities);
     }
-} 
+}

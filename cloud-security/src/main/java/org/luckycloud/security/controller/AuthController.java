@@ -25,13 +25,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public Response<SysUserToken> login(@RequestBody LoginRequest loginRequest) {
-        String username = loginRequest.getUserName();
-        String password = loginRequest.getPassword();
 
-        String token = authService.login(username, password);
+        String token = authService.login(loginRequest);
         SysUserToken sysUserToken = new SysUserToken();
         sysUserToken.setToken(token);
-        return Response.success("登录成功",sysUserToken);
+        return Response.success(sysUserToken,"登录成功");
     }
 
     @PostMapping("/register")

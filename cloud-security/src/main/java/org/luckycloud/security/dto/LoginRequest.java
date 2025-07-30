@@ -10,9 +10,11 @@ import lombok.Data;
 @Data
 public class LoginRequest {
 
-    private String userName;
+    private String mail;
 
 
     private String password;
+
+    private String loginType;
 }
 

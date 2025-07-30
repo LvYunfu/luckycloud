@@ -21,7 +21,9 @@ public enum ResponseCode {
 
     VERIFY("LC004", "校验成功"),
 
-    VALIDATE_FAILED("LC005", "参数检验失败");
+    VALIDATE_FAILED("LC005", "参数检验失败"),
+
+    SYS_ERROR("LC006", "系统异常,请联系管理员"),;
 
     private String code;
     private String message;

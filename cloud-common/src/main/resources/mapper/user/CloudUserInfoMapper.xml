@@ -21,11 +21,18 @@
         ACCOUNT_STATUS,STATUS
     </sql>
 
-    <select id="findByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="findByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from cloud_user_info
         where  USER_ID = #{userId}
+    </select>
+    <select id="findByUsername" resultType="org.luckycloud.domain.user.CloudUserInfoDO">
+
+        select
+        <include refid="Base_Column_List" />
+        from cloud_user_info
+        where  USER_NAME = #{userName}
     </select>
 
 

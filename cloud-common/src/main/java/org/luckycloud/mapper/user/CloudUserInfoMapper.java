@@ -21,5 +21,7 @@ public interface CloudUserInfoMapper {
 
     int updateByPrimaryKey(CloudUserInfoDO record);
 
-    CloudUserInfoDO findByUsername(String userId);
+    CloudUserInfoDO findByUserId(String userId);
+
+    CloudUserInfoDO findByUsername(String userName);
 }

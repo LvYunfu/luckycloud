@@ -1,21 +1,27 @@
 package org.luckycloud.security.service;
 
 import org.luckycloud.domain.user.CloudUserInfoDO;
+import org.luckycloud.exception.BusinessException;
 import org.luckycloud.mapper.user.CloudUserInfoMapper;
+import org.luckycloud.security.dto.LoginRequest;
 import org.luckycloud.security.dto.RegisterRequest;
 import org.luckycloud.security.util.JwtTokenUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
 import static org.luckycloud.constant.SystemConstant.ENABLE;
+import static org.luckycloud.dto.common.ResponseCode.OPERATE_FAILED;
+import static org.luckycloud.dto.common.ResponseCode.SUCCESS;
 
 @Service
 public class AuthService {
@@ -35,20 +41,26 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String login(String username, String password) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(username, password)
-        );
+    public String login(LoginRequest request) {
+        try {
+            String username = request.getMail();
+            String password = request.getPassword();
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+            );
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return jwtTokenUtil.generateToken(userDetails);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return jwtTokenUtil.generateToken(userDetails);
+        } catch (AuthenticationException e) {
+           throw new BusinessException(OPERATE_FAILED, "登录失败，用户名或密码错误");
+        }
     }
 
     @Transactional
     public void register(RegisterRequest request) {
         // 检查用户名是否已存在
         if (userMapper.findByUsername(request.getUserName()) != null) {
-            throw new RuntimeException("Username already exists");
+            throw new BusinessException(SUCCESS, "用户名已存在");
         }
 
         // 创建新用户
@@ -57,8 +69,8 @@ public class AuthService {
         user.setUserName(request.getUserName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setMail(request.getMail());
-        user.setCreateTime(new Date());
-        user.setUpdateTime(new Date());
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
         user.setAccountStatus(ENABLE); // 正常状态
         user.setStatus(ENABLE); // 生效状态
 

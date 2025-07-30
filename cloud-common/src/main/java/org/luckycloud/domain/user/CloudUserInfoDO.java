@@ -1,5 +1,6 @@
 package org.luckycloud.domain.user;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
@@ -32,12 +33,12 @@ public class CloudUserInfoDO {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      *
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 账户状态

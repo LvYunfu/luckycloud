@@ -2,6 +2,9 @@ package org.luckycloud.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.luckycloud.exception.BusinessException;
+
+import static org.luckycloud.dto.common.ResponseCode.SUCCESS;
 
 /**
  * @author lvyf
@@ -31,13 +34,27 @@ public class Response<T> {
         this.message = message;
     }
 
+    public Response(ResponseCode code) {
+        this.code = code.getCode();
+        this.message = code.getMessage();
+    }
 
     public static Response<Void> success(String message) {
-        return new Response<>("", message);
+        return new Response<>(SUCCESS.getCode(), message);
     }
 
-    public static <T> Response<T> success(String message, T data) {
-        return new Response<>("", message, data);
+    public static <T> Response<T> success(T data) {
+        return new Response<>(SUCCESS.getCode(), SUCCESS.getMessage(), data);
+    }
+    public static <T> Response<T> success(T data,String message) {
+        return new Response<>(SUCCESS.getCode(), message, data);
     }
 
+    public static Response<Void> exception(BusinessException e) {
+        return new Response<>(e.getCode(), e.getMessage());
+    }
+
+    public static Response<Void> fail(String defaultMessage) {
+        return new Response<>(ResponseCode.OPERATE_FAILED.getCode(), defaultMessage);
+    }
 }
