@@ -1,8 +1,11 @@
 package org.luckycloud.security.service;
 
 import org.luckycloud.domain.user.CloudUserInfoDO;
+import org.luckycloud.enums.LoginType;
 import org.luckycloud.exception.BusinessException;
 import org.luckycloud.mapper.user.CloudUserInfoMapper;
+import org.luckycloud.security.components.loginProcess.LoginTypeFactory;
+import org.luckycloud.security.components.loginProcess.LoginTypeService;
 import org.luckycloud.security.dto.LoginRequest;
 import org.luckycloud.security.dto.RegisterRequest;
 import org.luckycloud.security.util.JwtTokenUtil;
@@ -31,28 +34,29 @@ public class AuthService {
     private final CloudUserInfoMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+
     public AuthService(AuthenticationManager authenticationManager,
-                      JwtTokenUtil jwtTokenUtil,
-                      CloudUserInfoMapper userMapper,
-                      PasswordEncoder passwordEncoder) {
+                       JwtTokenUtil jwtTokenUtil,
+                       CloudUserInfoMapper userMapper,
+                       PasswordEncoder passwordEncoder
+
+    ) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+
     }
 
     public String login(LoginRequest request) {
         try {
-            String username = request.getMail();
-            String password = request.getPassword();
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
-            );
-
+            LoginTypeService loginTypeService = LoginTypeFactory.getLoginWayProcess(LoginType.getLoginType(request.getLoginType()));
+            Authentication authenticationToken = loginTypeService.loginProcess(request);
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return jwtTokenUtil.generateToken(userDetails);
         } catch (AuthenticationException e) {
-           throw new BusinessException(OPERATE_FAILED, "登录失败，用户名或密码错误");
+            throw new BusinessException(OPERATE_FAILED, "登录失败，用户名或密码错误");
         }
     }
 

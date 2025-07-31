@@ -24,4 +24,6 @@ public interface CloudUserInfoMapper {
     CloudUserInfoDO findByUserId(String userId);
 
     CloudUserInfoDO findByUsername(String userName);
+
+    CloudUserInfoDO findByMail(String mail);
 }
