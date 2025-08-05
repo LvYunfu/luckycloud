@@ -1,5 +1,6 @@
 package org.luckycloud.domain.common;
 
+import lombok.Data;
 import lombok.Getter;
 
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
  *
  * @TableName cloud_verify_code_info
  */
-@Getter
+@Data
 public class CloudVerifyCodeInfoDO {
     /**
      * ID
@@ -90,75 +91,6 @@ public class CloudVerifyCodeInfoDO {
      */
     private String status;
 
-    /**
-     * ID
-     */
-    public void setVerifyId(String verifyId) {
-        this.verifyId = verifyId;
-    }
-
-    /**
-     * 验证码
-     */
-    public void setVerifyCode(String verifyCode) {
-        this.verifyCode = verifyCode;
-    }
-
-    /**
-     * 用户ID
-     */
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * 用户IP
-     */
-    public void setUserIp(String userIp) {
-        this.userIp = userIp;
-    }
-
-    /**
-     * 验证码用途
-     */
-    public void setVerifyType(String verifyType) {
-        this.verifyType = verifyType;
-    }
-
-    /**
-     * 发送时间
-     */
-    public void setSendTime(Date sendTime) {
-        this.sendTime = sendTime;
-    }
-
-    /**
-     * 过期时间 ms
-     */
-    public void setExpireTime(Integer expireTime) {
-        this.expireTime = expireTime;
-    }
-
-    /**
-     *
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     *
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    /**
-     * 1 有效 0无效
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     @Override
     public boolean equals(Object that) {

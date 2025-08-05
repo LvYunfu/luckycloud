@@ -1,0 +1,28 @@
+package org.luckycloud.mapper.blog;
+
+import org.luckycloud.domain.blog.CloudBlogTagDO;
+
+import java.util.List;
+
+/**
+* @author lvyf
+* @description 针对表【cloud_blog_tag】的数据库操作Mapper
+* @createDate 2025-08-05 23:29:54
+* @Entity org.luckycloud.domain.blog.CloudBlogTagDO
+*/
+public interface CloudBlogTagMapper {
+
+    int deleteByPrimaryKey(Long id);
+
+    int insert(CloudBlogTagDO record);
+
+    int insertSelective(CloudBlogTagDO record);
+
+    CloudBlogTagDO selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(CloudBlogTagDO record);
+
+    int updateByPrimaryKey(CloudBlogTagDO record);
+
+    int batchInsert(List<CloudBlogTagDO> tagList);
+}

@@ -5,52 +5,52 @@
 <mapper namespace="org.luckycloud.mapper.user.CloudUserInfoMapper">
 
     <resultMap id="BaseResultMap" type="org.luckycloud.domain.user.CloudUserInfoDO">
-            <id property="userId" column="USER_ID" jdbcType="VARCHAR"/>
-            <result property="userName" column="USER_NAME" jdbcType="VARCHAR"/>
-            <result property="password" column="PASSWORD" jdbcType="VARCHAR"/>
-            <result property="mail" column="MAIL" jdbcType="VARCHAR"/>
-            <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
-            <result property="accountStatus" column="ACCOUNT_STATUS" jdbcType="CHAR"/>
-            <result property="status" column="STATUS" jdbcType="CHAR"/>
+            <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="mail" column="mail" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="accountStatus" column="account_status" jdbcType="CHAR"/>
+            <result property="status" column="status" jdbcType="CHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        USER_ID,USER_NAME,PASSWORD,
-        MAIL,CREATE_TIME,UPDATE_TIME,
-        ACCOUNT_STATUS,STATUS
+        user_id,user_name,password,
+        mail,create_time,update_time,
+        account_status,status
     </sql>
 
     <select id="findByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from cloud_user_info
-        where  USER_ID = #{userId}
+        where  user_id = #{userId}
     </select>
     <select id="findByUsername" resultType="org.luckycloud.domain.user.CloudUserInfoDO">
 
         select
         <include refid="Base_Column_List" />
         from cloud_user_info
-        where  USER_NAME = #{userName}
+        where  user_name = #{userName}
     </select>
     <select id="findByMail" resultType="org.luckycloud.domain.user.CloudUserInfoDO">
         select
         <include refid="Base_Column_List" />
         from cloud_user_info
-        where  MAIL = #{mail}
+        where  mail = #{mail}
     </select>
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from cloud_user_info
-        where  USER_ID = #{userId,jdbcType=VARCHAR}
+        where  user_id = #{userId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" keyColumn="USER_ID" keyProperty="userId" parameterType="org.luckycloud.domain.user.CloudUserInfoDO" useGeneratedKeys="true">
         insert into cloud_user_info
-        ( USER_ID,USER_NAME,PASSWORD
-        ,MAIL,CREATE_TIME,UPDATE_TIME
-        ,ACCOUNT_STATUS,STATUS)
+        ( user_id,user_name,password
+        ,mail,create_time,update_time
+        ,account_status,status)
         values (#{userId,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
         ,#{mail,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP}
         ,#{accountStatus,jdbcType=CHAR},#{status,jdbcType=CHAR})
@@ -58,63 +58,63 @@
     <insert id="insertSelective" keyColumn="USER_ID" keyProperty="userId" parameterType="org.luckycloud.domain.user.CloudUserInfoDO" useGeneratedKeys="true">
         insert into cloud_user_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="userId != null">USER_ID,</if>
-                <if test="userName != null">USER_NAME,</if>
-                <if test="password != null">PASSWORD,</if>
-                <if test="mail != null">MAIL,</if>
-                <if test="createTime != null">CREATE_TIME,</if>
-                <if test="updateTime != null">UPDATE_TIME,</if>
-                <if test="accountStatus != null">ACCOUNT_STATUS,</if>
-                <if test="status != null">STATUS,</if>
+                <if test="userId != null">user_id,</if>
+                <if test="userName != null">user_name,</if>
+                <if test="password != null">password,</if>
+                <if test="mail != null">mail,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="updateTime != null">update_time,</if>
+                <if test="accountStatus != null">account_status,</if>
+                <if test="status != null">status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="userId != null">USER_ID = #{userId,jdbcType=VARCHAR},</if>
-                <if test="userName != null">USER_NAME = #{userName,jdbcType=VARCHAR},</if>
-                <if test="password != null">PASSWORD = #{password,jdbcType=VARCHAR},</if>
-                <if test="mail != null">MAIL = #{mail,jdbcType=VARCHAR},</if>
-                <if test="createTime != null">CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},</if>
-                <if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
-                <if test="accountStatus != null">ACCOUNT_STATUS = #{accountStatus,jdbcType=CHAR},</if>
-                <if test="status != null">STATUS = #{status,jdbcType=CHAR},</if>
+                <if test="userId != null">user_id = #{userId,jdbcType=VARCHAR},</if>
+                <if test="userName != null">user_name = #{userName,jdbcType=VARCHAR},</if>
+                <if test="password != null">password = #{password,jdbcType=VARCHAR},</if>
+                <if test="mail != null">mail = #{mail,jdbcType=VARCHAR},</if>
+                <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="accountStatus != null">account_status = #{accountStatus,jdbcType=CHAR},</if>
+                <if test="status != null">status = #{status,jdbcType=CHAR},</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.user.CloudUserInfoDO">
         update cloud_user_info
         <set>
                 <if test="userName != null">
-                    USER_NAME = #{userName,jdbcType=VARCHAR},
+                    user_name = #{userName,jdbcType=VARCHAR},
                 </if>
                 <if test="password != null">
-                    PASSWORD = #{password,jdbcType=VARCHAR},
+                    password = #{password,jdbcType=VARCHAR},
                 </if>
                 <if test="mail != null">
-                    MAIL = #{mail,jdbcType=VARCHAR},
+                    mail = #{mail,jdbcType=VARCHAR},
                 </if>
                 <if test="createTime != null">
-                    CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
                 </if>
                 <if test="updateTime != null">
-                    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
                 </if>
                 <if test="accountStatus != null">
-                    ACCOUNT_STATUS = #{accountStatus,jdbcType=CHAR},
+                    account_status = #{accountStatus,jdbcType=CHAR},
                 </if>
                 <if test="status != null">
-                    STATUS = #{status,jdbcType=CHAR},
+                    status = #{status,jdbcType=CHAR},
                 </if>
         </set>
-        where   USER_ID = #{userId,jdbcType=VARCHAR}
+        where   user_id = #{userId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.user.CloudUserInfoDO">
         update cloud_user_info
         set
-            USER_NAME =  #{userName,jdbcType=VARCHAR},
-            PASSWORD =  #{password,jdbcType=VARCHAR},
-            MAIL =  #{mail,jdbcType=VARCHAR},
-            CREATE_TIME =  #{createTime,jdbcType=TIMESTAMP},
-            UPDATE_TIME =  #{updateTime,jdbcType=TIMESTAMP},
-            ACCOUNT_STATUS =  #{accountStatus,jdbcType=CHAR},
-            STATUS =  #{status,jdbcType=CHAR}
-        where   USER_ID = #{userId,jdbcType=VARCHAR}
+            user_name =  #{userName,jdbcType=VARCHAR},
+            password =  #{password,jdbcType=VARCHAR},
+            mail =  #{mail,jdbcType=VARCHAR},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            update_time =  #{updateTime,jdbcType=TIMESTAMP},
+            account_status =  #{accountStatus,jdbcType=CHAR},
+            status =  #{status,jdbcType=CHAR}
+        where   user_id = #{userId,jdbcType=VARCHAR}
     </update>
 </mapper>
