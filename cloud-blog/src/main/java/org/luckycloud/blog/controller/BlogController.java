@@ -5,6 +5,7 @@ import org.luckycloud.blog.dto.request.BlogInfoRequest;
 import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2025/8/5
  */
 
-@RestController("/blog")
+@RestController
+@RequestMapping("/blog")
 public class BlogController {
 
 

@@ -79,6 +79,12 @@
                 <artifactId>cloud-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.luckycloud</groupId>
+                <artifactId>cloud-blog</artifactId>
+                <version>${project.version}</version>
+
+            </dependency>
         </dependencies>
 
     </dependencyManagement>

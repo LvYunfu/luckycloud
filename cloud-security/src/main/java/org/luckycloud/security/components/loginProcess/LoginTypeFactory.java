@@ -21,7 +21,7 @@ public class LoginTypeFactory implements InitializingBean, ApplicationContextAwa
 
     public  static  LoginTypeService getLoginWayProcess(LoginType loginWay) {
         if (loginWay == null) {
-            throw new BusinessException(ResponseCode.OPERATE_FAILED.getCode(), "支持的登录方式");
+            throw new BusinessException(ResponseCode.OPERATE_FAILED.getCode(), "不支持的登录方式");
         }
         return LOGIN_TYPE_PROCESS.get(loginWay);
 

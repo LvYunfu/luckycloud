@@ -19,7 +19,7 @@ public class MailPasswordLoginServiceImpl implements LoginTypeService {
 
     @Override
     public LoginType getLoginType() {
-        return null;
+        return LoginType.MAIL_PASSWORD;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class MailPasswordLoginServiceImpl implements LoginTypeService {
         String mail = userInfo.getMail();
         CloudUserInfoDO userInfoDO = cloudUserInfoMapper.findByMail(mail);
         if (userInfoDO == null) {
-            throw new UsernameNotFoundException("账户未注册");
+            throw new UsernameNotFoundException("邮箱未注册");
         }
         userInfo.setUserId(userInfoDO.getUserId());
 //        String privateKey = RSAUtils.getPrivateKey();
