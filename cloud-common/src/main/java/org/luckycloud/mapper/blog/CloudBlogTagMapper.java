@@ -18,11 +18,12 @@ public interface CloudBlogTagMapper {
 
     int insertSelective(CloudBlogTagDO record);
 
-    CloudBlogTagDO selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(CloudBlogTagDO record);
 
     int updateByPrimaryKey(CloudBlogTagDO record);
 
     int batchInsert(List<CloudBlogTagDO> tagList);
+
+     void deleteBlogTag(String blogId);
 }

@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class BlogConvertFactory {
 
+    private BlogConvertFactory() {
+    }
     public static List<CloudBlogTagDO> convertToBlogTagDOList(List<String> tags,String blogId) {
        return tags.stream().map(tag -> {
             CloudBlogTagDO tagDO = new CloudBlogTagDO();

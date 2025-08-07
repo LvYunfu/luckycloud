@@ -8,4 +8,7 @@ package org.luckycloud.constant;
 public class SystemConstant {
     public static final String ENABLE = "1";
     public static final String DISABLE = "0";
+
+    public static final String N = "N";
+    public static final String Y = "Y";
 }

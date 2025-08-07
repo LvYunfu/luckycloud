@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.luckycloud.exception.BusinessException;
 
+import static org.luckycloud.dto.common.ResponseCode.DATA_SUCCESS;
 import static org.luckycloud.dto.common.ResponseCode.SUCCESS;
 
 /**
@@ -44,10 +45,10 @@ public class Response<T> {
     }
 
     public static <T> Response<T> success(T data) {
-        return new Response<>(SUCCESS.getCode(), SUCCESS.getMessage(), data);
+        return new Response<>(DATA_SUCCESS.getCode(), DATA_SUCCESS.getMessage(), data);
     }
     public static <T> Response<T> success(T data,String message) {
-        return new Response<>(SUCCESS.getCode(), message, data);
+        return new Response<>(DATA_SUCCESS.getCode(), message, data);
     }
 
     public static Response<Void> exception(BusinessException e) {

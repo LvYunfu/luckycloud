@@ -49,4 +49,11 @@ public class BlogInfoRequest {
 
     private List<String> tags;
 
+    private String privateFlag;
+    /**
+     *
+     * BS00 保存草稿  BS01 公开   BS02 私有
+     */
+    private String blogStatus;
+
 }

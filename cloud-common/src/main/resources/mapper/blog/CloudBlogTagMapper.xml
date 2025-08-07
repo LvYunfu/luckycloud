@@ -6,67 +6,62 @@
 
     <resultMap id="BaseResultMap" type="org.luckycloud.domain.blog.CloudBlogTagDO">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="blodId" column="blod_id" jdbcType="VARCHAR"/>
-            <result property="tagId" column="tag_id" jdbcType="VARCHAR"/>
+            <result property="blogId" column="blog_id" jdbcType="VARCHAR"/>
             <result property="tagName" column="tag_name" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="CHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,blod_id,tag_id,
+        id,blog_id,
         tag_name,status
     </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from cloud_blog_tag
-        where  id = #{id,jdbcType=INTEGER}
-    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from cloud_blog_tag
         where  id = #{id,jdbcType=INTEGER}
     </delete>
+    <delete id="deleteBlogTag">
+        delete
+        from cloud_blog_tag
+        where blog_id = #{blogId,jdbcType=VARCHAR}
+    </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.luckycloud.domain.blog.CloudBlogTagDO" useGeneratedKeys="true">
         insert into cloud_blog_tag
-        ( id,blod_id,tag_id
-        ,tag_name,status)
-        values (#{id,jdbcType=INTEGER},#{blodId,jdbcType=VARCHAR},#{tagId,jdbcType=VARCHAR}
-        ,#{tagName,jdbcType=VARCHAR},#{status,jdbcType=CHAR})
+            (id, blog_id, tag_name, status)
+        values (#{id,jdbcType=INTEGER}, #{blogId,jdbcType=VARCHAR}, #{tagName,jdbcType=VARCHAR},
+                #{status,jdbcType=CHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.luckycloud.domain.blog.CloudBlogTagDO" useGeneratedKeys="true">
         insert into cloud_blog_tag
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="id != null">id,</if>
-                <if test="blodId != null">blod_id,</if>
-                <if test="tagId != null">tag_id,</if>
+                <if test="blogId != null">blog_id,</if>
                 <if test="tagName != null">tag_name,</if>
                 <if test="status != null">status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">id = #{id,jdbcType=INTEGER},</if>
-                <if test="blodId != null">blod_id = #{blodId,jdbcType=VARCHAR},</if>
-                <if test="tagId != null">tag_id = #{tagId,jdbcType=VARCHAR},</if>
+                <if test="blogId != null">blog_id = #{blogId,jdbcType=VARCHAR},</if>
                 <if test="tagName != null">tag_name = #{tagName,jdbcType=VARCHAR},</if>
                 <if test="status != null">status = #{status,jdbcType=CHAR},</if>
         </trim>
     </insert>
     <insert id="batchInsert">
         insert into cloud_blog_tag
-        ( blod_id,tag_id
-        ,tag_name,status)
+        ( blog_id,tag_name,status)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.blodId,jdbcType=VARCHAR},#{item.tagId,jdbcType=VARCHAR}
-            ,#{item.tagName,jdbcType=VARCHAR},#{item.status,jdbcType=CHAR})
+            (#{item.blogId,jdbcType=VARCHAR},
+            #{item.tagName,jdbcType=VARCHAR},
+            #{item.status,jdbcType=CHAR})
         </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.blog.CloudBlogTagDO">
         update cloud_blog_tag
         <set>
-                <if test="blodId != null">
-                    blod_id = #{blodId,jdbcType=VARCHAR},
+                <if test="blogId != null">
+                    blog_id = #{blogId,jdbcType=VARCHAR},
                 </if>
                 <if test="tagId != null">
                     tag_id = #{tagId,jdbcType=VARCHAR},
@@ -83,7 +78,7 @@
     <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.blog.CloudBlogTagDO">
         update cloud_blog_tag
         set
-            blod_id =  #{blodId,jdbcType=VARCHAR},
+            blog_id =  #{blogId,jdbcType=VARCHAR},
             tag_id =  #{tagId,jdbcType=VARCHAR},
             tag_name =  #{tagName,jdbcType=VARCHAR},
             status =  #{status,jdbcType=CHAR}

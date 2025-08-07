@@ -45,6 +45,7 @@ public class BlogServiceImpl implements BlogService {
 
         transactionalUtils.executeInTransaction(List.of(
                 () -> blogInfoMapper.insert(blogDO),
+                () -> blogTagMapper.deleteBlogTag(blogDO.getBlogId()),
                 () -> blogTagMapper.batchInsert(tagList)
         ));
     }
