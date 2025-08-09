@@ -21,6 +21,7 @@ public interface CloudBlogCategoriesMapper {
 
     int updateByPrimaryKey(CloudBlogCategoriesDO record);
 
-    List<CloudBlogCategoriesDO> getCategoryListByParentId(String categoryId);
+    List<CloudBlogCategoriesDO> selectCategoryListByParentId(String categoryId);
 
+    List<CloudBlogCategoriesDO> selectCategoryListById(List<String> categoryIds);
 }

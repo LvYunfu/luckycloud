@@ -1,6 +1,12 @@
 package org.luckycloud.mapper.blog;
 
+import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
+import org.luckycloud.dto.blog.request.BlogQuery;
+import org.luckycloud.dto.blog.response.CategoryCount;
+
+import java.util.List;
 
 /**
 * @author lvyf
@@ -22,4 +28,7 @@ public interface CloudBlogInfoMapper {
 
     int updateByPrimaryKey(CloudBlogInfoDO record);
 
+    List<CategoryCount> calculateCategoryCount();
+
+    List<CloudBlogInfoDO> getBlogList(@Param("query") BlogQuery query);
 }

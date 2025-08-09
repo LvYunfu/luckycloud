@@ -3,7 +3,7 @@ package org.luckycloud.blog.service.impl;
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.convert.BlogConvert;
 import org.luckycloud.blog.convert.BlogConvertFactory;
-import org.luckycloud.blog.dto.request.BlogInfoRequest;
+import org.luckycloud.blog.dto.request.BlogInfoCommand;
 import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
@@ -12,7 +12,6 @@ import org.luckycloud.mapper.blog.CloudBlogTagMapper;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.luckycloud.utils.TransactionalUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class BlogServiceImpl implements BlogService {
     private TransactionalUtils transactionalUtils;
     @Override
 
-    public void createBlog(BlogInfoRequest request) {
+    public void createBlog(BlogInfoCommand request) {
 
         CloudBlogInfoDO blogDO = blogConvert.convertToBlogDO(request);
         blogDO.setBlogId(GenerateIdUtils.generateId());

@@ -1,6 +1,6 @@
 package org.luckycloud.blog.service;
 
-import org.luckycloud.blog.dto.request.BlogInfoRequest;
+import org.luckycloud.blog.dto.request.BlogInfoCommand;
 
 /**
  * @author lvyf
@@ -8,5 +8,5 @@ import org.luckycloud.blog.dto.request.BlogInfoRequest;
  * @date 2025/8/5
  */
 public interface BlogService {
-    void createBlog(BlogInfoRequest request);
+    void createBlog(BlogInfoCommand request);
 }

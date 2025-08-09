@@ -19,6 +19,10 @@
             <result property="status" column="status" jdbcType="CHAR"/>
     </resultMap>
 
+   <resultMap id="CategoryCountMap" type="org.luckycloud.dto.blog.response.CategoryCount">
+        <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
+        <result property="count" column="count" jdbcType="INTEGER"/>
+    </resultMap>
     <sql id="Base_Column_List">
         blog_id,blog_title,blog_abstract,
         blog_content,slug,user_id,
@@ -31,6 +35,40 @@
         <include refid="Base_Column_List" />
         from cloud_blog_info
         where  blog_id = #{blogId,jdbcType=VARCHAR}
+    </select>
+    <select id="calculateCategoryCount" resultMap="CategoryCountMap">
+        select category_id as category_id,
+               count(*) as count
+        from cloud_blog_info
+        where status = '1'
+        group by category_id
+    </select>
+    <select id="getBlogList" resultType="org.luckycloud.domain.blog.CloudBlogInfoDO">
+        select
+        blog_id,
+        blog_title,
+        blog_abstract,
+        slug,user_id,
+        category_id,
+        cover_image,
+        update_time
+        from cloud_blog_info
+        where status = '1'
+        <if test="query.categoryId != null and query.categoryId != ''">
+            and category_id = #{query.categoryId,jdbcType=VARCHAR}
+        </if>
+        <if test="query.blogStatus != null and query.blogStatus != ''">
+            and blog_status = #{query.blogStatus,jdbcType=CHAR}
+        </if>
+        <if test="query.blogIdList != null and query.blogIdList.size() > 0">
+            and blog_id in
+            <foreach item="item" index="index" collection="query.blogIdList"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        order by create_time desc
+
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

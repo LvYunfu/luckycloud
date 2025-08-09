@@ -1,6 +1,6 @@
 package org.luckycloud.blog.convert;
 
-import org.luckycloud.blog.dto.request.BlogInfoRequest;
+import org.luckycloud.blog.dto.request.BlogInfoCommand;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,5 +18,5 @@ public interface BlogConvert {
     @Mapping(target = "createTime", expression = "java(new java.util.Date())")
     @Mapping(target = "updateTime", expression = "java(new java.util.Date())")
     @Mapping(target = "status", constant = ENABLE)
-    CloudBlogInfoDO convertToBlogDO(BlogInfoRequest request);
+    CloudBlogInfoDO convertToBlogDO(BlogInfoCommand request);
 }

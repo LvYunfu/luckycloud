@@ -26,4 +26,8 @@ public interface CloudBlogTagMapper {
     int batchInsert(List<CloudBlogTagDO> tagList);
 
      void deleteBlogTag(String blogId);
+
+    List<String> selectBlogIdListByTagName(String tagName);
+
+    List<CloudBlogTagDO> selectBlogTag(List<String> list);
 }

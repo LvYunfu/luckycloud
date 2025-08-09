@@ -1,7 +1,7 @@
 package org.luckycloud.blog.controller;
 
 import jakarta.annotation.Resource;
-import org.luckycloud.blog.dto.request.BlogInfoRequest;
+import org.luckycloud.blog.dto.request.BlogInfoCommand;
 import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +31,7 @@ public class BlogController {
      * 功能描述：创建博客文章
      */
     @PostMapping("/create")
-    public Response<Void> createBlog(@RequestBody BlogInfoRequest request) {
+    public Response<Void> createBlog(@RequestBody BlogInfoCommand request) {
         request.setBlogStatus(N.equals(request.getPrivateFlag()) ? PUBLIC : DRAFT);
         blogService.createBlog(request);
         return Response.success("博客文章创建成功");
@@ -43,7 +43,7 @@ public class BlogController {
      * @return
      */
     @PostMapping("/save-draft")
-    public Response<Void> saveDraft(@RequestBody BlogInfoRequest request) {
+    public Response<Void> saveDraft(@RequestBody BlogInfoCommand request) {
         request.setBlogStatus(DRAFT);
         blogService.createBlog(request);
         return Response.success("博客文章创建成功");

@@ -1,5 +1,6 @@
 package org.luckycloud.blog.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.service.BlogCategoryService;
 import org.luckycloud.domain.blog.CloudBlogCategoriesDO;
@@ -23,7 +24,7 @@ public class BlogCategoryServiceImpl implements BlogCategoryService {
     @Override
     public List<Select> getCategoryList(String categoryId) {
 
-        List<CloudBlogCategoriesDO> categoriesDOList = blogCategoriesMapper.getCategoryListByParentId(categoryId);
+        List<CloudBlogCategoriesDO> categoriesDOList = blogCategoriesMapper.selectCategoryListByParentId(categoryId);
         return categoriesDOList.stream()
                 .map(category -> new Select(category.getName(), category.getCategoryId()))
                 .toList();

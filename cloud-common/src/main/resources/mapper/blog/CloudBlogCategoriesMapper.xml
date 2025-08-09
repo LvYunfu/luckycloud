@@ -5,106 +5,119 @@
 <mapper namespace="org.luckycloud.mapper.blog.CloudBlogCategoriesMapper">
 
     <resultMap id="BaseResultMap" type="org.luckycloud.domain.blog.CloudBlogCategoriesDO">
-            <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="slug" column="slug" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
-            <result property="sortOrder" column="sort_order" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="slug" column="slug" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
+        <result property="sortOrder" column="sort_order" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        category_id,name,slug,
+        category_id
+        ,name,slug,
         description,parent_id,sort_order,
         create_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from cloud_blog_categories
         where
     </select>
-    <select id="getCategoryListByParentId" resultType="org.luckycloud.domain.blog.CloudBlogCategoriesDO">
+    <select id="selectCategoryListByParentId" resultType="org.luckycloud.domain.blog.CloudBlogCategoriesDO">
         select
         <include refid="Base_Column_List"/>
         from cloud_blog_categories
         where parent_id = #{parentId,jdbcType=VARCHAR}
 
     </select>
+    <select id="selectCategoryListById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cloud_blog_categories
+        <where>
+            category_id
+            in
+            <foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from cloud_blog_categories
+        delete
+        from cloud_blog_categories
         where
     </delete>
     <insert id="insert">
         insert into cloud_blog_categories
-        ( category_id,name,slug
-        ,description,parent_id,sort_order
-        ,create_time)
-        values (#{categoryId,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{slug,jdbcType=VARCHAR}
-        ,#{description,jdbcType=VARCHAR},#{parentId,jdbcType=VARCHAR},#{sortOrder,jdbcType=INTEGER}
-        ,#{createTime,jdbcType=TIMESTAMP})
+        ( category_id, name, slug
+        , description, parent_id, sort_order
+        , create_time)
+        values ( #{categoryId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{slug,jdbcType=VARCHAR}
+               , #{description,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{sortOrder,jdbcType=INTEGER}
+               , #{createTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective">
         insert into cloud_blog_categories
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="categoryId != null">category_id,</if>
-                <if test="name != null">name,</if>
-                <if test="slug != null">slug,</if>
-                <if test="description != null">description,</if>
-                <if test="parentId != null">parent_id,</if>
-                <if test="sortOrder != null">sort_order,</if>
-                <if test="createTime != null">create_time,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="name != null">name,</if>
+            <if test="slug != null">slug,</if>
+            <if test="description != null">description,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createTime != null">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="categoryId != null">category_id = #{categoryId,jdbcType=VARCHAR},</if>
-                <if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
-                <if test="slug != null">slug = #{slug,jdbcType=VARCHAR},</if>
-                <if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
-                <if test="parentId != null">parent_id = #{parentId,jdbcType=VARCHAR},</if>
-                <if test="sortOrder != null">sort_order = #{sortOrder,jdbcType=INTEGER},</if>
-                <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="categoryId != null">category_id = #{categoryId,jdbcType=VARCHAR},</if>
+            <if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+            <if test="slug != null">slug = #{slug,jdbcType=VARCHAR},</if>
+            <if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+            <if test="parentId != null">parent_id = #{parentId,jdbcType=VARCHAR},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder,jdbcType=INTEGER},</if>
+            <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.blog.CloudBlogCategoriesDO">
         update cloud_blog_categories
         <set>
-                <if test="categoryId != null">
-                    category_id = #{categoryId,jdbcType=VARCHAR},
-                </if>
-                <if test="name != null">
-                    name = #{name,jdbcType=VARCHAR},
-                </if>
-                <if test="slug != null">
-                    slug = #{slug,jdbcType=VARCHAR},
-                </if>
-                <if test="description != null">
-                    description = #{description,jdbcType=VARCHAR},
-                </if>
-                <if test="parentId != null">
-                    parent_id = #{parentId,jdbcType=VARCHAR},
-                </if>
-                <if test="sortOrder != null">
-                    sort_order = #{sortOrder,jdbcType=INTEGER},
-                </if>
-                <if test="createTime != null">
-                    create_time = #{createTime,jdbcType=TIMESTAMP},
-                </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="slug != null">
+                slug = #{slug,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=VARCHAR},
+            </if>
+            <if test="sortOrder != null">
+                sort_order = #{sortOrder,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
         </set>
         where
     </update>
     <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.blog.CloudBlogCategoriesDO">
         update cloud_blog_categories
-        set
-            category_id =  #{categoryId,jdbcType=VARCHAR},
-            name =  #{name,jdbcType=VARCHAR},
-            slug =  #{slug,jdbcType=VARCHAR},
-            description =  #{description,jdbcType=VARCHAR},
-            parent_id =  #{parentId,jdbcType=VARCHAR},
-            sort_order =  #{sortOrder,jdbcType=INTEGER},
-            create_time =  #{createTime,jdbcType=TIMESTAMP}
+        set category_id = #{categoryId,jdbcType=VARCHAR},
+            name        = #{name,jdbcType=VARCHAR},
+            slug        = #{slug,jdbcType=VARCHAR},
+            description = #{description,jdbcType=VARCHAR},
+            parent_id   = #{parentId,jdbcType=VARCHAR},
+            sort_order  = #{sortOrder,jdbcType=INTEGER},
+            create_time = #{createTime,jdbcType=TIMESTAMP}
         where
     </update>
 </mapper>

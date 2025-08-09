@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2025/8/5
  */
 @Data
-public class BlogInfoRequest {
+public class BlogInfoCommand {
     /**
      * 博客标题
      */
