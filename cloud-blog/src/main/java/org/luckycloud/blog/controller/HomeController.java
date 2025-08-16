@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import org.luckycloud.blog.dto.request.HomeBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
+import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.service.HomeService;
 import org.luckycloud.dto.common.PageResponse;
 import org.springframework.web.bind.annotation.*;
@@ -43,4 +44,8 @@ public class HomeController {
         return homeService.getBlogList(request);
     }
 
+    @GetMapping("/get-blog-info")
+    public BlogInfoResponse getBlogInfo(String  blogId) {
+        return homeService.getBlogInfo(blogId);
+    }
 }

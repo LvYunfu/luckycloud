@@ -3,6 +3,7 @@ package org.luckycloud.blog.service;
 import org.luckycloud.blog.dto.request.HomeBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
+import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.dto.common.PageResponse;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface HomeService {
     List<BlogCategoryCountResponse> getCategoryNum();
 
     PageResponse<BlogBaseResponse> getBlogList(HomeBlogQuery request);
+
+    BlogInfoResponse getBlogInfo(String blogId);
 }

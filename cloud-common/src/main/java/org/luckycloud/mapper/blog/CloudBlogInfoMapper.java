@@ -22,7 +22,7 @@ public interface CloudBlogInfoMapper {
 
     int insertSelective(CloudBlogInfoDO record);
 
-    CloudBlogInfoDO selectByPrimaryKey(Long id);
+    CloudBlogInfoDO selectByBlogId(String  blogId);
 
     int updateByPrimaryKeySelective(CloudBlogInfoDO record);
 

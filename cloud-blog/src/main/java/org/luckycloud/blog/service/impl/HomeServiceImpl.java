@@ -8,6 +8,7 @@ import org.luckycloud.blog.convert.HomeConvert;
 import org.luckycloud.blog.dto.request.HomeBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
+import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.service.HomeService;
 import org.luckycloud.domain.blog.CloudBlogCategoriesDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
@@ -18,11 +19,18 @@ import org.luckycloud.mapper.blog.CloudBlogCategoriesMapper;
 import org.luckycloud.mapper.blog.CloudBlogInfoMapper;
 import org.luckycloud.mapper.blog.CloudBlogTagMapper;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 /**
@@ -84,5 +92,13 @@ public class HomeServiceImpl implements HomeService {
                 .collect(Collectors.groupingBy(CloudBlogTagDO::getBlogId, Collectors.mapping(CloudBlogTagDO::getTagName, Collectors.toList())));
         baseResponses.forEach(e -> e.setTags(tagMap.get(e.getBlogId())));
         return new PageResponse<>(blogPage.getTotal(), baseResponses);
+    }
+
+    @Override
+    public BlogInfoResponse getBlogInfo(String blogId) {
+        CloudBlogInfoDO blogInfoDO = blogInfoMapper.selectByBlogId(blogId);
+        BlogInfoResponse blogInfo = homeConvert.toBlogInfo(blogInfoDO);
+        blogInfo.setTags(blogTagMapper.selectBlogTag(List.of(blogId)).stream().map(CloudBlogTagDO::getTagName).toList());
+        return blogInfo;
     }
 }
