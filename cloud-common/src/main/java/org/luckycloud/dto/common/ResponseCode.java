@@ -25,7 +25,10 @@ public enum ResponseCode {
 
     VALIDATE_FAILED("LC006", "参数检验失败"),
 
-    SYS_ERROR("LC007", "系统异常,请联系管理员"),;
+    SYS_ERROR("LC007", "系统异常,请联系管理员"),
+
+    UNAUTHORIZED("LC008", "暂未登录或登录失效,请重新登录"),
+    ;
 
     private String code;
 

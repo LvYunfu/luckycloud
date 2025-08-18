@@ -2,6 +2,7 @@ package org.luckycloud.blog.controller;
 
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
+import org.luckycloud.blog.dto.request.CommentBlogCommand;
 import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,7 @@ public class BlogController {
 
     /**
      * 保存为草稿
+     *
      * @param request
      * @return
      */
@@ -48,4 +50,16 @@ public class BlogController {
         blogService.createBlog(request);
         return Response.success("博客文章创建成功");
     }
+
+    /**
+     * 功能描述：评论博客文章
+     * @param request
+     * @return
+     */
+    @PostMapping
+    public Response<Void> commentBlog(@RequestBody CommentBlogCommand request) {
+        blogService.commentBlog(request);
+        return Response.success("评论成功");
+    }
+
 }

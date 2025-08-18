@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.luckycloud.mapper.blog.CloudBlogCommentsMapper">
+
+    <resultMap id="BaseResultMap" type="org.luckycloud.domain.blog.CloudBlogCommentsDO">
+            <id property="commentId" column="comment_id" jdbcType="VARCHAR"/>
+            <result property="blogId" column="blog_id" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="parentCommentId" column="parent_comment_id" jdbcType="INTEGER"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="likeCount" column="like_count" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        comment_id,blog_id,user_id,
+        parent_comment_id,content,like_count,
+        create_time,update_time,status
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_blog_comments
+        where  comment_id = #{commentId,jdbcType=VARCHAR} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from cloud_blog_comments
+        where  comment_id = #{commentId,jdbcType=VARCHAR} 
+    </delete>
+    <insert id="insert" keyColumn="comment_id" keyProperty="commentId" parameterType="org.luckycloud.domain.blog.CloudBlogCommentsDO" useGeneratedKeys="true">
+        insert into cloud_blog_comments
+        ( comment_id,blog_id,user_id
+        ,parent_comment_id,content,like_count
+        ,create_time,update_time,status
+        )
+        values (#{commentId,jdbcType=VARCHAR},#{blogId,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR}
+        ,#{parentCommentId,jdbcType=INTEGER},#{content,jdbcType=VARCHAR},#{likeCount,jdbcType=INTEGER}
+        ,#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{status,jdbcType=CHAR}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="comment_id" keyProperty="commentId" parameterType="org.luckycloud.domain.blog.CloudBlogCommentsDO" useGeneratedKeys="true">
+        insert into cloud_blog_comments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="commentId != null">comment_id,</if>
+                <if test="blogId != null">blog_id,</if>
+                <if test="userId != null">user_id,</if>
+                <if test="parentCommentId != null">parent_comment_id,</if>
+                <if test="content != null">content,</if>
+                <if test="likeCount != null">like_count,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="updateTime != null">update_time,</if>
+                <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="commentId != null">comment_id = #{commentId,jdbcType=VARCHAR},</if>
+                <if test="blogId != null">blog_id = #{blogId,jdbcType=VARCHAR},</if>
+                <if test="userId != null">user_id = #{userId,jdbcType=VARCHAR},</if>
+                <if test="parentCommentId != null">parent_comment_id = #{parentCommentId,jdbcType=INTEGER},</if>
+                <if test="content != null">content = #{content,jdbcType=VARCHAR},</if>
+                <if test="likeCount != null">like_count = #{likeCount,jdbcType=INTEGER},</if>
+                <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="status != null">status = #{status,jdbcType=CHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.blog.CloudBlogCommentsDO">
+        update cloud_blog_comments
+        <set>
+                <if test="blogId != null">
+                    blog_id = #{blogId,jdbcType=VARCHAR},
+                </if>
+                <if test="userId != null">
+                    user_id = #{userId,jdbcType=VARCHAR},
+                </if>
+                <if test="parentCommentId != null">
+                    parent_comment_id = #{parentCommentId,jdbcType=INTEGER},
+                </if>
+                <if test="content != null">
+                    content = #{content,jdbcType=VARCHAR},
+                </if>
+                <if test="likeCount != null">
+                    like_count = #{likeCount,jdbcType=INTEGER},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=CHAR},
+                </if>
+        </set>
+        where   comment_id = #{commentId,jdbcType=VARCHAR} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.blog.CloudBlogCommentsDO">
+        update cloud_blog_comments
+        set 
+            blog_id =  #{blogId,jdbcType=VARCHAR},
+            user_id =  #{userId,jdbcType=VARCHAR},
+            parent_comment_id =  #{parentCommentId,jdbcType=INTEGER},
+            content =  #{content,jdbcType=VARCHAR},
+            like_count =  #{likeCount,jdbcType=INTEGER},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            update_time =  #{updateTime,jdbcType=TIMESTAMP},
+            status =  #{status,jdbcType=CHAR}
+        where   comment_id = #{commentId,jdbcType=VARCHAR} 
+    </update>
+</mapper>

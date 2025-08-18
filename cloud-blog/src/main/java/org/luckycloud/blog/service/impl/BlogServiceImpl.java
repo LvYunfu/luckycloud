@@ -4,9 +4,12 @@ import jakarta.annotation.Resource;
 import org.luckycloud.blog.convert.BlogConvert;
 import org.luckycloud.blog.convert.BlogConvertFactory;
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
+import org.luckycloud.blog.dto.request.CommentBlogCommand;
 import org.luckycloud.blog.service.BlogService;
+import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
+import org.luckycloud.mapper.blog.CloudBlogCommentsMapper;
 import org.luckycloud.mapper.blog.CloudBlogInfoMapper;
 import org.luckycloud.mapper.blog.CloudBlogTagMapper;
 import org.luckycloud.utils.GenerateIdUtils;
@@ -34,6 +37,9 @@ public class BlogServiceImpl implements BlogService {
 
     @Resource
     private TransactionalUtils transactionalUtils;
+
+    @Resource
+    private CloudBlogCommentsMapper blogCommentsMapper;
     @Override
 
     public void createBlog(BlogInfoCommand request) {
@@ -47,5 +53,11 @@ public class BlogServiceImpl implements BlogService {
                 () -> blogTagMapper.deleteBlogTag(blogDO.getBlogId()),
                 () -> blogTagMapper.batchInsert(tagList)
         ));
+    }
+
+    @Override
+    public void commentBlog(CommentBlogCommand request) {
+        CloudBlogCommentsDO  blogCommentsDO = blogConvert.convertToBlogCommentsDO(request);
+        blogCommentsMapper.insert(blogCommentsDO);
     }
 }

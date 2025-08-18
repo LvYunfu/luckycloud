@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: luckycloud
+  profiles:
+    active: dev
+  config:
+    import:
+      - optional:classpath:/application-common.yml
+      - optional:classpath:/application-security.yml
+      - optional:classpath:/application-blog.yml
+      - optional:classpath:/application-web.yml
+server:
+  port: 8080

@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
  * @date 2025/7/30
  */
 @Getter
-public class BusinessException extends RuntimeException{
+public class BusinessException extends RuntimeException {
     /**
      * 异常码
      */
@@ -24,6 +24,11 @@ public class BusinessException extends RuntimeException{
 
     public BusinessException(ResponseCode code, String message) {
         super(ObjectUtils.isEmpty(message) ? code.getMessage() : message);
+        this.code = code.getCode();
+    }
+
+    public BusinessException(ResponseCode code) {
+        super(code.getMessage());
         this.code = code.getCode();
     }
 }

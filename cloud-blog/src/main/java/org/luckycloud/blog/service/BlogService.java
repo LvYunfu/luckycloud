@@ -1,6 +1,7 @@
 package org.luckycloud.blog.service;
 
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
+import org.luckycloud.blog.dto.request.CommentBlogCommand;
 
 /**
  * @author lvyf
@@ -9,4 +10,6 @@ import org.luckycloud.blog.dto.request.BlogInfoCommand;
  */
 public interface BlogService {
     void createBlog(BlogInfoCommand request);
+
+    void commentBlog(CommentBlogCommand request);
 }

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: cloud-web
+
+server:
+  servlet:
+    context-path: /api 
