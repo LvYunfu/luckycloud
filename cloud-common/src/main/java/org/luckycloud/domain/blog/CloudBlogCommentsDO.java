@@ -24,11 +24,18 @@ public class CloudBlogCommentsDO {
      * 评论人
      */
     private String userId;
+    /**
+     * 回复给谁的评论
+     */
+    private String toUserId;
 
     /**
      * 父评论ID
      */
-    private Integer parentCommentId;
+
+    private  String firstCommentId;
+
+    private String parentCommentId;
 
     /**
      *  评论内容

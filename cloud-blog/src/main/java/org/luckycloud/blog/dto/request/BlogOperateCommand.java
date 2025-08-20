@@ -1,4 +1,4 @@
-package org.luckycloud.dto.blog.request;
+package org.luckycloud.blog.dto.request;
 
 import lombok.Data;
 
@@ -8,10 +8,11 @@ import lombok.Data;
  * @date 2025/8/20
  */
 @Data
-public class BlogCommentQuery {
+public class BlogOperateCommand {
 
     private String blogId;
 
+    private String commentId;
 
-    private String firstCommentId;
+
 }

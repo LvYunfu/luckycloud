@@ -8,17 +8,19 @@
             <id property="commentId" column="comment_id" jdbcType="VARCHAR"/>
             <result property="blogId" column="blog_id" jdbcType="VARCHAR"/>
             <result property="userId" column="user_id" jdbcType="VARCHAR"/>
-            <result property="parentCommentId" column="parent_comment_id" jdbcType="INTEGER"/>
+            <result property="toUserId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="parentCommentId" column="parent_comment_id" jdbcType="VARCHAR"/>
+            <result property="firstCommentId" column="first_comment_id" jdbcType="VARCHAR"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
-            <result property="likeCount" column="like_count" jdbcType="INTEGER"/>
+            <result property="likeCount" column="like_count" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="status" column="status" jdbcType="CHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        comment_id,blog_id,user_id,
-        parent_comment_id,content,like_count,
+        comment_id,blog_id,user_id,to_user_id
+        parent_comment_id,first_comment_id,content,like_count,
         create_time,update_time,status
     </sql>
 
@@ -32,8 +34,8 @@
         select
         <include refid="Base_Column_List"/>
         from cloud_blog_comments
-        where blog_id = #{blogId}
-        and parent_comment_id = #{parentCommentId}
+        where blog_id = #{query.blogId}
+        and first_comment_id = #{query.firstCommentId}
         and status = '1'
         order by create_time desc
     </select>
@@ -44,12 +46,12 @@
     </delete>
     <insert id="insert" keyColumn="comment_id" keyProperty="commentId" parameterType="org.luckycloud.domain.blog.CloudBlogCommentsDO" useGeneratedKeys="true">
         insert into cloud_blog_comments
-        ( comment_id,blog_id,user_id
-        ,parent_comment_id,content,like_count
+        ( comment_id,blog_id,user_id,to_user_id
+        ,parent_comment_id,first_comment_id,content,like_count
         ,create_time,update_time,status
         )
-        values (#{commentId,jdbcType=VARCHAR},#{blogId,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR}
-        ,#{parentCommentId,jdbcType=INTEGER},#{content,jdbcType=VARCHAR},#{likeCount,jdbcType=INTEGER}
+        values (#{commentId,jdbcType=VARCHAR},#{blogId,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{toUserId,jdbcType=VARCHAR}
+        ,#{parentCommentId,jdbcType=VARCHAR},#{firstCommentId,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{likeCount,jdbcType=INTEGER}
         ,#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{status,jdbcType=CHAR}
         )
     </insert>
@@ -59,7 +61,9 @@
                 <if test="commentId != null">comment_id,</if>
                 <if test="blogId != null">blog_id,</if>
                 <if test="userId != null">user_id,</if>
+                <if test="toUserId != null">to_user_id,</if>
                 <if test="parentCommentId != null">parent_comment_id,</if>
+                <if test="firstCommentId != null">first_comment_id,</if>
                 <if test="content != null">content,</if>
                 <if test="likeCount != null">like_count,</if>
                 <if test="createTime != null">create_time,</if>
@@ -70,7 +74,9 @@
                 <if test="commentId != null">comment_id = #{commentId,jdbcType=VARCHAR},</if>
                 <if test="blogId != null">blog_id = #{blogId,jdbcType=VARCHAR},</if>
                 <if test="userId != null">user_id = #{userId,jdbcType=VARCHAR},</if>
-                <if test="parentCommentId != null">parent_comment_id = #{parentCommentId,jdbcType=INTEGER},</if>
+                <if test="toUserId != null">to_user_id = #{toUserId,jdbcType=VARCHAR},</if>
+                <if test="parentCommentId != null">parent_comment_id = #{parentCommentId,jdbcType=VARCHAR},</if>
+                <if test="firstComment != null">first_comment_id = #{firstCommentId,jdbcType=VARCHAR},</if>
                 <if test="content != null">content = #{content,jdbcType=VARCHAR},</if>
                 <if test="likeCount != null">like_count = #{likeCount,jdbcType=INTEGER},</if>
                 <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
@@ -88,7 +94,7 @@
                     user_id = #{userId,jdbcType=VARCHAR},
                 </if>
                 <if test="parentCommentId != null">
-                    parent_comment_id = #{parentCommentId,jdbcType=INTEGER},
+                    parent_comment_id = #{parentCommentId,jdbcType=VARCHAR},
                 </if>
                 <if test="content != null">
                     content = #{content,jdbcType=VARCHAR},
@@ -113,12 +119,20 @@
         set
             blog_id =  #{blogId,jdbcType=VARCHAR},
             user_id =  #{userId,jdbcType=VARCHAR},
-            parent_comment_id =  #{parentCommentId,jdbcType=INTEGER},
+            parent_comment_id =  #{parentCommentId,jdbcType=VARCHAR},
+            first_comment_id =  #{firstCommentId,jdbcType=VARCHAR},
             content =  #{content,jdbcType=VARCHAR},
             like_count =  #{likeCount,jdbcType=INTEGER},
             create_time =  #{createTime,jdbcType=TIMESTAMP},
             update_time =  #{updateTime,jdbcType=TIMESTAMP},
             status =  #{status,jdbcType=CHAR}
         where   comment_id = #{commentId,jdbcType=VARCHAR}
+    </update>
+    <update id="likeComment">
+        update
+            cloud_blog_comments
+        set like_count = like_count + 1
+        where comment_id = #{commentId}
+
     </update>
 </mapper>

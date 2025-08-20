@@ -1,5 +1,6 @@
 package org.luckycloud.blog.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -27,18 +28,22 @@ public class BlogCommentResponse {
      */
     private String userId;
 
+    private String userName;
+    private String toUserId;
+    private String toUserName;
+
     /**
      * 父评论ID
      */
-    private Integer parentCommentId;
+    private String parentCommentId;
 
     /**
-     *  评论内容
+     * 评论内容
      */
     private String content;
 
     /**
-     *   点赞数
+     * 点赞数
      */
     private Integer likeCount;
 
@@ -46,5 +51,6 @@ public class BlogCommentResponse {
     /**
      *
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 }

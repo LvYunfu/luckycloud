@@ -2,6 +2,7 @@ package org.luckycloud.blog.dto.response;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class BlogBaseResponse {
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 评论数

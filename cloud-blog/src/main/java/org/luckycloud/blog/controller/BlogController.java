@@ -2,6 +2,7 @@ package org.luckycloud.blog.controller;
 
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
+import org.luckycloud.blog.dto.request.BlogOperateCommand;
 import org.luckycloud.blog.dto.request.CommentBlogCommand;
 import org.luckycloud.blog.dto.request.CommentQuery;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
@@ -76,6 +77,18 @@ public class BlogController {
     @PostMapping("/get-comment")
     public PageResponse<BlogCommentResponse> getBlogComment(@RequestBody CommentQuery query) {
         return blogService.getBlogComment(query);
+
+    }
+
+    /**
+     * 功能描述：点赞评论
+     * @param command
+     * @return
+     */
+    @PostMapping("/like-comment")
+    public Response<Void> likeComment(@RequestBody BlogOperateCommand command) {
+         blogService.likeComment(command);
+        return Response.success("点赞成功");
 
     }
 }

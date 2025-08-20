@@ -1,6 +1,7 @@
 package org.luckycloud.blog.service;
 
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
+import org.luckycloud.blog.dto.request.BlogOperateCommand;
 import org.luckycloud.blog.dto.request.CommentBlogCommand;
 import org.luckycloud.blog.dto.request.CommentQuery;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
@@ -17,4 +18,6 @@ public interface BlogService {
     void commentBlog(CommentBlogCommand request);
 
     PageResponse<BlogCommentResponse> getBlogComment(CommentQuery query);
+
+    void likeComment(BlogOperateCommand command);
 }

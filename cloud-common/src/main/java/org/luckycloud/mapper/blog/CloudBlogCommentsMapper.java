@@ -1,5 +1,6 @@
 package org.luckycloud.mapper.blog;
 
+import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.dto.blog.request.BlogCommentQuery;
 
@@ -25,5 +26,7 @@ public interface CloudBlogCommentsMapper {
 
     int updateByPrimaryKey(CloudBlogCommentsDO record);
 
-    List<CloudBlogCommentsDO> getBlogComment(BlogCommentQuery query);
+    List<CloudBlogCommentsDO> getBlogComment(@Param("query") BlogCommentQuery query);
+
+    void likeComment(String commentId);
 }

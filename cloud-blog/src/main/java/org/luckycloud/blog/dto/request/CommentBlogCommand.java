@@ -16,5 +16,7 @@ public class CommentBlogCommand {
 
     private String parentCommentId;
 
+    private String firstCommentId;
+
 
 }

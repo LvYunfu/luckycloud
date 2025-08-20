@@ -41,6 +41,7 @@ public interface BlogConvert {
 
     List<BlogCommentResponse> toBlogCommentDOList(List<CloudBlogCommentsDO> commands);
 
+
     BlogCommentResponse convertToBlogCommentResponse(CloudBlogCommentsDO commentDO);
 
 }

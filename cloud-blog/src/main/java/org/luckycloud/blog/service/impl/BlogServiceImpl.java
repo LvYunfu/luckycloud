@@ -7,10 +7,12 @@ import jakarta.annotation.Resource;
 import org.luckycloud.blog.convert.BlogConvert;
 import org.luckycloud.blog.convert.BlogConvertFactory;
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
+import org.luckycloud.blog.dto.request.BlogOperateCommand;
 import org.luckycloud.blog.dto.request.CommentBlogCommand;
 import org.luckycloud.blog.dto.request.CommentQuery;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.service.BlogService;
+import org.luckycloud.cache.UserInfoCache;
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
@@ -22,6 +24,8 @@ import org.luckycloud.mapper.blog.CloudBlogTagMapper;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.luckycloud.utils.TransactionalUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -47,6 +51,10 @@ public class BlogServiceImpl implements BlogService {
 
     @Resource
     private CloudBlogCommentsMapper blogCommentsMapper;
+
+
+    @Resource
+    private UserInfoCache userInfoCache;
 
     @Override
 
@@ -76,6 +84,12 @@ public class BlogServiceImpl implements BlogService {
         List<CloudBlogCommentsDO> comments = blogCommentsMapper.getBlogComment(blogCommentQuery);
         PageInfo<CloudBlogCommentsDO> commentPage = new PageInfo<>(comments);
         List<BlogCommentResponse> list = blogConvert.toBlogCommentDOList(comments);
+        list.forEach(e -> e.setUserName(userInfoCache.getUserName(e.getUserId())));
         return new PageResponse<>(commentPage.getTotal(), list);
+    }
+
+    @Override
+    public void likeComment(BlogOperateCommand command) {
+        blogCommentsMapper.likeComment(command.getCommentId());
     }
 }
