@@ -3,7 +3,10 @@ package org.luckycloud.blog.controller;
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
 import org.luckycloud.blog.dto.request.CommentBlogCommand;
+import org.luckycloud.blog.dto.request.CommentQuery;
+import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.service.BlogService;
+import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,13 +56,26 @@ public class BlogController {
 
     /**
      * 功能描述：评论博客文章
+     *
      * @param request
      * @return
      */
-    @PostMapping
+    @PostMapping("/comment")
     public Response<Void> commentBlog(@RequestBody CommentBlogCommand request) {
         blogService.commentBlog(request);
         return Response.success("评论成功");
     }
 
+
+    /**
+     * 功能描述：获取博客文章评论
+     *
+     * @param query
+     * @return
+     */
+    @PostMapping("/get-comment")
+    public PageResponse<BlogCommentResponse> getBlogComment(@RequestBody CommentQuery query) {
+        return blogService.getBlogComment(query);
+
+    }
 }

@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+import org.luckycloud.security.entity.SysUserDetail;
 import org.luckycloud.security.util.JwtTokenUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,13 +46,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
          if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(jwt, createUserDetails(username, jwt)))) {
-                List<SimpleGrantedAuthority> authorities = jwtTokenUtil.extractAuthorities(jwt).stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
+            if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(jwt))) {
+                SysUserDetail userDetails = jwtTokenUtil.extractUserInfo(jwt);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        username, null, authorities);
+                        userDetails, null, new ArrayList<>());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
@@ -58,10 +58,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    private UserDetails createUserDetails(String username, String token) {
-        List<SimpleGrantedAuthority> authorities = jwtTokenUtil.extractAuthorities(token).stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-        return new User(username, "", authorities);
-    }
 }

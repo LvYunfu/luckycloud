@@ -1,10 +1,11 @@
 package org.luckycloud.domain.blog;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
 /**
- * 
+ *
  * @TableName cloud_blog_info
  */
 @Data
@@ -50,19 +51,19 @@ public class CloudBlogInfoDO {
     private String coverImage;
 
     /**
-     *  BS00 保存草稿  BS01 公开   BS02 私有 
+     *  BS00 保存草稿  BS01 公开   BS02 私有
      */
     private String blogStatus;
 
     /**
      * 创作时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 0 有效 1无效

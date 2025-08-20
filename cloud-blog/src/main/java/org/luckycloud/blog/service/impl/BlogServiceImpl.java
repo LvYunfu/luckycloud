@@ -1,14 +1,21 @@
 package org.luckycloud.blog.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.convert.BlogConvert;
 import org.luckycloud.blog.convert.BlogConvertFactory;
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
 import org.luckycloud.blog.dto.request.CommentBlogCommand;
+import org.luckycloud.blog.dto.request.CommentQuery;
+import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
+import org.luckycloud.dto.blog.request.BlogCommentQuery;
+import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.mapper.blog.CloudBlogCommentsMapper;
 import org.luckycloud.mapper.blog.CloudBlogInfoMapper;
 import org.luckycloud.mapper.blog.CloudBlogTagMapper;
@@ -40,6 +47,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Resource
     private CloudBlogCommentsMapper blogCommentsMapper;
+
     @Override
 
     public void createBlog(BlogInfoCommand request) {
@@ -57,7 +65,17 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void commentBlog(CommentBlogCommand request) {
-        CloudBlogCommentsDO  blogCommentsDO = blogConvert.convertToBlogCommentsDO(request);
+        CloudBlogCommentsDO blogCommentsDO = blogConvert.convertToBlogCommentsDO(request);
         blogCommentsMapper.insert(blogCommentsDO);
+    }
+
+    @Override
+    public PageResponse<BlogCommentResponse> getBlogComment(CommentQuery query) {
+        PageMethod.startPage(query.getPageNum(), query.getPageSize());
+        BlogCommentQuery blogCommentQuery = blogConvert.toCommentQuery(query);
+        List<CloudBlogCommentsDO> comments = blogCommentsMapper.getBlogComment(blogCommentQuery);
+        PageInfo<CloudBlogCommentsDO> commentPage = new PageInfo<>(comments);
+        List<BlogCommentResponse> list = blogConvert.toBlogCommentDOList(comments);
+        return new PageResponse<>(commentPage.getTotal(), list);
     }
 }

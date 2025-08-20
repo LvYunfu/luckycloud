@@ -2,11 +2,16 @@ package org.luckycloud.blog.convert;
 
 import org.luckycloud.blog.dto.request.BlogInfoCommand;
 import org.luckycloud.blog.dto.request.CommentBlogCommand;
+import org.luckycloud.blog.dto.request.CommentQuery;
+import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
+import org.luckycloud.dto.blog.request.BlogCommentQuery;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.luckycloud.security.util.UserUtils;
+
+import java.util.List;
+
 import static org.luckycloud.constant.SystemConstant.ENABLE;
 
 /**
@@ -17,17 +22,25 @@ import static org.luckycloud.constant.SystemConstant.ENABLE;
 @Mapper(componentModel = "spring")
 public interface BlogConvert {
 
-    @Mapping(target = "createTime", expression = "java(new java.util.Date())")
-    @Mapping(target = "updateTime", expression = "java(new java.util.Date())")
+    @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "status", constant = ENABLE)
-    @Mapping(target = "userId", expression = "java(UserUtils.getUserId())")
+    @Mapping(target = "userId", expression = "java(org.luckycloud.security.util.UserUtils.getUserId())")
     CloudBlogInfoDO convertToBlogDO(BlogInfoCommand request);
 
 
-    @Mapping(target = "createTime", expression = "java(new java.util.Date())")
-    @Mapping(target = "updateTime", expression = "java(new java.util.Date())")
+    @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "status", constant = ENABLE)
     @Mapping(target = "likeCount", constant = "0")
-    @Mapping(target = "userId", expression = "java(UserUtils.getUserId())")
+    @Mapping(target = "userId", expression = "java(org.luckycloud.security.util.UserUtils.getUserId())")
+    @Mapping(target = "commentId", expression = "java(org.luckycloud.utils.GenerateIdUtils.generateId())")
     CloudBlogCommentsDO convertToBlogCommentsDO(CommentBlogCommand request);
+
+    BlogCommentQuery toCommentQuery(CommentQuery query);
+
+    List<BlogCommentResponse> toBlogCommentDOList(List<CloudBlogCommentsDO> commands);
+
+    BlogCommentResponse convertToBlogCommentResponse(CloudBlogCommentsDO commentDO);
+
 }

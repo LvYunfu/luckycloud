@@ -1,56 +1,57 @@
 package org.luckycloud.domain.blog;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
 /**
- * 
+ *
  * @TableName cloud_blog_comments
  */
 @Data
 public class CloudBlogCommentsDO {
     /**
-     * 
+     * 评论ID
      */
     private String commentId;
 
     /**
-     * 
+     * 博客ID
      */
     private String blogId;
 
     /**
-     * 
+     * 评论人
      */
     private String userId;
 
     /**
-     * 
+     * 父评论ID
      */
     private Integer parentCommentId;
 
     /**
-     * 
+     *  评论内容
      */
     private String content;
 
     /**
-     * 
+     *      * 点赞数
      */
     private Integer likeCount;
 
     /**
-     * 
+     *
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
-     * 
+     *
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
-     * 
+     *
      */
     private String status;
 

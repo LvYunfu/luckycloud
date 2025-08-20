@@ -62,7 +62,7 @@ public class SysUserDetail implements UserDetails {
         SysUserDetail sysUserDetail = SysUserDetail.builder()
                 .userId(userInfoDO.getUserId())
                 .username(userInfoDO.getUserName())
-                .accountName(userInfoDO.getUserName())
+                .accountName(userInfoDO.getMail())
                 .password(userInfoDO.getPassword())
                 .enabled(ENABLE.equals(userInfoDO.getStatus()))
                 .accountNonLocked(ENABLE.equals(userInfoDO.getAccountStatus()))

@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.luckycloud.security.entity.SysUserDetail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,12 +32,12 @@ public class JwtTokenUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(SysUserDetail userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("authorities", userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()));
-        return createToken(claims, userDetails.getUsername());
+        claims.put("userId", userDetails.getUserId());
+        claims.put("userName", userDetails.getUsername());
+        claims.put("accountName", userDetails.getAccountName());
+        return createToken(claims, userDetails.getUserId());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -49,26 +50,28 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        ThreadLocal<String> currentUsername = new ThreadLocal<>();
-        currentUsername.set(userDetails.getUsername());
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public Boolean validateToken(String token) {
+        return !extractExpiration(token).before(new Date());
     }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public SysUserDetail extractUserInfo(String token) {
+        Claims claims = extractAllClaims(token);
+        return SysUserDetail.builder().userId(claims.get("userId", String.class))
+                .username(claims.get("userName", String.class))
+                .accountName(claims.get("accountName", String.class))
+                .build();
+
+    }
+
+
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<String> extractAuthorities(String token) {
-        Claims claims = extractAllClaims(token);
-        return (List<String>) claims.get("authorities");
-    }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -83,7 +86,5 @@ public class JwtTokenUtil {
                 .getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
+
 }

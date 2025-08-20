@@ -1,6 +1,9 @@
 package org.luckycloud.mapper.blog;
 
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
+import org.luckycloud.dto.blog.request.BlogCommentQuery;
+
+import java.util.List;
 
 /**
 * @author lvyf
@@ -22,4 +25,5 @@ public interface CloudBlogCommentsMapper {
 
     int updateByPrimaryKey(CloudBlogCommentsDO record);
 
+    List<CloudBlogCommentsDO> getBlogComment(BlogCommentQuery query);
 }

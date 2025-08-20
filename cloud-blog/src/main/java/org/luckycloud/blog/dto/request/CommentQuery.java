@@ -1,20 +1,18 @@
 package org.luckycloud.blog.dto.request;
 
 import lombok.Data;
+import org.luckycloud.dto.common.PageQuery;
 
 /**
  * @author lvyf
  * @description:
- * @date 2025/8/17
+ * @date 2025/8/20
  */
 @Data
-public class CommentBlogCommand {
+public class CommentQuery extends PageQuery {
 
     private String blogId;
 
-    private String content;
-
-    private String parentCommentId;
-
+    private String commentId;
 
 }

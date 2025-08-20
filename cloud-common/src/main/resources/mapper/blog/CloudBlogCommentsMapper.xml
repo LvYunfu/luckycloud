@@ -26,12 +26,21 @@
         select
         <include refid="Base_Column_List" />
         from cloud_blog_comments
-        where  comment_id = #{commentId,jdbcType=VARCHAR} 
+        where  comment_id = #{commentId,jdbcType=VARCHAR}
+    </select>
+    <select id="getBlogComment" resultType="org.luckycloud.domain.blog.CloudBlogCommentsDO">
+        select
+        <include refid="Base_Column_List"/>
+        from cloud_blog_comments
+        where blog_id = #{blogId}
+        and parent_comment_id = #{parentCommentId}
+        and status = '1'
+        order by create_time desc
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from cloud_blog_comments
-        where  comment_id = #{commentId,jdbcType=VARCHAR} 
+        where  comment_id = #{commentId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" keyColumn="comment_id" keyProperty="commentId" parameterType="org.luckycloud.domain.blog.CloudBlogCommentsDO" useGeneratedKeys="true">
         insert into cloud_blog_comments
@@ -97,11 +106,11 @@
                     status = #{status,jdbcType=CHAR},
                 </if>
         </set>
-        where   comment_id = #{commentId,jdbcType=VARCHAR} 
+        where   comment_id = #{commentId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.blog.CloudBlogCommentsDO">
         update cloud_blog_comments
-        set 
+        set
             blog_id =  #{blogId,jdbcType=VARCHAR},
             user_id =  #{userId,jdbcType=VARCHAR},
             parent_comment_id =  #{parentCommentId,jdbcType=INTEGER},
@@ -110,6 +119,6 @@
             create_time =  #{createTime,jdbcType=TIMESTAMP},
             update_time =  #{updateTime,jdbcType=TIMESTAMP},
             status =  #{status,jdbcType=CHAR}
-        where   comment_id = #{commentId,jdbcType=VARCHAR} 
+        where   comment_id = #{commentId,jdbcType=VARCHAR}
     </update>
 </mapper>

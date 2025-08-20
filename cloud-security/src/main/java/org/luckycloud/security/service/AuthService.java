@@ -8,6 +8,7 @@ import org.luckycloud.security.components.loginProcess.LoginTypeFactory;
 import org.luckycloud.security.components.loginProcess.LoginTypeService;
 import org.luckycloud.security.dto.LoginRequest;
 import org.luckycloud.security.dto.RegisterRequest;
+import org.luckycloud.security.entity.SysUserDetail;
 import org.luckycloud.security.util.JwtTokenUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,7 +54,7 @@ public class AuthService {
             LoginTypeService loginTypeService = LoginTypeFactory.getLoginWayProcess(LoginType.getLoginType(request.getLoginType()));
             Authentication authenticationToken = loginTypeService.loginProcess(request);
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            SysUserDetail userDetails = (SysUserDetail) authentication.getPrincipal();
             return jwtTokenUtil.generateToken(userDetails);
         } catch (AuthenticationException e) {
             throw new BusinessException(OPERATE_FAILED, "登录失败，用户名或密码错误");
