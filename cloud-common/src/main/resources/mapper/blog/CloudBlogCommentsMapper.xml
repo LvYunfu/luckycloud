@@ -19,7 +19,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        comment_id,blog_id,user_id,to_user_id
+        comment_id
+        ,blog_id,user_id,to_user_id,
         parent_comment_id,first_comment_id,content,like_count,
         create_time,update_time,status
     </sql>

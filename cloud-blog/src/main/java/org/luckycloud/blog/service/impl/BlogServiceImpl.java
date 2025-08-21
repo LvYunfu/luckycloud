@@ -84,7 +84,12 @@ public class BlogServiceImpl implements BlogService {
         List<CloudBlogCommentsDO> comments = blogCommentsMapper.getBlogComment(blogCommentQuery);
         PageInfo<CloudBlogCommentsDO> commentPage = new PageInfo<>(comments);
         List<BlogCommentResponse> list = blogConvert.toBlogCommentDOList(comments);
-        list.forEach(e -> e.setUserName(userInfoCache.getUserName(e.getUserId())));
+        list.forEach(e -> {
+            e.setUserName(userInfoCache.getUserName(e.getUserId()));
+            if( !ObjectUtils.isEmpty(e.getToUserId())) {
+                e.setToUserName(userInfoCache.getUserName(e.getUserId()));
+            }
+        });
         return new PageResponse<>(commentPage.getTotal(), list);
     }
 

@@ -29,13 +29,17 @@ public class BlogCommentResponse {
     private String userId;
 
     private String userName;
+
     private String toUserId;
+
     private String toUserName;
 
     /**
      * 父评论ID
      */
     private String parentCommentId;
+
+    private String firstCommentId;
 
     /**
      * 评论内容

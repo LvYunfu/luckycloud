@@ -18,5 +18,7 @@ public class CommentBlogCommand {
 
     private String firstCommentId;
 
+    private String toUserId;
+
 
 }
