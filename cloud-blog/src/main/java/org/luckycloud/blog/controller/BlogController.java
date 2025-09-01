@@ -1,18 +1,14 @@
 package org.luckycloud.blog.controller;
 
 import jakarta.annotation.Resource;
-import org.luckycloud.blog.dto.request.BlogInfoCommand;
-import org.luckycloud.blog.dto.request.BlogOperateCommand;
-import org.luckycloud.blog.dto.request.CommentBlogCommand;
-import org.luckycloud.blog.dto.request.CommentQuery;
+import org.luckycloud.blog.dto.request.*;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
+import org.luckycloud.blog.dto.response.BlogInfoResponse;
+import org.luckycloud.blog.dto.response.BlogStaticsResponse;
 import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.dto.common.Response;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.luckycloud.constant.BlogConstant.BlogStatus.DRAFT;
 import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
@@ -55,6 +51,13 @@ public class BlogController {
         return Response.success("博客文章创建成功");
     }
 
+
+
+    @GetMapping("/get-blog-info")
+    public BlogInfoResponse getBlogInfo(String  blogId) {
+        return blogService.getBlogInfo(blogId);
+    }
+
     /**
      * 功能描述：评论博客文章
      *
@@ -67,6 +70,17 @@ public class BlogController {
         return Response.success("评论成功");
     }
 
+    /**
+     * 功能描述：获取博客操作信息
+     *
+     * @param query
+     * @return
+     */
+    @PostMapping("/get-statics")
+    public BlogStaticsResponse getBlogStatics(@RequestBody BlogIdQuery query) {
+        return blogService.getBlogStatics(query);
+
+    }
 
     /**
      * 功能描述：获取博客文章评论

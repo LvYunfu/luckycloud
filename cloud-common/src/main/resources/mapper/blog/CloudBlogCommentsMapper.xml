@@ -38,7 +38,13 @@
         where blog_id = #{query.blogId}
         and first_comment_id = #{query.firstCommentId}
         and status = '1'
-        order by create_time desc
+        order by create_time  ${query.sortOrder}
+    </select>
+    <select id="countCommentByBlogId" resultType="java.lang.Integer">
+        select count(1)
+        from cloud_blog_comments
+        where blog_id = #{blogId}
+          and status = '1'
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

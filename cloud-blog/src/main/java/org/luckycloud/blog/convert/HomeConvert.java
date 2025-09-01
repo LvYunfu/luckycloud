@@ -29,5 +29,5 @@ public interface HomeConvert {
     BlogBaseResponse toBlogBase(CloudBlogInfoDO blogInfoDO);
     List<BlogBaseResponse> toBlogBaseList(List<CloudBlogInfoDO> blogInfoDOList);
 
-    BlogInfoResponse toBlogInfo(CloudBlogInfoDO blogInfoDO);
+
 }

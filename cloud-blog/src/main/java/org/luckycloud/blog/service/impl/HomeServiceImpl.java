@@ -94,11 +94,5 @@ public class HomeServiceImpl implements HomeService {
         return new PageResponse<>(blogPage.getTotal(), baseResponses);
     }
 
-    @Override
-    public BlogInfoResponse getBlogInfo(String blogId) {
-        CloudBlogInfoDO blogInfoDO = blogInfoMapper.selectByBlogId(blogId);
-        BlogInfoResponse blogInfo = homeConvert.toBlogInfo(blogInfoDO);
-        blogInfo.setTags(blogTagMapper.selectBlogTag(List.of(blogId)).stream().map(CloudBlogTagDO::getTagName).toList());
-        return blogInfo;
-    }
+
 }

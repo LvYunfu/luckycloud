@@ -29,4 +29,6 @@ public interface CloudBlogCommentsMapper {
     List<CloudBlogCommentsDO> getBlogComment(@Param("query") BlogCommentQuery query);
 
     void likeComment(String commentId);
+
+    int countCommentByBlogId(String blogId);
 }

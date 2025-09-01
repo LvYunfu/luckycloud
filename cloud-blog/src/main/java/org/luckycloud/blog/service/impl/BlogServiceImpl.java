@@ -1,31 +1,30 @@
 package org.luckycloud.blog.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.page.PageMethod;
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.convert.BlogConvert;
 import org.luckycloud.blog.convert.BlogConvertFactory;
-import org.luckycloud.blog.dto.request.BlogInfoCommand;
-import org.luckycloud.blog.dto.request.BlogOperateCommand;
-import org.luckycloud.blog.dto.request.CommentBlogCommand;
-import org.luckycloud.blog.dto.request.CommentQuery;
+import org.luckycloud.blog.dto.request.*;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
+import org.luckycloud.blog.dto.response.BlogInfoResponse;
+import org.luckycloud.blog.dto.response.BlogStaticsResponse;
 import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.cache.UserInfoCache;
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
 import org.luckycloud.dto.blog.request.BlogCommentQuery;
+import org.luckycloud.dto.blog.response.BlogStatics;
 import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.mapper.blog.CloudBlogCommentsMapper;
 import org.luckycloud.mapper.blog.CloudBlogInfoMapper;
+import org.luckycloud.mapper.blog.CloudBlogOperateMapper;
 import org.luckycloud.mapper.blog.CloudBlogTagMapper;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.luckycloud.utils.TransactionalUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -52,9 +51,11 @@ public class BlogServiceImpl implements BlogService {
     @Resource
     private CloudBlogCommentsMapper blogCommentsMapper;
 
-
     @Resource
     private UserInfoCache userInfoCache;
+
+    @Resource
+    private CloudBlogOperateMapper blogOperateMapper;
 
     @Override
 
@@ -71,6 +72,15 @@ public class BlogServiceImpl implements BlogService {
         ));
     }
 
+
+    @Override
+    public BlogInfoResponse getBlogInfo(String blogId) {
+        CloudBlogInfoDO blogInfoDO = blogInfoMapper.selectByBlogId(blogId);
+        BlogInfoResponse blogInfo = blogConvert.toBlogInfo(blogInfoDO);
+        blogInfo.setTags(blogTagMapper.selectBlogTag(List.of(blogId)).stream().map(CloudBlogTagDO::getTagName).toList());
+        return blogInfo;
+    }
+
     @Override
     public void commentBlog(CommentBlogCommand request) {
         CloudBlogCommentsDO blogCommentsDO = blogConvert.convertToBlogCommentsDO(request);
@@ -81,13 +91,16 @@ public class BlogServiceImpl implements BlogService {
     public PageResponse<BlogCommentResponse> getBlogComment(CommentQuery query) {
         PageMethod.startPage(query.getPageNum(), query.getPageSize());
         BlogCommentQuery blogCommentQuery = blogConvert.toCommentQuery(query);
+        if (!"0".equals(blogCommentQuery.getFirstCommentId())) {
+            blogCommentQuery.setSortOrder("asc");
+        }
         List<CloudBlogCommentsDO> comments = blogCommentsMapper.getBlogComment(blogCommentQuery);
         PageInfo<CloudBlogCommentsDO> commentPage = new PageInfo<>(comments);
         List<BlogCommentResponse> list = blogConvert.toBlogCommentDOList(comments);
         list.forEach(e -> {
             e.setUserName(userInfoCache.getUserName(e.getUserId()));
-            if( !ObjectUtils.isEmpty(e.getToUserId())) {
-                e.setToUserName(userInfoCache.getUserName(e.getUserId()));
+            if (!ObjectUtils.isEmpty(e.getToUserId())) {
+                e.setToUserName(userInfoCache.getUserName(e.getToUserId()));
             }
         });
         return new PageResponse<>(commentPage.getTotal(), list);
@@ -96,5 +109,13 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void likeComment(BlogOperateCommand command) {
         blogCommentsMapper.likeComment(command.getCommentId());
+    }
+
+    @Override
+    public BlogStaticsResponse getBlogStatics(BlogIdQuery query) {
+        BlogStatics statics = blogOperateMapper.blogStatics(query.getBlogId());
+        BlogStaticsResponse response = blogConvert.convertStatics(statics);
+        response.setCommentCount(blogCommentsMapper.countCommentByBlogId(query.getBlogId()));
+        return response;
     }
 }

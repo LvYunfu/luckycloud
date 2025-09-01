@@ -14,4 +14,6 @@ public class BlogCommentQuery {
 
 
     private String firstCommentId;
+
+    private String sortOrder;
 }

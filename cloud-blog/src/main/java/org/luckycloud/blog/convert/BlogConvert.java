@@ -4,9 +4,12 @@ import org.luckycloud.blog.dto.request.BlogInfoCommand;
 import org.luckycloud.blog.dto.request.CommentBlogCommand;
 import org.luckycloud.blog.dto.request.CommentQuery;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
+import org.luckycloud.blog.dto.response.BlogInfoResponse;
+import org.luckycloud.blog.dto.response.BlogStaticsResponse;
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.dto.blog.request.BlogCommentQuery;
+import org.luckycloud.dto.blog.response.BlogStatics;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -44,4 +47,9 @@ public interface BlogConvert {
 
     BlogCommentResponse convertToBlogCommentResponse(CloudBlogCommentsDO commentDO);
 
+
+
+    BlogInfoResponse toBlogInfo(CloudBlogInfoDO blogInfoDO);
+
+    BlogStaticsResponse convertStatics(BlogStatics statics);
 }

@@ -44,8 +44,5 @@ public class HomeController {
         return homeService.getBlogList(request);
     }
 
-    @GetMapping("/get-blog-info")
-    public BlogInfoResponse getBlogInfo(String  blogId) {
-        return homeService.getBlogInfo(blogId);
-    }
+
 }

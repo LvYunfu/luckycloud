@@ -18,5 +18,4 @@ public interface HomeService {
 
     PageResponse<BlogBaseResponse> getBlogList(HomeBlogQuery request);
 
-    BlogInfoResponse getBlogInfo(String blogId);
 }
