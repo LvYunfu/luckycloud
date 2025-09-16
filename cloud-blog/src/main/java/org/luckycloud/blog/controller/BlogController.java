@@ -10,6 +10,8 @@ import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CountDownLatch;
+
 import static org.luckycloud.constant.BlogConstant.BlogStatus.DRAFT;
 import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
 import static org.luckycloud.constant.SystemConstant.N;
@@ -78,6 +80,7 @@ public class BlogController {
      */
     @PostMapping("/get-statics")
     public BlogStaticsResponse getBlogStatics(@RequestBody BlogIdQuery query) {
+
         return blogService.getBlogStatics(query);
 
     }
@@ -102,6 +105,13 @@ public class BlogController {
     @PostMapping("/like-comment")
     public Response<Void> likeComment(@RequestBody BlogOperateCommand command) {
          blogService.likeComment(command);
+        return Response.success("点赞成功");
+
+    }
+
+    @PostMapping("/like-blog")
+    public Response<Void> likeBlog(@RequestBody BlogOperateCommand command) {
+        blogService.likeBlog(command);
         return Response.success("点赞成功");
 
     }

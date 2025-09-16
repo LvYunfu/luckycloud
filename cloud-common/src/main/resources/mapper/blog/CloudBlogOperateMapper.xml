@@ -33,7 +33,7 @@
     </select>
     <select id="blogStatics" resultMap="StaticsResultMap">
         select sum(case when operate_type = 'OT00' then 1 else 0 end) as view_count,
-               sum(case when operate_type = 'OT02' then 1 else 0 end)         as like_count,
+               sum(case when operate_type = 'OT01' then 1 else 0 end)         as like_count,
                sum(case when operate_type = 'OT02' then 1 else 0 end)         as collect_count
         from cloud_blog_operate
         where blog_id = #{blogId}
@@ -46,10 +46,10 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.luckycloud.domain.blog.CloudBlogOperateDO" useGeneratedKeys="true">
         insert into cloud_blog_operate
-        ( id,user_id,blog_id
+        (user_id,blog_id
         ,score_num,operate_type,update_time
         ,create_time,status)
-        values (#{id,jdbcType=INTEGER},#{userId,jdbcType=VARCHAR},#{blogId,jdbcType=VARCHAR}
+        values (#{userId,jdbcType=VARCHAR},#{blogId,jdbcType=VARCHAR}
         ,#{scoreNum,jdbcType=INTEGER},#{operateType,jdbcType=CHAR},#{updateTime,jdbcType=TIMESTAMP}
         ,#{createTime,jdbcType=TIMESTAMP},#{status,jdbcType=CHAR})
     </insert>

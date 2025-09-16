@@ -3,6 +3,8 @@ spring:
     name: luckycloud
   profiles:
     active: dev
+  banner:
+    location: classpath:static/banner.txt
   config:
     import:
       - optional:classpath:/application-common.yml

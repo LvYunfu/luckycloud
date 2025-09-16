@@ -13,6 +13,7 @@ import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.cache.UserInfoCache;
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
+import org.luckycloud.domain.blog.CloudBlogOperateDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
 import org.luckycloud.dto.blog.request.BlogCommentQuery;
 import org.luckycloud.dto.blog.response.BlogStatics;
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+
+import static org.luckycloud.constant.BlogConstant.BlogOperateType.LIKE;
 
 /**
  * @author lvyf
@@ -117,5 +120,12 @@ public class BlogServiceImpl implements BlogService {
         BlogStaticsResponse response = blogConvert.convertStatics(statics);
         response.setCommentCount(blogCommentsMapper.countCommentByBlogId(query.getBlogId()));
         return response;
+    }
+
+    @Override
+    public void likeBlog(BlogOperateCommand command) {
+        CloudBlogOperateDO operateDO = blogConvert.convertToBlogOperateDO(command);
+        operateDO.setOperateType(LIKE);
+        blogOperateMapper.insert(operateDO);
     }
 }

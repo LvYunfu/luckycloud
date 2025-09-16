@@ -12,4 +12,10 @@ public class BlogConstant {
         public static final String PUBLIC = "BS01"; // 公开
         public static final String PRIVATE = "BS02"; // 私有
     }
+
+    public static class BlogOperateType {
+        public static final String VIEW = "OT00";
+        public static final String LIKE = "OT01";
+        public static final String COLLECT = "OT02";
+    }
 }

@@ -23,4 +23,6 @@ public interface BlogService {
     BlogInfoResponse getBlogInfo(String blogId);
 
     BlogStaticsResponse getBlogStatics(BlogIdQuery query);
+
+    void likeBlog(BlogOperateCommand command);
 }

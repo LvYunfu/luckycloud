@@ -1,5 +1,6 @@
 package org.luckycloud.domain.blog;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
@@ -37,12 +38,12 @@ public class CloudBlogOperateDO {
     /**
      * 时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      *
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 0无效 1有效
