@@ -15,6 +15,7 @@
             <result property="status" column="status" jdbcType="CHAR"/>
     </resultMap>
     <resultMap id="StaticsResultMap" type="org.luckycloud.dto.blog.response.BlogStatics">
+        <result property="blogId" column="blog_id" jdbcType="VARCHAR"/>
         <result property="likeCount" column="like_count" jdbcType="VARCHAR"/>
         <result property="collectCount" column="collect_count" jdbcType="VARCHAR"/>
         <result property="viewCount" column="view_count" jdbcType="INTEGER"/>
@@ -38,6 +39,22 @@
         from cloud_blog_operate
         where blog_id = #{blogId}
           and status = '1'
+    </select>
+    <select id="listBlogStatics" resultMap="StaticsResultMap">
+        select
+        blog_id,
+        sum(case when operate_type = 'OT00' then 1 else 0 end) as view_count,
+        sum(case when operate_type = 'OT01' then 1 else 0 end) as like_count,
+        sum(case when operate_type = 'OT02' then 1 else 0 end) as collect_count
+        from cloud_blog_operate
+        <where>
+            blog_id in
+            <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            and status = '1'
+        </where>
+        group by blog_id
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

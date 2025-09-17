@@ -10,20 +10,26 @@ import lombok.Data;
 @Data
 public class BlogStatics {
 
+    private String blogId;
+
     /**
      * 点赞数
      */
-    private Integer likeCount;
+    private int likeCount;
 
     /**
      * 浏览数
      */
-    private Integer viewCount;
+    private int viewCount;
 
     /**
      * 收藏数
      */
-    private Integer collectCount;
+    private int collectCount;
+    /**
+     * 评论数
+     */
+    private int commentCount;
 
 
 }

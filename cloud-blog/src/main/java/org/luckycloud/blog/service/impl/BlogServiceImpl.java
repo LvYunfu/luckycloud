@@ -117,6 +117,9 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogStaticsResponse getBlogStatics(BlogIdQuery query) {
         BlogStatics statics = blogOperateMapper.blogStatics(query.getBlogId());
+        if (statics == null) {
+            statics = new BlogStatics();
+        }
         BlogStaticsResponse response = blogConvert.convertStatics(statics);
         response.setCommentCount(blogCommentsMapper.countCommentByBlogId(query.getBlogId()));
         return response;

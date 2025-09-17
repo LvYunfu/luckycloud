@@ -3,6 +3,8 @@ package org.luckycloud.mapper.blog;
 import org.luckycloud.domain.blog.CloudBlogOperateDO;
 import org.luckycloud.dto.blog.response.BlogStatics;
 
+import java.util.List;
+
 /**
 * @author lvyf
 * @description 针对表【cloud_blog_operate】的数据库操作Mapper
@@ -24,4 +26,5 @@ public interface CloudBlogOperateMapper {
     int updateByPrimaryKey(CloudBlogOperateDO record);
 
     BlogStatics blogStatics(String blogId);
+    List<BlogStatics> listBlogStatics(List<String> list);
 }

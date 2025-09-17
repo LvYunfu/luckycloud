@@ -17,7 +17,13 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="status" column="status" jdbcType="CHAR"/>
     </resultMap>
-
+    <resultMap id="StaticsResultMap" type="org.luckycloud.dto.blog.response.BlogStatics">
+        <result property="blogId" column="blog_id" jdbcType="VARCHAR"/>
+        <result property="likeCount" column="like_count" jdbcType="VARCHAR"/>
+        <result property="collectCount" column="collect_count" jdbcType="VARCHAR"/>
+        <result property="viewCount" column="view_count" jdbcType="INTEGER"/>
+        <result property="commentCount" column="comment_count" jdbcType="INTEGER"/>
+    </resultMap>
     <sql id="Base_Column_List">
         comment_id
         ,blog_id,user_id,to_user_id,
@@ -31,7 +37,7 @@
         from cloud_blog_comments
         where  comment_id = #{commentId,jdbcType=VARCHAR}
     </select>
-    <select id="getBlogComment" resultType="org.luckycloud.domain.blog.CloudBlogCommentsDO">
+    <select id="getBlogComment" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from cloud_blog_comments
@@ -45,6 +51,21 @@
         from cloud_blog_comments
         where blog_id = #{blogId}
           and status = '1'
+    </select>
+    <select id="getListBlogComment" resultMap="StaticsResultMap">
+        select
+        blog_id,
+        count(1) comment_count
+        from cloud_blog_comments
+        <where>
+            blog_id in
+            <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            and status = '1'
+        </where>
+        group by blog_id
+
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

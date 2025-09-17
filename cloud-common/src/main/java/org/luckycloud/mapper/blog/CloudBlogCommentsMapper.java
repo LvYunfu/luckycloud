@@ -3,6 +3,7 @@ package org.luckycloud.mapper.blog;
 import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.blog.CloudBlogCommentsDO;
 import org.luckycloud.dto.blog.request.BlogCommentQuery;
+import org.luckycloud.dto.blog.response.BlogStatics;
 
 import java.util.List;
 
@@ -31,4 +32,6 @@ public interface CloudBlogCommentsMapper {
     void likeComment(String commentId);
 
     int countCommentByBlogId(String blogId);
+
+    List<BlogStatics> getListBlogComment(List<String> list);
 }

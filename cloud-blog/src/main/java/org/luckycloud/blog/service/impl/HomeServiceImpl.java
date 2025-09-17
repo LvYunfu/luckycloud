@@ -13,18 +13,19 @@ import org.luckycloud.blog.service.HomeService;
 import org.luckycloud.domain.blog.CloudBlogCategoriesDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
+import org.luckycloud.dto.blog.response.BlogStatics;
 import org.luckycloud.dto.blog.response.CategoryCount;
 import org.luckycloud.dto.common.PageResponse;
-import org.luckycloud.mapper.blog.CloudBlogCategoriesMapper;
-import org.luckycloud.mapper.blog.CloudBlogInfoMapper;
-import org.luckycloud.mapper.blog.CloudBlogTagMapper;
+import org.luckycloud.mapper.blog.*;
 import org.springframework.core.env.Environment;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Executor;
@@ -55,8 +56,13 @@ public class HomeServiceImpl implements HomeService {
     @Resource
     private CloudBlogTagMapper blogTagMapper;
 
+
     @Resource
-    Environment environment;
+    private CloudBlogOperateMapper blogOperateMapper;
+
+    @Resource
+    private CloudBlogCommentsMapper cloudBlogCommentsMapper;
+
     @Override
     public List<BlogCategoryCountResponse> getCategoryNum() {
         List<CategoryCount> categoryCountList = blogInfoMapper.calculateCategoryCount();
@@ -87,10 +93,22 @@ public class HomeServiceImpl implements HomeService {
             return new PageResponse<>(0L, List.of());
         }
         //查询tag
-        List<CloudBlogTagDO> tagList = blogTagMapper.selectBlogTag(baseResponses.stream().map(BlogBaseResponse::getBlogId).toList());
+        List<String> idList = baseResponses.stream().map(BlogBaseResponse::getBlogId).toList();
+        List<CloudBlogTagDO> tagList = blogTagMapper.selectBlogTag(idList);
         Map<String, List<String>> tagMap = tagList.stream()
                 .collect(Collectors.groupingBy(CloudBlogTagDO::getBlogId, Collectors.mapping(CloudBlogTagDO::getTagName, Collectors.toList())));
-        baseResponses.forEach(e -> e.setTags(tagMap.get(e.getBlogId())));
+        //查询统计数据
+        Map<String, BlogStatics> staticsMap = blogOperateMapper.listBlogStatics(idList).stream().collect(Collectors.toMap(BlogStatics::getBlogId, e -> e));
+        // 查询评论数
+        Map<String, Integer> commentCountMap = cloudBlogCommentsMapper.getListBlogComment(idList).stream().collect(Collectors.toMap(BlogStatics::getBlogId, BlogStatics::getCommentCount));
+        baseResponses.forEach(e -> {
+            e.setTags(tagMap.get(e.getBlogId()));
+            BlogStatics statics = staticsMap.getOrDefault(e.getBlogId(), new BlogStatics());
+            e.setLikeCount(statics.getLikeCount());
+            e.setViewCount(statics.getViewCount());
+            e.setCommentCount(commentCountMap.getOrDefault(e.getBlogId(), 0));
+
+        });
         return new PageResponse<>(blogPage.getTotal(), baseResponses);
     }
 
