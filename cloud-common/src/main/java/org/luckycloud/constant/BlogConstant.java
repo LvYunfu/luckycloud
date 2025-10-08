@@ -7,6 +7,10 @@ package org.luckycloud.constant;
  */
 public class BlogConstant {
 
+    public static final String GITHUB_PATH = "/";
+    private BlogConstant() {
+    }
+
     public static class BlogStatus {
         public static final String DRAFT = "BS00"; // 草稿
         public static final String PUBLIC = "BS01"; // 公开

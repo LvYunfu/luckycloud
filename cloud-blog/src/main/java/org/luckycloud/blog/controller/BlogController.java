@@ -9,8 +9,7 @@ import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.concurrent.CountDownLatch;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.luckycloud.constant.BlogConstant.BlogStatus.DRAFT;
 import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
@@ -41,6 +40,14 @@ public class BlogController {
     }
 
     /**
+     * 上传文件
+     */
+    @PostMapping("/upload-file")
+    public Response<String> uploadFile(MultipartFile file) {
+        return Response.successData(blogService.uploadFile(file));
+    }
+
+    /**
      * 保存为草稿
      *
      * @param request
@@ -54,9 +61,8 @@ public class BlogController {
     }
 
 
-
     @GetMapping("/get-blog-info")
-    public BlogInfoResponse getBlogInfo(String  blogId) {
+    public BlogInfoResponse getBlogInfo(String blogId) {
         return blogService.getBlogInfo(blogId);
     }
 
@@ -99,12 +105,13 @@ public class BlogController {
 
     /**
      * 功能描述：点赞评论
+     *
      * @param command
      * @return
      */
     @PostMapping("/like-comment")
     public Response<Void> likeComment(@RequestBody BlogOperateCommand command) {
-         blogService.likeComment(command);
+        blogService.likeComment(command);
         return Response.success("点赞成功");
 
     }

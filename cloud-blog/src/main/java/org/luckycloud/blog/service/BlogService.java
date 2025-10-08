@@ -5,6 +5,7 @@ import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.dto.response.BlogStaticsResponse;
 import org.luckycloud.dto.common.PageResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author lvyf
@@ -25,4 +26,6 @@ public interface BlogService {
     BlogStaticsResponse getBlogStatics(BlogIdQuery query);
 
     void likeBlog(BlogOperateCommand command);
+
+    String uploadFile(MultipartFile file);
 }

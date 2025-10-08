@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.luckycloud.mapper.workspace.CloudWorkspaceToolInfoMapper">
+
+    <resultMap id="BaseResultMap" type="org.luckycloud.domain.workspace.CloudWorkspaceToolInfoDO">
+            <id property="toolId" column="tool_id" jdbcType="VARCHAR"/>
+            <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
+            <result property="toolTitle" column="tool_title" jdbcType="VARCHAR"/>
+            <result property="toolIcon" column="tool_icon" jdbcType="VARCHAR"/>
+            <result property="toolUrl" column="tool_url" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        tool_id,category_id,tool_title,
+        tool_icon,tool_url,user_id,
+        create_time,update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_workspace_tool_info
+        where  tool_id = #{toolId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByCategoryIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cloud_workspace_tool_info
+        where category_id in
+        <foreach item="item" index="index" collection="categoryIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by create_time desc
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from cloud_workspace_tool_info
+        where  tool_id = #{toolId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" keyColumn="tool_id" keyProperty="toolId" parameterType="org.luckycloud.domain.workspace.CloudWorkspaceToolInfoDO" useGeneratedKeys="true">
+        insert into cloud_workspace_tool_info
+        ( tool_id,category_id,tool_title
+        ,tool_icon,tool_url,user_id
+        ,create_time,update_time)
+        values (#{toolId,jdbcType=VARCHAR},#{categoryId,jdbcType=VARCHAR},#{toolTitle,jdbcType=VARCHAR}
+        ,#{toolIcon,jdbcType=VARCHAR},#{toolUrl,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR}
+        ,#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="tool_id" keyProperty="toolId" parameterType="org.luckycloud.domain.workspace.CloudWorkspaceToolInfoDO" useGeneratedKeys="true">
+        insert into cloud_workspace_tool_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="toolId != null">tool_id,</if>
+                <if test="categoryId != null">category_id,</if>
+                <if test="toolTitle != null">tool_title,</if>
+                <if test="toolIcon != null">tool_icon,</if>
+                <if test="toolUrl != null">tool_url,</if>
+                <if test="userId != null">user_id,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="toolId != null">tool_id = #{toolId,jdbcType=VARCHAR},</if>
+                <if test="categoryId != null">category_id = #{categoryId,jdbcType=VARCHAR},</if>
+                <if test="toolTitle != null">tool_title = #{toolTitle,jdbcType=VARCHAR},</if>
+                <if test="toolIcon != null">tool_icon = #{toolIcon,jdbcType=VARCHAR},</if>
+                <if test="toolUrl != null">tool_url = #{toolUrl,jdbcType=VARCHAR},</if>
+                <if test="userId != null">user_id = #{userId,jdbcType=VARCHAR},</if>
+                <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.workspace.CloudWorkspaceToolInfoDO">
+        update cloud_workspace_tool_info
+        <set>
+                <if test="categoryId != null">
+                    category_id = #{categoryId,jdbcType=VARCHAR},
+                </if>
+                <if test="toolTitle != null">
+                    tool_title = #{toolTitle,jdbcType=VARCHAR},
+                </if>
+                <if test="toolIcon != null">
+                    tool_icon = #{toolIcon,jdbcType=VARCHAR},
+                </if>
+                <if test="toolUrl != null">
+                    tool_url = #{toolUrl,jdbcType=VARCHAR},
+                </if>
+                <if test="userId != null">
+                    user_id = #{userId,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+        </set>
+        where   tool_id = #{toolId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.workspace.CloudWorkspaceToolInfoDO">
+        update cloud_workspace_tool_info
+        set
+            category_id =  #{categoryId,jdbcType=VARCHAR},
+            tool_title =  #{toolTitle,jdbcType=VARCHAR},
+            tool_icon =  #{toolIcon,jdbcType=VARCHAR},
+            tool_url =  #{toolUrl,jdbcType=VARCHAR},
+            user_id =  #{userId,jdbcType=VARCHAR},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            update_time =  #{updateTime,jdbcType=TIMESTAMP}
+        where   tool_id = #{toolId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -94,7 +94,11 @@
                 <artifactId>caffeine</artifactId>
                 <version>3.1.8</version>
             </dependency>
+            <dependency>
+                <groupId>org.kohsuke</groupId>
+                <artifactId>github-api</artifactId>
+                <version>1.314</version>
+            </dependency>
         </dependencies>
-
     </dependencyManagement>
 </project>

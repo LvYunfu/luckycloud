@@ -26,7 +26,7 @@ public class AuthController {
         String token = authService.login(loginRequest);
         SysUserToken sysUserToken = new SysUserToken();
         sysUserToken.setToken(token);
-        return Response.success(sysUserToken,"登录成功");
+        return Response.successData(sysUserToken,"登录成功");
     }
 
     @PostMapping("/register")

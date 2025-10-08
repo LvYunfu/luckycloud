@@ -1,0 +1,33 @@
+package org.luckycloud.blog.convert;
+
+import org.luckycloud.blog.dto.request.WorkspaceCategoryCommand;
+import org.luckycloud.blog.dto.request.WorkspaceToolCommand;
+import org.luckycloud.blog.dto.response.WorkspaceResponse;
+import org.luckycloud.blog.dto.response.WorkspaceToolResponse;
+import org.luckycloud.domain.workspace.CloudWorkspaceCategoryInfoDO;
+import org.luckycloud.domain.workspace.CloudWorkspaceToolInfoDO;
+import org.mapstruct.Mapper;
+
+import java.util.List;
+
+/**
+ * @author lvyf
+ * @description:
+ * @date 2025/10/8
+ */
+@Mapper(componentModel = "spring")
+
+public interface WorkspaceConvert {
+
+    CloudWorkspaceCategoryInfoDO toCategoryDO(WorkspaceCategoryCommand command);
+
+    CloudWorkspaceToolInfoDO toCategoryDO(WorkspaceToolCommand command);
+
+    WorkspaceResponse toWorkspaceResponse(CloudWorkspaceCategoryInfoDO categoryInfoDO);
+
+    List<WorkspaceResponse> toWorkspaceResponse(List<CloudWorkspaceCategoryInfoDO> list);
+
+    WorkspaceToolResponse toToolResponse(CloudWorkspaceToolInfoDO toolInfoDO);
+
+    List<WorkspaceToolResponse> toToolResponse(List<CloudWorkspaceToolInfoDO> list);
+}

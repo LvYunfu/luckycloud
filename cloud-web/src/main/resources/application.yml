@@ -11,5 +11,9 @@ spring:
       - optional:classpath:/application-security.yml
       - optional:classpath:/application-blog.yml
       - optional:classpath:/application-web.yml
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
 server:
   port: 8080

@@ -44,10 +44,10 @@ public class Response<T> {
         return new Response<>(SUCCESS.getCode(), message);
     }
 
-    public static <T> Response<T> success(T data) {
+    public static <T> Response<T> successData(T data) {
         return new Response<>(DATA_SUCCESS.getCode(), DATA_SUCCESS.getMessage(), data);
     }
-    public static <T> Response<T> success(T data,String message) {
+    public static <T> Response<T> successData(T data,String message) {
         return new Response<>(DATA_SUCCESS.getCode(), message, data);
     }
 
