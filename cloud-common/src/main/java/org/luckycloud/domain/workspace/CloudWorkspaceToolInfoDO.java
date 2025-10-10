@@ -1,10 +1,11 @@
 package org.luckycloud.domain.workspace;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
 /**
- * 
+ *
  * @TableName cloud_workspace_tool_info
  */
 @Data
@@ -42,10 +43,10 @@ public class CloudWorkspaceToolInfoDO {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

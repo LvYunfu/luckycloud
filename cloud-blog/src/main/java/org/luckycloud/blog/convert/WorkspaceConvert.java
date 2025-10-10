@@ -7,8 +7,11 @@ import org.luckycloud.blog.dto.response.WorkspaceToolResponse;
 import org.luckycloud.domain.workspace.CloudWorkspaceCategoryInfoDO;
 import org.luckycloud.domain.workspace.CloudWorkspaceToolInfoDO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
+
+import static org.luckycloud.constant.SystemConstant.ENABLE;
 
 /**
  * @author lvyf
@@ -19,8 +22,14 @@ import java.util.List;
 
 public interface WorkspaceConvert {
 
+    @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "userId", expression = "java(org.luckycloud.security.util.UserUtils.getUserId())")
     CloudWorkspaceCategoryInfoDO toCategoryDO(WorkspaceCategoryCommand command);
 
+    @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "userId", expression = "java(org.luckycloud.security.util.UserUtils.getUserId())")
     CloudWorkspaceToolInfoDO toCategoryDO(WorkspaceToolCommand command);
 
     WorkspaceResponse toWorkspaceResponse(CloudWorkspaceCategoryInfoDO categoryInfoDO);

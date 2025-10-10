@@ -1,5 +1,6 @@
 package org.luckycloud.domain.workspace;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
@@ -37,10 +38,10 @@ public class CloudWorkspaceCategoryInfoDO {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }
