@@ -11,6 +11,7 @@ import org.luckycloud.domain.workspace.CloudWorkspaceToolInfoDO;
 import org.luckycloud.mapper.workspace.CloudWorkspaceCategoryInfoMapper;
 import org.luckycloud.mapper.workspace.CloudWorkspaceToolInfoMapper;
 import org.luckycloud.security.util.UserUtils;
+import org.luckycloud.utils.FaviconUtil;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Override
     public void addTool(WorkspaceToolCommand command) {
         CloudWorkspaceToolInfoDO toolInfo = workspaceConvert.toCategoryDO(command);
+        toolInfo.setToolIcon(FaviconUtil.getFaviconUrl(command.getToolUrl()));
         toolInfo.setToolId(GenerateIdUtils.generateId());
         toolInfoMapper.insert(toolInfo);
     }
