@@ -1,6 +1,8 @@
 package org.luckycloud.dto.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author lvyf
@@ -8,16 +10,11 @@ import lombok.Data;
  * @date 2025/8/6
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Select {
 
     private String label;
     private String value;
 
-    public Select(String label, String value) {
-        this.label = label;
-        this.value = value;
-    }
-
-    public Select() {
-    }
 }

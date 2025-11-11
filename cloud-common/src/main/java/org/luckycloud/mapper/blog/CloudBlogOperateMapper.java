@@ -1,6 +1,8 @@
 package org.luckycloud.mapper.blog;
 
+import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.blog.CloudBlogOperateDO;
+import org.luckycloud.dto.blog.request.BlogOperateQuery;
 import org.luckycloud.dto.blog.response.BlogStatics;
 
 import java.util.List;
@@ -25,6 +27,12 @@ public interface CloudBlogOperateMapper {
 
     int updateByPrimaryKey(CloudBlogOperateDO record);
 
+
     BlogStatics blogStatics(String blogId);
+
     List<BlogStatics> listBlogStatics(List<String> list);
+
+    List<String> selectUserBlogOperate(@Param("query") BlogOperateQuery query);
+
+    void likeBlog(CloudBlogOperateDO operateDO);
 }

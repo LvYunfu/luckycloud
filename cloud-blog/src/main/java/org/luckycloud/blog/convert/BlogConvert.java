@@ -56,7 +56,6 @@ public interface BlogConvert {
     BlogStaticsResponse convertStatics(BlogStatics statics);
     @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "status", constant = ENABLE)
     @Mapping(target = "userId", expression = "java(org.luckycloud.security.util.UserUtils.getUserId())")
     CloudBlogOperateDO convertToBlogOperateDO(BlogOperateCommand command);
 }

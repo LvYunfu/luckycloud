@@ -61,19 +61,14 @@ public class BlogInfoResponse {
      */
     private int commentCount;
 
-    /**
-     * 点赞数
-     */
-    private int likeCount;
-
-    /**
-     * 阅读数
-     */
-    private int viewCount;
 
     /**
      * 标签
      */
     private List<String> tags;
 
+
+    private boolean likeFlag;
+
+    private boolean collectFlag;
 }

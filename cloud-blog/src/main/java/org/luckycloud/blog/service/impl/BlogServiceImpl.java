@@ -44,8 +44,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.luckycloud.constant.BlogConstant.BlogOperateType.LIKE;
+import static org.luckycloud.constant.BlogConstant.BlogOperateType.*;
 import static org.luckycloud.constant.BlogConstant.GITHUB_PATH;
+import static org.luckycloud.constant.SystemConstant.DISABLE;
+import static org.luckycloud.constant.SystemConstant.ENABLE;
 import static org.luckycloud.dto.common.ResponseCode.OPERATE_FAILED;
 
 /**
@@ -86,6 +88,7 @@ public class BlogServiceImpl implements BlogService {
     String filePath;
     @Value("${lucky.cloud.blog-resource.github-cdn}")
     String githubCdn;
+
     @Override
     public void createBlog(BlogInfoCommand request) {
 
@@ -106,6 +109,9 @@ public class BlogServiceImpl implements BlogService {
         CloudBlogInfoDO blogInfoDO = blogInfoMapper.selectByBlogId(blogId);
         BlogInfoResponse blogInfo = blogConvert.toBlogInfo(blogInfoDO);
         blogInfo.setTags(blogTagMapper.selectBlogTag(List.of(blogId)).stream().map(CloudBlogTagDO::getTagName).toList());
+        List<String> operateType = blogOperateMapper.selectUserBlogOperate(BlogConvertFactory.buildOperateQuery(blogId));
+        blogInfo.setLikeFlag(operateType.contains(LIKE));
+        blogInfo.setCollectFlag(operateType.contains(COLLECT));
         return blogInfo;
     }
 
@@ -151,11 +157,21 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void likeBlog(BlogOperateCommand command) {
+    public String likeBlog(BlogOperateCommand command) {
         CloudBlogOperateDO operateDO = blogConvert.convertToBlogOperateDO(command);
         operateDO.setOperateType(LIKE);
+        blogOperateMapper.likeBlog(operateDO);
+        return DISABLE.equals(command.getStatus()) ? "取消点赞" : "点赞成功";
+
+    }
+
+    @Override
+    public void viewBlog(BlogOperateCommand command) {
+        CloudBlogOperateDO operateDO = blogConvert.convertToBlogOperateDO(command);
+        operateDO.setOperateType(VIEW);
         blogOperateMapper.insert(operateDO);
     }
+
 
     @Override
     public String uploadFile(MultipartFile file) {
@@ -163,8 +179,8 @@ public class BlogServiceImpl implements BlogService {
             GitHub github = new GitHubBuilder().withOAuthToken(gitHubToken).build();
             GHRepository repository = github.getRepository(filePath);
             String userId = UserUtils.getUserId();
-            String path  =String.join(GITHUB_PATH,List.of("images",userId, Optional.ofNullable(file.getOriginalFilename()).orElse(UUID.randomUUID().toString())));
-            log.info("上传文件路径:{}",path);
+            String path = String.join(GITHUB_PATH, List.of("images", userId, Optional.ofNullable(file.getOriginalFilename()).orElse(UUID.randomUUID().toString())));
+            log.info("上传文件路径:{}", path);
             // 上传文件
             GHContentUpdateResponse updateResponse = repository.createContent()
                     .message("lucky blog upload userId:" + userId)
@@ -172,10 +188,12 @@ public class BlogServiceImpl implements BlogService {
                     .content(file.getInputStream().readAllBytes())
                     .commit();
 
-            return githubCdn+path;
+            return githubCdn + path;
         } catch (Exception e) {
             log.error("上传文件失败", e);
-            throw  new BusinessException(OPERATE_FAILED,"上传文件失败");
+            throw new BusinessException(OPERATE_FAILED, "上传文件失败");
         }
     }
+
+
 }

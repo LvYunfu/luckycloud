@@ -2,8 +2,13 @@ package org.luckycloud.blog.convert;
 
 import org.luckycloud.constant.SystemConstant;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
+import org.luckycloud.dto.blog.request.BlogOperateQuery;
+import org.luckycloud.security.util.UserUtils;
 
 import java.util.List;
+
+import static org.luckycloud.constant.BlogConstant.BlogOperateType.COLLECT;
+import static org.luckycloud.constant.BlogConstant.BlogOperateType.LIKE;
 
 /**
  * @author lvyf
@@ -23,5 +28,13 @@ public class BlogConvertFactory {
             return tagDO;
         }).toList();
 
+    }
+
+    public static BlogOperateQuery buildOperateQuery(String blogId) {
+        BlogOperateQuery query = new BlogOperateQuery();
+        query.setBlogId(blogId);
+        query.setOperateType(List.of(LIKE,COLLECT));
+        query.setUserId(UserUtils.getUserId());
+        return query;
     }
 }

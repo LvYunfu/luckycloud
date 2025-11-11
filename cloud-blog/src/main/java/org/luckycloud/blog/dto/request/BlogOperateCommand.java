@@ -14,5 +14,7 @@ public class BlogOperateCommand {
 
     private String commentId;
 
+    private String status;
+
 
 }

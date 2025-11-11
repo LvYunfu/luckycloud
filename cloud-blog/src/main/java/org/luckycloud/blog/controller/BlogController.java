@@ -60,7 +60,12 @@ public class BlogController {
         return Response.success("博客文章创建成功");
     }
 
-
+    /**
+     * 功能描述：获取博客文章信息
+     *
+     * @param blogId
+     * @return
+     */
     @GetMapping("/get-blog-info")
     public BlogInfoResponse getBlogInfo(String blogId) {
         return blogService.getBlogInfo(blogId);
@@ -116,10 +121,28 @@ public class BlogController {
 
     }
 
+    /**
+     * 功能描述：点赞博客
+     *
+     * @param command
+     * @return
+     */
     @PostMapping("/like-blog")
     public Response<Void> likeBlog(@RequestBody BlogOperateCommand command) {
-        blogService.likeBlog(command);
-        return Response.success("点赞成功");
+        return Response.success(blogService.likeBlog(command));
+
+    }
+
+
+    /**
+     * 功能描述：点击博客
+     *
+     * @param command
+     * @return
+     */
+    @PostMapping("/view-blog")
+    public void viewBlog(@RequestBody BlogOperateCommand command) {
+        blogService.viewBlog(command);
 
     }
 }

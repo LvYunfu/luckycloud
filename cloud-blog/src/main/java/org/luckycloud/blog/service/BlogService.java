@@ -25,7 +25,9 @@ public interface BlogService {
 
     BlogStaticsResponse getBlogStatics(BlogIdQuery query);
 
-    void likeBlog(BlogOperateCommand command);
+    String likeBlog(BlogOperateCommand command);
 
     String uploadFile(MultipartFile file);
+
+    void viewBlog(BlogOperateCommand command);
 }

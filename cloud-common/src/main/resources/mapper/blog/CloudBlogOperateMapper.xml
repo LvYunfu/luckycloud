@@ -56,6 +56,20 @@
         </where>
         group by blog_id
     </select>
+    <select id="selectUserBlogOperate" resultType="java.lang.String">
+        select
+        operate_type
+        from cloud_blog_operate
+        <where>
+            user_id = #{query.userId}
+            and blog_id = #{query.blogId}
+            and operate_type in
+            <foreach item="item" index="index" collection="query.operateType" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            and status = '1'
+        </where>
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from cloud_blog_operate
@@ -131,5 +145,19 @@
             create_time =  #{createTime,jdbcType=TIMESTAMP},
             status =  #{status,jdbcType=CHAR}
         where   id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="likeBlog">
+        insert into cloud_blog_operate
+        ( user_id, blog_id
+        , score_num, operate_type, update_time
+        , create_time, status)
+        values ( #{userId,jdbcType=VARCHAR}, #{blogId,jdbcType=VARCHAR}
+               , #{scoreNum,jdbcType=INTEGER}, #{operateType,jdbcType=CHAR}, #{updateTime,jdbcType=TIMESTAMP}
+               , #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR}) on duplicate key
+        update
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
+            status = #{status,jdbcType=CHAR}
+
+
     </update>
 </mapper>

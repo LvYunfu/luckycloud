@@ -2,17 +2,19 @@ package org.luckycloud.dto.blog.request;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author lvyf
  * @description:
- * @date 2025/8/20
+ * @date 2025/11/11
  */
 @Data
-public class BlogCommentQuery {
+public class BlogOperateQuery {
 
     private String blogId;
 
-    private String firstCommentId;
+    private String userId;
 
-    private String sortOrder;
+    private List<String> operateType;
 }
