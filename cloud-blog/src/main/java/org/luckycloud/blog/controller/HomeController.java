@@ -1,6 +1,7 @@
 package org.luckycloud.blog.controller;
 
 import jakarta.annotation.Resource;
+import org.luckycloud.blog.dto.request.BlogOperateCommand;
 import org.luckycloud.blog.dto.request.HomeBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
@@ -44,5 +45,9 @@ public class HomeController {
         return homeService.getBlogList(request);
     }
 
+    @PostMapping("/get-hot-blog")
+    public List<BlogBaseResponse> getHotBlog() {
+       return  homeService.getHotBlogList();
 
+    }
 }

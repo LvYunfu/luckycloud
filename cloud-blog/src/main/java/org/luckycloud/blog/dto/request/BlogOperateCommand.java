@@ -2,6 +2,8 @@ package org.luckycloud.blog.dto.request;
 
 import lombok.Data;
 
+import static org.luckycloud.constant.SystemConstant.ENABLE;
+
 /**
  * @author lvyf
  * @description:
@@ -14,7 +16,7 @@ public class BlogOperateCommand {
 
     private String commentId;
 
-    private String status;
+    private String status=ENABLE;
 
 
 }

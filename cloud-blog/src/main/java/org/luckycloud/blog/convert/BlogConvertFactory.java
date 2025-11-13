@@ -37,4 +37,12 @@ public class BlogConvertFactory {
         query.setUserId(UserUtils.getUserId());
         return query;
     }
+
+    public static BlogOperateQuery buildLikeOperateQuery(String blogId) {
+        BlogOperateQuery query = new BlogOperateQuery();
+        query.setBlogId(blogId);
+        query.setOperateType(List.of(LIKE));
+        query.setUserId(UserUtils.getUserId());
+        return query;
+    }
 }

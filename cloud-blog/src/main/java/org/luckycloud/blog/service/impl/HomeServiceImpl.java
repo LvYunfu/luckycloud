@@ -13,6 +13,7 @@ import org.luckycloud.blog.service.HomeService;
 import org.luckycloud.domain.blog.CloudBlogCategoriesDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
+import org.luckycloud.dto.blog.request.BlogQuery;
 import org.luckycloud.dto.blog.response.BlogStatics;
 import org.luckycloud.dto.blog.response.CategoryCount;
 import org.luckycloud.dto.common.PageResponse;
@@ -75,7 +76,6 @@ public class HomeServiceImpl implements HomeService {
         categoryCountList.forEach(e -> e.setName(categoryNameMap.get(e.getCategoryId())));
         return homeConvert.toBlogCategoryCountVOList(categoryCountList);
     }
-
     @Override
     public PageResponse<BlogBaseResponse> getBlogList(HomeBlogQuery request) {
         if (!ObjectUtils.isEmpty(request.getTagName())) {
@@ -110,6 +110,16 @@ public class HomeServiceImpl implements HomeService {
 
         });
         return new PageResponse<>(blogPage.getTotal(), baseResponses);
+    }
+
+    @Override
+    public List<BlogBaseResponse> getHotBlogList() {
+        List<String> hotBlogIds = blogOperateMapper.queryHotBlogList();
+        BlogQuery query = new BlogQuery();
+        query.setBlogIdList(hotBlogIds);
+        List<CloudBlogInfoDO> blog = blogInfoMapper.getBlogList(query);
+        return homeConvert.toBlogBaseList(blog);
+
     }
 
 

@@ -70,6 +70,26 @@
             and status = '1'
         </where>
     </select>
+    <select id="selectOperateRecord" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_blog_operate
+        <where>
+            user_id = #{query.userId}
+            and blog_id = #{query.blogId}
+            and operate_type in
+            <foreach item="item" index="index" collection="query.operateType" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+    <select id="queryHotBlogList" resultType="java.lang.String">
+        select blog_id
+        from cloud_blog_operate
+        where status = '1'
+        group by blog_id
+        order by count(*) desc limit 5
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from cloud_blog_operate
@@ -110,7 +130,8 @@
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.blog.CloudBlogOperateDO">
         update cloud_blog_operate
         <set>
-                <if test="userId != null">
+            update_time = CURRENT_TIMESTAMP,
+            <if test="userId != null">
                     user_id = #{userId,jdbcType=VARCHAR},
                 </if>
                 <if test="blogId != null">
@@ -122,9 +143,7 @@
                 <if test="operateType != null">
                     operate_type = #{operateType,jdbcType=CHAR},
                 </if>
-                <if test="updateTime != null">
-                    update_time = #{updateTime,jdbcType=TIMESTAMP},
-                </if>
+
                 <if test="createTime != null">
                     create_time = #{createTime,jdbcType=TIMESTAMP},
                 </if>
@@ -146,18 +165,5 @@
             status =  #{status,jdbcType=CHAR}
         where   id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="likeBlog">
-        insert into cloud_blog_operate
-        ( user_id, blog_id
-        , score_num, operate_type, update_time
-        , create_time, status)
-        values ( #{userId,jdbcType=VARCHAR}, #{blogId,jdbcType=VARCHAR}
-               , #{scoreNum,jdbcType=INTEGER}, #{operateType,jdbcType=CHAR}, #{updateTime,jdbcType=TIMESTAMP}
-               , #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR}) on duplicate key
-        update
-            update_time = #{updateTime,jdbcType=TIMESTAMP},
-            status = #{status,jdbcType=CHAR}
 
-
-    </update>
 </mapper>

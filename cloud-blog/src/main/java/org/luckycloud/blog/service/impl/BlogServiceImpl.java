@@ -22,6 +22,7 @@ import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogOperateDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
 import org.luckycloud.dto.blog.request.BlogCommentQuery;
+import org.luckycloud.dto.blog.request.BlogOperateQuery;
 import org.luckycloud.dto.blog.response.BlogStatics;
 import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.exception.BusinessException;
@@ -34,6 +35,7 @@ import org.luckycloud.utils.GenerateIdUtils;
 import org.luckycloud.utils.TransactionalUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,6 +88,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Value("${lucky.cloud.blog-resource.file-path}")
     String filePath;
+
     @Value("${lucky.cloud.blog-resource.github-cdn}")
     String githubCdn;
 
@@ -158,9 +161,20 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public String likeBlog(BlogOperateCommand command) {
-        CloudBlogOperateDO operateDO = blogConvert.convertToBlogOperateDO(command);
-        operateDO.setOperateType(LIKE);
-        blogOperateMapper.likeBlog(operateDO);
+
+        BlogOperateQuery query = BlogConvertFactory.buildLikeOperateQuery(command.getBlogId());
+        List<CloudBlogOperateDO>  operateList =  blogOperateMapper.selectOperateRecord(query);
+        if(CollectionUtils.isEmpty(operateList)){
+            CloudBlogOperateDO operateDO = blogConvert.convertToBlogOperateDO(command);
+            operateDO.setOperateType(LIKE);
+            blogOperateMapper.insert(operateDO);
+        }else{
+            CloudBlogOperateDO operateDO = new CloudBlogOperateDO();
+            operateDO.setId(operateList.get(0).getId());
+            operateDO.setStatus(command.getStatus());
+            blogOperateMapper.updateByPrimaryKeySelective(operateDO);
+        }
+
         return DISABLE.equals(command.getStatus()) ? "取消点赞" : "点赞成功";
 
     }

@@ -18,4 +18,6 @@ public interface HomeService {
 
     PageResponse<BlogBaseResponse> getBlogList(HomeBlogQuery request);
 
+    List<BlogBaseResponse> getHotBlogList();
+
 }

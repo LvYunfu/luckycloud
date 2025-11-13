@@ -145,4 +145,6 @@ public class BlogController {
         blogService.viewBlog(command);
 
     }
+
+
 }
