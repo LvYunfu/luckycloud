@@ -23,5 +23,6 @@ public interface CloudBlogCategoriesMapper {
 
     List<CloudBlogCategoriesDO> selectCategoryListByParentId(String categoryId);
 
+
     List<CloudBlogCategoriesDO> selectCategoryListById(List<String> categoryIds);
 }

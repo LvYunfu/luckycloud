@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2025/8/9
  */
 public interface HomeService {
-    List<BlogCategoryCountResponse> getCategoryNum();
+    List<BlogCategoryCountResponse> getCategoryNum(String categoryId);
 
     PageResponse<BlogBaseResponse> getBlogList(HomeBlogQuery request);
 

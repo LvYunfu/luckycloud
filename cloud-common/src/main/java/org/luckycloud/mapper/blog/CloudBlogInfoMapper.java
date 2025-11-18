@@ -28,7 +28,7 @@ public interface CloudBlogInfoMapper {
 
     int updateByPrimaryKey(CloudBlogInfoDO record);
 
-    List<CategoryCount> calculateCategoryCount();
+    List<CategoryCount> calculateCategoryCount(@Param("list") List<String> categoryId);
 
     List<CloudBlogInfoDO> getBlogList(@Param("query") BlogQuery query);
 }

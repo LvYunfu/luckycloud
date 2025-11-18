@@ -31,7 +31,11 @@
         select
         <include refid="Base_Column_List"/>
         from cloud_blog_categories
-        where parent_id = #{parentId,jdbcType=VARCHAR}
+        <where>
+            <if test="parentId != null and parentId != ''">
+                parent_id = #{parentId,jdbcType=VARCHAR}
+            </if>
+        </where>
 
     </select>
     <select id="selectCategoryListById" resultMap="BaseResultMap">

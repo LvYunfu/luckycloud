@@ -65,16 +65,20 @@ public class HomeServiceImpl implements HomeService {
     private CloudBlogCommentsMapper cloudBlogCommentsMapper;
 
     @Override
-    public List<BlogCategoryCountResponse> getCategoryNum() {
-        List<CategoryCount> categoryCountList = blogInfoMapper.calculateCategoryCount();
-        List<String> categoryIds = categoryCountList.stream()
-                .map(CategoryCount::getCategoryId)
-                .toList();
-        List<CloudBlogCategoriesDO> categoriesDOList = blogCategoriesMapper.selectCategoryListById(categoryIds);
-        Map<String, String> categoryNameMap = categoriesDOList.stream()
-                .collect(Collectors.toMap(CloudBlogCategoriesDO::getCategoryId, CloudBlogCategoriesDO::getName));
-        categoryCountList.forEach(e -> e.setName(categoryNameMap.get(e.getCategoryId())));
-        return homeConvert.toBlogCategoryCountVOList(categoryCountList);
+    public List<BlogCategoryCountResponse> getCategoryNum(String categoryId) {
+        List<CloudBlogCategoriesDO> categoriesDOList = blogCategoriesMapper.selectCategoryListByParentId(categoryId);
+        List<CategoryCount> categoryCountList = blogInfoMapper.calculateCategoryCount(categoriesDOList.stream().map(CloudBlogCategoriesDO::getCategoryId).toList());
+
+        Map<String, Integer> countMap = categoryCountList.stream()
+                .collect(Collectors.toMap(CategoryCount::getCategoryId, CategoryCount::getCount));
+        List<CategoryCount> countList = categoriesDOList.stream().map(e -> {
+            CategoryCount count = new CategoryCount();
+            count.setCategoryId(e.getCategoryId());
+            count.setName(e.getName());
+            count.setCount(countMap.getOrDefault(e.getCategoryId(), 0));
+            return count;
+        }).toList();
+        return homeConvert.toBlogCategoryCountVOList(countList);
     }
     @Override
     public PageResponse<BlogBaseResponse> getBlogList(HomeBlogQuery request) {

@@ -30,8 +30,8 @@ public class HomeController {
      * @return
      */
     @GetMapping("/get-category-num")
-    public List<BlogCategoryCountResponse> getCategoryNum() {
-        return homeService.getCategoryNum();
+    public List<BlogCategoryCountResponse> getCategoryNum(String categoryId) {
+        return homeService.getCategoryNum(categoryId);
     }
 
     /**
