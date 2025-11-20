@@ -2,6 +2,7 @@ package org.luckycloud.blog.controller;
 
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.dto.request.*;
+import org.luckycloud.blog.dto.response.BlogAuthorResponse;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.dto.response.BlogStaticsResponse;
@@ -143,6 +144,32 @@ public class BlogController {
     @PostMapping("/view-blog")
     public void viewBlog(@RequestBody BlogOperateCommand command) {
         blogService.viewBlog(command);
+
+    }
+
+    /**
+     * 功能描述：关注作者
+     *
+     * @param command
+     * @return
+     */
+    @PostMapping("/follow-author")
+    public Response<Void> followAuthor(@RequestBody BlogFollowCommand command) {
+
+        return Response.success(blogService.followAuthor(command));
+
+    }
+
+    /**
+     * 功能描述：获取作者信息
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/get-blog-author")
+    public Response<BlogAuthorResponse> getBlogAuthor(String userId) {
+
+        return Response.successData(blogService.getBlogAuthor(userId));
 
     }
 

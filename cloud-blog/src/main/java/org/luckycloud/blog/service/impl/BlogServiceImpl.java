@@ -12,24 +12,20 @@ import org.kohsuke.github.GitHubBuilder;
 import org.luckycloud.blog.convert.BlogConvert;
 import org.luckycloud.blog.convert.BlogConvertFactory;
 import org.luckycloud.blog.dto.request.*;
+import org.luckycloud.blog.dto.response.BlogAuthorResponse;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.dto.response.BlogStaticsResponse;
 import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.cache.UserInfoCache;
-import org.luckycloud.domain.blog.CloudBlogCommentsDO;
-import org.luckycloud.domain.blog.CloudBlogInfoDO;
-import org.luckycloud.domain.blog.CloudBlogOperateDO;
-import org.luckycloud.domain.blog.CloudBlogTagDO;
+import org.luckycloud.domain.blog.*;
+import org.luckycloud.domain.user.CloudUserInfoDO;
 import org.luckycloud.dto.blog.request.BlogCommentQuery;
 import org.luckycloud.dto.blog.request.BlogOperateQuery;
 import org.luckycloud.dto.blog.response.BlogStatics;
 import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.exception.BusinessException;
-import org.luckycloud.mapper.blog.CloudBlogCommentsMapper;
-import org.luckycloud.mapper.blog.CloudBlogInfoMapper;
-import org.luckycloud.mapper.blog.CloudBlogOperateMapper;
-import org.luckycloud.mapper.blog.CloudBlogTagMapper;
+import org.luckycloud.mapper.blog.*;
 import org.luckycloud.security.util.UserUtils;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.luckycloud.utils.TransactionalUtils;
@@ -82,6 +78,8 @@ public class BlogServiceImpl implements BlogService {
     @Resource
     private CloudBlogOperateMapper blogOperateMapper;
 
+    @Resource
+    private CloudFollowUserMapper followUserMapper;
 
     @Value("${lucky.cloud.blog-resource.github-token}")
     String gitHubToken;
@@ -91,6 +89,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Value("${lucky.cloud.blog-resource.github-cdn}")
     String githubCdn;
+
 
     @Override
     public void createBlog(BlogInfoCommand request) {
@@ -163,12 +162,12 @@ public class BlogServiceImpl implements BlogService {
     public String likeBlog(BlogOperateCommand command) {
 
         BlogOperateQuery query = BlogConvertFactory.buildLikeOperateQuery(command.getBlogId());
-        List<CloudBlogOperateDO>  operateList =  blogOperateMapper.selectOperateRecord(query);
-        if(CollectionUtils.isEmpty(operateList)){
+        List<CloudBlogOperateDO> operateList = blogOperateMapper.selectOperateRecord(query);
+        if (CollectionUtils.isEmpty(operateList)) {
             CloudBlogOperateDO operateDO = blogConvert.convertToBlogOperateDO(command);
             operateDO.setOperateType(LIKE);
             blogOperateMapper.insert(operateDO);
-        }else{
+        } else {
             CloudBlogOperateDO operateDO = new CloudBlogOperateDO();
             operateDO.setId(operateList.get(0).getId());
             operateDO.setStatus(command.getStatus());
@@ -209,5 +208,26 @@ public class BlogServiceImpl implements BlogService {
         }
     }
 
+    @Override
+    public String followAuthor(BlogFollowCommand command) {
+        command.setUserId(UserUtils.getUserId());
+        CloudFollowUserDO followUserDO = blogConvert.toFollowUserDO(command);
+        followUserMapper.insert(followUserDO);
+        return command.getStatus().equals(ENABLE) ? "关注成功" : "取消关注";
+    }
 
+
+    @Override
+    public BlogAuthorResponse getBlogAuthor(String userId) {
+        BlogAuthorResponse response = new BlogAuthorResponse();
+        CloudUserInfoDO cloudUserInfoDO = userInfoCache.getUserInfo(userId);
+        response.setUserId(cloudUserInfoDO.getUserId());
+        response.setUserName(cloudUserInfoDO.getUserName());
+        response.setProfile(cloudUserInfoDO.getProfile());
+        response.setFanCount(followUserMapper.countFollowFans(userId));
+        response.setBlogCount(blogInfoMapper.countBlogByUserId(userId));
+        response.setLikeCount(blogInfoMapper.countLikeByUserId(userId));
+        response.setFollowFlag(followUserMapper.checkFollowUser(UserUtils.getUserId(),userId) > 0);
+        return response;
+    }
 }

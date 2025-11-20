@@ -30,6 +30,8 @@ public class CloudUserInfoDO {
      */
     private String mail;
 
+    private String profile;
+
     /**
      * 创建时间
      */

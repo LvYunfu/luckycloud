@@ -1,6 +1,7 @@
 package org.luckycloud.blog.service;
 
 import org.luckycloud.blog.dto.request.*;
+import org.luckycloud.blog.dto.response.BlogAuthorResponse;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.dto.response.BlogStaticsResponse;
@@ -30,4 +31,8 @@ public interface BlogService {
     String uploadFile(MultipartFile file);
 
     void viewBlog(BlogOperateCommand command);
+
+    String followAuthor(BlogFollowCommand command);
+
+    BlogAuthorResponse getBlogAuthor(String userId);
 }

@@ -31,4 +31,8 @@ public interface CloudBlogInfoMapper {
     List<CategoryCount> calculateCategoryCount(@Param("list") List<String> categoryId);
 
     List<CloudBlogInfoDO> getBlogList(@Param("query") BlogQuery query);
+
+    int countBlogByUserId(String userId);
+
+    int countLikeByUserId(String userId);
 }

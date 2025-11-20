@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.luckycloud.mapper.blog.CloudFollowUserMapper">
+
+    <resultMap id="BaseResultMap" type="org.luckycloud.domain.blog.CloudFollowUserDO">
+            <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <id property="followUserId" column="follow_user_id" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,follow_user_id,status
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_follow_user
+        where  user_id = #{userId,jdbcType=VARCHAR} AND follow_user_id = #{followUserId,jdbcType=VARCHAR}
+    </select>
+    <select id="countFollowFans" resultType="java.lang.Integer">
+        select count(1)
+        from cloud_follow_user
+        where follow_user_id = #{followUserId,jdbcType=VARCHAR}
+          AND status = '1'
+    </select>
+    <select id="checkFollowUser" resultType="java.lang.Integer">
+        select count(1)
+        from cloud_follow_user
+        where user_id = #{userId,jdbcType=VARCHAR}
+          AND follow_user_id = #{followUserId,jdbcType=VARCHAR}
+          and status = '1'
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from cloud_follow_user
+        where  user_id = #{userId,jdbcType=VARCHAR}
+          AND follow_user_id = #{followUserId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert">
+        replace
+        into cloud_follow_user
+        ( user_id,follow_user_id,status)
+        values (
+        #{userId,jdbcType=VARCHAR},
+        #{followUserId,jdbcType=VARCHAR},
+        #{status,jdbcType=CHAR}
+        )
+    </insert>
+    <insert id="insertSelective">
+        insert into cloud_follow_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="userId != null">user_id,</if>
+                <if test="followUserId != null">follow_user_id,</if>
+                <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="userId != null">user_id = #{userId,jdbcType=VARCHAR},</if>
+                <if test="followUserId != null">follow_user_id = #{followUserId,jdbcType=VARCHAR},</if>
+                <if test="status != null">status = #{status,jdbcType=CHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.blog.CloudFollowUserDO">
+        update cloud_follow_user
+        <set>
+                <if test="status != null">
+                    status = #{status,jdbcType=CHAR},
+                </if>
+        </set>
+        where   user_id = #{userId,jdbcType=VARCHAR} AND follow_user_id = #{followUserId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.blog.CloudFollowUserDO">
+        update cloud_follow_user
+        set
+            status =  #{status,jdbcType=CHAR}
+        where   user_id = #{userId,jdbcType=VARCHAR} AND follow_user_id = #{followUserId,jdbcType=VARCHAR}
+    </update>
+</mapper>
