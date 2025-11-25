@@ -24,6 +24,7 @@ import org.luckycloud.dto.blog.request.BlogCommentQuery;
 import org.luckycloud.dto.blog.request.BlogOperateQuery;
 import org.luckycloud.dto.blog.response.BlogStatics;
 import org.luckycloud.dto.common.PageResponse;
+import org.luckycloud.dto.common.UploadFileDTO;
 import org.luckycloud.exception.BusinessException;
 import org.luckycloud.mapper.blog.*;
 import org.luckycloud.security.util.UserUtils;
@@ -96,7 +97,7 @@ public class BlogServiceImpl implements BlogService {
 
         CloudBlogInfoDO blogDO = blogConvert.convertToBlogDO(request);
         blogDO.setBlogId(GenerateIdUtils.generateId());
-        List<CloudBlogTagDO> tagList = BlogConvertFactory.convertToBlogTagDOList(request.getTags(), blogDO.getBlogId());
+        List<CloudBlogTagDO> tagList = BlogConvertFactory.convertToBlogTagDOList(request.getTags(), blogDO.getBlogId(),blogDO.getCategoryId());
 
         transactionalUtils.executeInTransaction(List.of(
                 () -> blogInfoMapper.insert(blogDO),
@@ -187,21 +188,22 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Override
-    public String uploadFile(MultipartFile file) {
+    public UploadFileDTO uploadFile(MultipartFile file) {
         try {
             GitHub github = new GitHubBuilder().withOAuthToken(gitHubToken).build();
             GHRepository repository = github.getRepository(filePath);
             String userId = UserUtils.getUserId();
-            String path = String.join(GITHUB_PATH, List.of("images", userId, Optional.ofNullable(file.getOriginalFilename()).orElse(UUID.randomUUID().toString())));
+            String fileId = Optional.ofNullable(file.getOriginalFilename()).orElse("0")+"_"+UUID.randomUUID();
+            String path = String.join(GITHUB_PATH, List.of("images", userId,fileId));
             log.info("上传文件路径:{}", path);
             // 上传文件
-            GHContentUpdateResponse updateResponse = repository.createContent()
+            repository.createContent()
                     .message("lucky blog upload userId:" + userId)
                     .path(path)
                     .content(file.getInputStream().readAllBytes())
                     .commit();
 
-            return githubCdn + path;
+            return  new UploadFileDTO(file.getOriginalFilename(),githubCdn + path,fileId);
         } catch (Exception e) {
             log.error("上传文件失败", e);
             throw new BusinessException(OPERATE_FAILED, "上传文件失败");

@@ -88,7 +88,7 @@
         from cloud_blog_operate
         where status = '1'
         group by blog_id
-        order by count(*) desc limit 5
+        order by count(*) desc limit #{query.number}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

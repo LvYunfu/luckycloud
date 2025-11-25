@@ -19,12 +19,13 @@ public class BlogConvertFactory {
 
     private BlogConvertFactory() {
     }
-    public static List<CloudBlogTagDO> convertToBlogTagDOList(List<String> tags,String blogId) {
+    public static List<CloudBlogTagDO> convertToBlogTagDOList(List<String> tags,String blogId,String categoryId) {
        return tags.stream().map(tag -> {
             CloudBlogTagDO tagDO = new CloudBlogTagDO();
             tagDO.setBlogId(blogId);
             tagDO.setTagName(tag);
             tagDO.setStatus(SystemConstant.ENABLE);
+            tagDO.setCategoryId(categoryId);
             return tagDO;
         }).toList();
 

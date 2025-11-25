@@ -45,7 +45,7 @@ public class BlogController {
      */
     @PostMapping("/upload-file")
     public Response<String> uploadFile(MultipartFile file) {
-        return Response.successData(blogService.uploadFile(file));
+        return Response.successData(blogService.uploadFile(file).getFileUrl());
     }
 
     /**

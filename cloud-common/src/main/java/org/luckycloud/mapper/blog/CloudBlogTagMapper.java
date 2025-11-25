@@ -1,6 +1,8 @@
 package org.luckycloud.mapper.blog;
 
+import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
+import org.luckycloud.dto.blog.request.HotQuery;
 
 import java.util.List;
 
@@ -30,4 +32,6 @@ public interface CloudBlogTagMapper {
     List<String> selectBlogIdListByTagName(String tagName);
 
     List<CloudBlogTagDO> selectBlogTag(List<String> list);
+
+    List<String> selectHotTag(@Param("query") HotQuery query);
 }

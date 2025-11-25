@@ -9,12 +9,15 @@
         <result property="blogId" column="blog_id" jdbcType="VARCHAR"/>
         <result property="tagName" column="tag_name" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="CHAR"/>
+        <result property="categoryId" column="category_id" jdbcType="CHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id
-        ,blog_id,
-        tag_name,status
+        id,
+        blog_id,
+        tag_name,
+        category_id
+        status
     </sql>
 
 
@@ -45,6 +48,15 @@
         and status = '1'
 
     </select>
+    <select id="selectHotTag" resultType="java.lang.String">
+        select tag_name
+        from cloud_blog_tag
+        where status = '1'
+          and category_id = #{query.categoryId}
+        group by tag_name
+        order by count(1) desc
+            limit #{query.number}
+    </select>
 
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.luckycloud.domain.blog.CloudBlogTagDO"
             useGeneratedKeys="true">
@@ -71,11 +83,12 @@
     </insert>
     <insert id="batchInsert">
         insert into cloud_blog_tag
-        ( blog_id,tag_name,status)
+        ( blog_id,tag_name,category_id,status)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.blogId,jdbcType=VARCHAR},
             #{item.tagName,jdbcType=VARCHAR},
+            #{item.categoryId,jdbcType=VARCHAR},
             #{item.status,jdbcType=CHAR})
         </foreach>
     </insert>

@@ -1,6 +1,7 @@
 package org.luckycloud.blog.service;
 
 import org.luckycloud.blog.dto.request.HomeBlogQuery;
+import org.luckycloud.blog.dto.request.HostBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
 import org.luckycloud.blog.dto.response.BlogInfoResponse;
@@ -18,6 +19,7 @@ public interface HomeService {
 
     PageResponse<BlogBaseResponse> getBlogList(HomeBlogQuery request);
 
-    List<BlogBaseResponse> getHotBlogList();
+    List<BlogBaseResponse> getHotBlogList(HostBlogQuery request);
 
+    List<String> getHotTag(HostBlogQuery request);
 }

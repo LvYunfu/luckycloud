@@ -6,6 +6,7 @@ import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.dto.response.BlogStaticsResponse;
 import org.luckycloud.dto.common.PageResponse;
+import org.luckycloud.dto.common.UploadFileDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -28,7 +29,7 @@ public interface BlogService {
 
     String likeBlog(BlogOperateCommand command);
 
-    String uploadFile(MultipartFile file);
+    UploadFileDTO uploadFile(MultipartFile file);
 
     void viewBlog(BlogOperateCommand command);
 

@@ -3,25 +3,27 @@ package org.luckycloud.domain.blog;
 import lombok.Data;
 
 /**
- * 
+ *
  * @TableName cloud_blog_tag
  */
 @Data
 public class CloudBlogTagDO {
     /**
-     * 
+     *
      */
     private Integer id;
 
     /**
-     * 
+     *
      */
     private String blogId;
 
     /**
-     * 
+     *
      */
     private String tagName;
+
+    private String categoryId;
 
     /**
      * 0无效 1有效
