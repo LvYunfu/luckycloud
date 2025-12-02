@@ -1,11 +1,3 @@
 spring:
   application:
     name: cloud-blog
-
-lucky:
-  cloud:
-    blog-resource:
-      file-path: LvYunfu/lucky-picture
-      github-token: ${GitHub_Token}
-      github-cdn: https://cdn.jsdelivr.net/gh/LvYunfu/lucky-picture@main/
-

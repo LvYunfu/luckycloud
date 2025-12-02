@@ -10,7 +10,6 @@ import org.luckycloud.blog.service.BlogService;
 import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import static org.luckycloud.constant.BlogConstant.BlogStatus.DRAFT;
 import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
@@ -40,13 +39,7 @@ public class BlogController {
         return Response.success("博客文章创建成功");
     }
 
-    /**
-     * 上传文件
-     */
-    @PostMapping("/upload-file")
-    public Response<String> uploadFile(MultipartFile file) {
-        return Response.successData(blogService.uploadFile(file).getFileUrl());
-    }
+
 
     /**
      * 保存为草稿

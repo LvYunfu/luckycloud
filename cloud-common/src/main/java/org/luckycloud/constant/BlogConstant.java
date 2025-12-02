@@ -7,7 +7,7 @@ package org.luckycloud.constant;
  */
 public class BlogConstant {
 
-    public static final String GITHUB_PATH = "/";
+
 
     private BlogConstant() {
     }

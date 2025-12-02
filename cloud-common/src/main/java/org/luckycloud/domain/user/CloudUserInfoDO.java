@@ -32,6 +32,8 @@ public class CloudUserInfoDO {
 
     private String profile;
 
+    private String avatar;
+
     /**
      * 创建时间
      */

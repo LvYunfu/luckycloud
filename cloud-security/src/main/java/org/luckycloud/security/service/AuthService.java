@@ -8,19 +8,18 @@ import org.luckycloud.security.components.loginProcess.LoginTypeFactory;
 import org.luckycloud.security.components.loginProcess.LoginTypeService;
 import org.luckycloud.security.dto.LoginRequest;
 import org.luckycloud.security.dto.RegisterRequest;
+import org.luckycloud.security.dto.UserInfoResponse;
 import org.luckycloud.security.entity.SysUserDetail;
 import org.luckycloud.security.util.JwtTokenUtil;
+import org.luckycloud.security.util.UserUtils;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 import static org.luckycloud.constant.SystemConstant.ENABLE;
@@ -82,4 +81,6 @@ public class AuthService {
         // 保存用户
         userMapper.insert(user);
     }
+
+
 }

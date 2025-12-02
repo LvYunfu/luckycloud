@@ -3,9 +3,7 @@ package org.luckycloud.blog.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.page.PageMethod;
 import jakarta.annotation.Resource;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
-import org.kohsuke.github.GHContentUpdateResponse;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
@@ -30,21 +28,18 @@ import org.luckycloud.mapper.blog.*;
 import org.luckycloud.security.util.UserUtils;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.luckycloud.utils.TransactionalUtils;
+import org.luckycloud.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.luckycloud.constant.BlogConstant.BlogOperateType.*;
-import static org.luckycloud.constant.BlogConstant.GITHUB_PATH;
 import static org.luckycloud.constant.SystemConstant.DISABLE;
 import static org.luckycloud.constant.SystemConstant.ENABLE;
 import static org.luckycloud.dto.common.ResponseCode.OPERATE_FAILED;
@@ -82,14 +77,6 @@ public class BlogServiceImpl implements BlogService {
     @Resource
     private CloudFollowUserMapper followUserMapper;
 
-    @Value("${lucky.cloud.blog-resource.github-token}")
-    String gitHubToken;
-
-    @Value("${lucky.cloud.blog-resource.file-path}")
-    String filePath;
-
-    @Value("${lucky.cloud.blog-resource.github-cdn}")
-    String githubCdn;
 
 
     @Override
@@ -187,28 +174,6 @@ public class BlogServiceImpl implements BlogService {
     }
 
 
-    @Override
-    public UploadFileDTO uploadFile(MultipartFile file) {
-        try {
-            GitHub github = new GitHubBuilder().withOAuthToken(gitHubToken).build();
-            GHRepository repository = github.getRepository(filePath);
-            String userId = UserUtils.getUserId();
-            String fileId = Optional.ofNullable(file.getOriginalFilename()).orElse("0")+"_"+UUID.randomUUID();
-            String path = String.join(GITHUB_PATH, List.of("images", userId,fileId));
-            log.info("上传文件路径:{}", path);
-            // 上传文件
-            repository.createContent()
-                    .message("lucky blog upload userId:" + userId)
-                    .path(path)
-                    .content(file.getInputStream().readAllBytes())
-                    .commit();
-
-            return  new UploadFileDTO(file.getOriginalFilename(),githubCdn + path,fileId);
-        } catch (Exception e) {
-            log.error("上传文件失败", e);
-            throw new BusinessException(OPERATE_FAILED, "上传文件失败");
-        }
-    }
 
     @Override
     public String followAuthor(BlogFollowCommand command) {

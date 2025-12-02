@@ -29,8 +29,6 @@ public interface BlogService {
 
     String likeBlog(BlogOperateCommand command);
 
-    UploadFileDTO uploadFile(MultipartFile file);
-
     void viewBlog(BlogOperateCommand command);
 
     String followAuthor(BlogFollowCommand command);

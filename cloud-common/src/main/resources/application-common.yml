@@ -6,3 +6,9 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+lucky:
+  cloud:
+    file:
+      file-path: LvYunfu/lucky-picture
+      github-token: ${GitHub_Token}
+      github-cdn: https://cdn.jsdelivr.net/gh/LvYunfu/lucky-picture@main/

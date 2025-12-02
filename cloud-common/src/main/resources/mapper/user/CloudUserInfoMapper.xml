@@ -9,6 +9,8 @@
             <result property="userName" column="user_name" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="mail" column="mail" jdbcType="VARCHAR"/>
+            <result property="profile" column="profile" jdbcType="VARCHAR"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="accountStatus" column="account_status" jdbcType="CHAR"/>
@@ -17,7 +19,8 @@
 
     <sql id="Base_Column_List">
         user_id,user_name,password,
-        mail,create_time,update_time,
+        mail, profile,avatar,
+        create_time,update_time,
         account_status,status
     </sql>
 
@@ -48,12 +51,13 @@
     </delete>
     <insert id="insert" keyColumn="USER_ID" keyProperty="userId" parameterType="org.luckycloud.domain.user.CloudUserInfoDO" useGeneratedKeys="true">
         insert into cloud_user_info
-        ( user_id,user_name,password
-        ,mail,create_time,update_time
-        ,account_status,status)
-        values (#{userId,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
-        ,#{mail,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP}
-        ,#{accountStatus,jdbcType=CHAR},#{status,jdbcType=CHAR})
+        ( user_id, user_name, password
+        , mail, profile, avatar, create_time, update_time
+        , account_status, status)
+        values ( #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
+               , #{mail,jdbcType=VARCHAR}, #{profile,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}
+               , #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+               , #{accountStatus,jdbcType=CHAR}, #{status,jdbcType=CHAR})
     </insert>
     <insert id="insertSelective" keyColumn="USER_ID" keyProperty="userId" parameterType="org.luckycloud.domain.user.CloudUserInfoDO" useGeneratedKeys="true">
         insert into cloud_user_info
@@ -81,40 +85,35 @@
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.user.CloudUserInfoDO">
         update cloud_user_info
         <set>
-                <if test="userName != null">
-                    user_name = #{userName,jdbcType=VARCHAR},
-                </if>
-                <if test="password != null">
-                    password = #{password,jdbcType=VARCHAR},
-                </if>
-                <if test="mail != null">
-                    mail = #{mail,jdbcType=VARCHAR},
-                </if>
-                <if test="createTime != null">
-                    create_time = #{createTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="updateTime != null">
-                    update_time = #{updateTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="accountStatus != null">
-                    account_status = #{accountStatus,jdbcType=CHAR},
-                </if>
-                <if test="status != null">
-                    status = #{status,jdbcType=CHAR},
-                </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="mail != null">
+                mail = #{mail,jdbcType=VARCHAR},
+            </if>
+            <if test="profile != null">
+                profile = #{profile,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountStatus != null">
+                account_status = #{accountStatus,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
         </set>
-        where   user_id = #{userId,jdbcType=VARCHAR}
+        where user_id = #{userId,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.user.CloudUserInfoDO">
-        update cloud_user_info
-        set
-            user_name =  #{userName,jdbcType=VARCHAR},
-            password =  #{password,jdbcType=VARCHAR},
-            mail =  #{mail,jdbcType=VARCHAR},
-            create_time =  #{createTime,jdbcType=TIMESTAMP},
-            update_time =  #{updateTime,jdbcType=TIMESTAMP},
-            account_status =  #{accountStatus,jdbcType=CHAR},
-            status =  #{status,jdbcType=CHAR}
-        where   user_id = #{userId,jdbcType=VARCHAR}
-    </update>
+
 </mapper>

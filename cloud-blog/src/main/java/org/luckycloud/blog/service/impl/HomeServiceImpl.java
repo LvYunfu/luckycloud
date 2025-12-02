@@ -1,5 +1,6 @@
 package org.luckycloud.blog.service.impl;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.page.PageMethod;
@@ -93,8 +94,8 @@ public class HomeServiceImpl implements HomeService {
         }
         PageMethod.startPage(request.getPageNum(), request.getPageSize());
         List<CloudBlogInfoDO> blog = blogInfoMapper.getBlogList(homeConvert.toBlogQuery(request));
-        PageInfo<CloudBlogInfoDO> blogPage = new PageInfo<>(blog);
-        List<BlogBaseResponse> baseResponses = homeConvert.toBlogBaseList(blogPage.getList());
+        Page<CloudBlogInfoDO> blogPage = (Page<CloudBlogInfoDO>) blog;
+        List<BlogBaseResponse> baseResponses = homeConvert.toBlogBaseList(blogPage.getResult());
         if (ObjectUtils.isEmpty(baseResponses)) {
             return new PageResponse<>(0L, List.of());
         }

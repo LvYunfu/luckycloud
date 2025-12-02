@@ -19,7 +19,6 @@ public interface CloudUserInfoMapper {
 
     int updateByPrimaryKeySelective(CloudUserInfoDO record);
 
-    int updateByPrimaryKey(CloudUserInfoDO record);
 
     CloudUserInfoDO findByUserId(String userId);
 
