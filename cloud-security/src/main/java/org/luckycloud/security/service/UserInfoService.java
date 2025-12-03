@@ -1,13 +1,16 @@
 package org.luckycloud.security.service;
 
+import jakarta.annotation.Resource;
 import org.luckycloud.domain.user.CloudUserInfoDO;
 import org.luckycloud.exception.BusinessException;
 import org.luckycloud.mapper.user.CloudUserInfoMapper;
 import org.luckycloud.security.dto.RegisterRequest;
+import org.luckycloud.security.dto.UpdatePasswordRequest;
 import org.luckycloud.security.dto.UserInfoResponse;
 import org.luckycloud.security.entity.SysUserDetail;
 import org.luckycloud.security.util.UserUtils;
 import org.luckycloud.utils.UploadUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,9 @@ public class UserInfoService {
     private final CloudUserInfoMapper userMapper;
 
     private final UploadUtils uploadUtils;
+
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     public UserInfoService(CloudUserInfoMapper userMapper, UploadUtils uploadUtils) {
         this.userMapper = userMapper;
@@ -58,7 +64,21 @@ public class UserInfoService {
         user.setUserName(request.getUserName());
         user.setProfile(request.getProfile());
         user.setAvatar(request.getAvatar());
-        user.setUpdateTime(LocalDateTime.now());
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
+
+    public void updatePassword(UpdatePasswordRequest request) {
+        String userId = UserUtils.getUserId();
+        CloudUserInfoDO cloudUserInfoDO = userMapper.findByUserId(userId);
+        if (!passwordEncoder.matches(request.getOldPassword(), cloudUserInfoDO.getPassword())) {
+            throw new BusinessException(SUCCESS, "旧密码错误");
+        }
+
+        // 更新
+        CloudUserInfoDO user = new CloudUserInfoDO();
+        user.setUserId(userId);
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userMapper.updateByPrimaryKeySelective(user);
     }
 }

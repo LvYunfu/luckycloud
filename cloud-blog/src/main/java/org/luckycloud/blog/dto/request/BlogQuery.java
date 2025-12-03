@@ -13,7 +13,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class HomeBlogQuery extends PageQuery {
+public class BlogQuery extends PageQuery {
 
 
     private String categoryId;
@@ -21,4 +21,6 @@ public class HomeBlogQuery extends PageQuery {
     private String tagName;
 
     private List<String> blogIdList;
+
+    private String userId;
 }

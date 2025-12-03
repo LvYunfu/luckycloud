@@ -1,12 +1,10 @@
 package org.luckycloud.blog.controller;
 
 import jakarta.annotation.Resource;
-import org.luckycloud.blog.dto.request.BlogOperateCommand;
-import org.luckycloud.blog.dto.request.HomeBlogQuery;
+import org.luckycloud.blog.dto.request.BlogQuery;
 import org.luckycloud.blog.dto.request.HostBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
-import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.service.HomeService;
 import org.luckycloud.dto.common.PageResponse;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +40,7 @@ public class HomeController {
      * @return
      */
     @PostMapping("/get-blog-list")
-    public PageResponse<BlogBaseResponse> getBlogList(@RequestBody  HomeBlogQuery request) {
+    public PageResponse<BlogBaseResponse> getBlogList(@RequestBody BlogQuery request) {
         return homeService.getBlogList(request);
     }
 

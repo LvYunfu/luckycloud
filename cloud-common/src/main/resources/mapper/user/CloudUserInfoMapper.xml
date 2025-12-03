@@ -85,6 +85,7 @@
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.user.CloudUserInfoDO">
         update cloud_user_info
         <set>
+            update_time = current_timestamp,
             <if test="userName != null">
                 user_name = #{userName,jdbcType=VARCHAR},
             </if>
@@ -102,9 +103,6 @@
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="accountStatus != null">
                 account_status = #{accountStatus,jdbcType=CHAR},

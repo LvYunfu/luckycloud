@@ -3,6 +3,7 @@ package org.luckycloud.security.controller;
 import jakarta.annotation.Resource;
 import org.luckycloud.dto.common.Response;
 import org.luckycloud.security.dto.RegisterRequest;
+import org.luckycloud.security.dto.UpdatePasswordRequest;
 import org.luckycloud.security.dto.UserInfoResponse;
 import org.luckycloud.security.service.AuthService;
 import org.luckycloud.security.service.UserInfoService;
@@ -38,6 +39,12 @@ public class UserController {
     public Response<Void> updateUserInfo(@RequestBody RegisterRequest request) {
         userInfoService.updateUserInfo(request);
         return Response.success("更新成功");
-
     }
+
+    @PostMapping("/update-password")
+    public Response<Void> updatePassword(@RequestBody UpdatePasswordRequest request) {
+        userInfoService.updatePassword(request);
+        return Response.success("更新成功");
+    }
+
 }

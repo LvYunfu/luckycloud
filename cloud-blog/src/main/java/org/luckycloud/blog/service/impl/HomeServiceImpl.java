@@ -1,40 +1,27 @@
 package org.luckycloud.blog.service.impl;
 
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.page.PageMethod;
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.convert.HomeConvert;
-import org.luckycloud.blog.dto.request.HomeBlogQuery;
+import org.luckycloud.blog.dto.request.BlogQuery;
 import org.luckycloud.blog.dto.request.HostBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
-import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.blog.service.HomeService;
 import org.luckycloud.domain.blog.CloudBlogCategoriesDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
-import org.luckycloud.dto.blog.request.BlogQuery;
 import org.luckycloud.dto.blog.response.BlogStatics;
 import org.luckycloud.dto.blog.response.CategoryCount;
 import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.mapper.blog.*;
-import org.springframework.core.env.Environment;
-import org.springframework.data.relational.core.sql.In;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.luckycloud.security.util.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 /**
@@ -84,7 +71,7 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public PageResponse<BlogBaseResponse> getBlogList(HomeBlogQuery request) {
+    public PageResponse<BlogBaseResponse> getBlogList(BlogQuery request) {
         if (!ObjectUtils.isEmpty(request.getTagName())) {
             List<String> blogIds = blogTagMapper.selectBlogIdListByTagName(request.getTagName());
             if (ObjectUtils.isEmpty(blogIds)) {
@@ -122,7 +109,7 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public List<BlogBaseResponse> getHotBlogList(HostBlogQuery request) {
         List<String> hotBlogIds = blogOperateMapper.queryHotBlogList(homeConvert.toHotQuery(request));
-        BlogQuery query = new BlogQuery();
+        org.luckycloud.dto.blog.request.BlogQuery query = new org.luckycloud.dto.blog.request.BlogQuery();
         query.setBlogIdList(hotBlogIds);
         List<CloudBlogInfoDO> blog = blogInfoMapper.getBlogList(query);
         return homeConvert.toBlogBaseList(blog);
@@ -132,5 +119,11 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public List<String> getHotTag(HostBlogQuery request) {
         return blogTagMapper.selectHotTag(homeConvert.toHotQuery(request));
+    }
+
+    @Override
+    public PageResponse<BlogBaseResponse> getPersonalBlog(BlogQuery request) {
+        request.setUserId(UserUtils.getUserId());
+        return this.getBlogList(request);
     }
 }

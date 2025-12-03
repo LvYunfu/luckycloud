@@ -1,13 +1,11 @@
 package org.luckycloud.blog.convert;
 
 import jakarta.annotation.Resource;
-import org.luckycloud.blog.dto.request.HomeBlogQuery;
+import org.luckycloud.blog.dto.request.BlogQuery;
 import org.luckycloud.blog.dto.request.HostBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
-import org.luckycloud.blog.dto.response.BlogInfoResponse;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
-import org.luckycloud.dto.blog.request.BlogQuery;
 import org.luckycloud.dto.blog.request.HotQuery;
 import org.luckycloud.dto.blog.response.CategoryCount;
 import org.luckycloud.utils.UploadUtils;
@@ -32,7 +30,7 @@ public abstract class HomeConvert {
     public abstract List<BlogCategoryCountResponse> toBlogCategoryCountVOList(List<CategoryCount> categoryCount);
 
 
-    public abstract BlogQuery toBlogQuery(HomeBlogQuery categoryCount);
+    public abstract org.luckycloud.dto.blog.request.BlogQuery toBlogQuery(BlogQuery categoryCount);
 
     public abstract HotQuery toHotQuery(HostBlogQuery categoryCount);
 
