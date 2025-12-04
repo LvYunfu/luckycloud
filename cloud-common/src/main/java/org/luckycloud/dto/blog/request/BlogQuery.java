@@ -17,7 +17,7 @@ public class BlogQuery {
     private String categoryId;
 
 
-    private String blogStatus;
+    private List<String> blogStatus;
 
     private List<String> blogIdList;
 }

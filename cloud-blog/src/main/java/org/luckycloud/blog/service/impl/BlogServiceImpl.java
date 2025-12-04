@@ -93,6 +93,17 @@ public class BlogServiceImpl implements BlogService {
         ));
     }
 
+    @Override
+    public void updateBlog(BlogInfoCommand request) {
+        CloudBlogInfoDO blogDO = blogConvert.convertToBlogDO(request);
+        List<CloudBlogTagDO> tagList = BlogConvertFactory.convertToBlogTagDOList(request.getTags(), blogDO.getBlogId(),blogDO.getCategoryId());
+
+        transactionalUtils.executeInTransaction(List.of(
+                () -> blogInfoMapper.updateByPrimaryKey(blogDO),
+                () -> blogTagMapper.deleteBlogTag(blogDO.getBlogId()),
+                () -> blogTagMapper.batchInsert(tagList)
+        ));
+    }
 
     @Override
     public BlogInfoResponse getBlogInfo(String blogId) {

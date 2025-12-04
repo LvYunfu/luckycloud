@@ -23,4 +23,7 @@ public class BlogQuery extends PageQuery {
     private List<String> blogIdList;
 
     private String userId;
+
+    private List<String> blogStatus;
+
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public interface HomeService {
     List<BlogCategoryCountResponse> getCategoryNum(String categoryId);
 
-    PageResponse<BlogBaseResponse> getBlogList(BlogQuery request);
+    PageResponse<BlogBaseResponse> getPublicBlogList(BlogQuery request);
 
     List<BlogBaseResponse> getHotBlogList(HostBlogQuery request);
 

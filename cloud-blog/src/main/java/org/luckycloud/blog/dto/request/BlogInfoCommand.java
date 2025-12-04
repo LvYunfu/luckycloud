@@ -16,6 +16,8 @@ public class BlogInfoCommand {
      */
     private String blogTitle;
 
+    private String blogId;
+
     /**
      * 博客摘要
      */
@@ -49,11 +51,11 @@ public class BlogInfoCommand {
 
     private List<String> tags;
 
-    private String privateFlag;
     /**
      *
-     * BS00 保存草稿  BS01 公开   BS02 私有
+     * BS00 私有  BS01 公开
      */
     private String blogStatus;
+
 
 }

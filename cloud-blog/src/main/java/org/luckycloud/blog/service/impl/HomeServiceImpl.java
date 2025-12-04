@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
+
 /**
  * @author lvyf
  * @description:
@@ -71,7 +73,35 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public PageResponse<BlogBaseResponse> getBlogList(BlogQuery request) {
+    public PageResponse<BlogBaseResponse> getPublicBlogList(BlogQuery request) {
+        request.setBlogStatus(List.of(PUBLIC));
+        return this.getBlogList(request);
+
+    }
+
+    @Override
+    public List<BlogBaseResponse> getHotBlogList(HostBlogQuery request) {
+        List<String> hotBlogIds = blogOperateMapper.queryHotBlogList(homeConvert.toHotQuery(request));
+        org.luckycloud.dto.blog.request.BlogQuery query = new org.luckycloud.dto.blog.request.BlogQuery();
+        query.setBlogIdList(hotBlogIds);
+        List<CloudBlogInfoDO> blog = blogInfoMapper.getBlogList(query);
+        return homeConvert.toBlogBaseList(blog);
+
+    }
+
+    @Override
+    public List<String> getHotTag(HostBlogQuery request) {
+        return blogTagMapper.selectHotTag(homeConvert.toHotQuery(request));
+    }
+
+    @Override
+    public PageResponse<BlogBaseResponse> getPersonalBlog(BlogQuery request) {
+        request.setUserId(UserUtils.getUserId());
+        return this.getBlogList(request);
+    }
+
+
+    private PageResponse<BlogBaseResponse> getBlogList(BlogQuery request) {
         if (!ObjectUtils.isEmpty(request.getTagName())) {
             List<String> blogIds = blogTagMapper.selectBlogIdListByTagName(request.getTagName());
             if (ObjectUtils.isEmpty(blogIds)) {
@@ -104,26 +134,5 @@ public class HomeServiceImpl implements HomeService {
 
         });
         return new PageResponse<>(blogPage.getTotal(), baseResponses);
-    }
-
-    @Override
-    public List<BlogBaseResponse> getHotBlogList(HostBlogQuery request) {
-        List<String> hotBlogIds = blogOperateMapper.queryHotBlogList(homeConvert.toHotQuery(request));
-        org.luckycloud.dto.blog.request.BlogQuery query = new org.luckycloud.dto.blog.request.BlogQuery();
-        query.setBlogIdList(hotBlogIds);
-        List<CloudBlogInfoDO> blog = blogInfoMapper.getBlogList(query);
-        return homeConvert.toBlogBaseList(blog);
-
-    }
-
-    @Override
-    public List<String> getHotTag(HostBlogQuery request) {
-        return blogTagMapper.selectHotTag(homeConvert.toHotQuery(request));
-    }
-
-    @Override
-    public PageResponse<BlogBaseResponse> getPersonalBlog(BlogQuery request) {
-        request.setUserId(UserUtils.getUserId());
-        return this.getBlogList(request);
     }
 }

@@ -34,4 +34,6 @@ public interface BlogService {
     String followAuthor(BlogFollowCommand command);
 
     BlogAuthorResponse getBlogAuthor(String userId);
+
+    void updateBlog(BlogInfoCommand request);
 }

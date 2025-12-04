@@ -11,10 +11,6 @@ import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.*;
 
-import static org.luckycloud.constant.BlogConstant.BlogStatus.DRAFT;
-import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
-import static org.luckycloud.constant.SystemConstant.N;
-
 /**
  * @author lvyf
  * @description:
@@ -34,25 +30,20 @@ public class BlogController {
      */
     @PostMapping("/create")
     public Response<Void> createBlog(@RequestBody BlogInfoCommand request) {
-        request.setBlogStatus(N.equals(request.getPrivateFlag()) ? PUBLIC : DRAFT);
         blogService.createBlog(request);
         return Response.success("博客文章创建成功");
     }
-
-
 
     /**
-     * 保存为草稿
-     *
-     * @param request
-     * @return
+     * 功能描述：更新博客文章
      */
-    @PostMapping("/save-draft")
-    public Response<Void> saveDraft(@RequestBody BlogInfoCommand request) {
-        request.setBlogStatus(DRAFT);
-        blogService.createBlog(request);
-        return Response.success("博客文章创建成功");
+    @PostMapping("/update")
+    public Response<Void> updateBlg(@RequestBody BlogInfoCommand request) {
+        blogService.updateBlog(request);
+        return Response.success("文章更新成功");
     }
+
+
 
     /**
      * 功能描述：获取博客文章信息
