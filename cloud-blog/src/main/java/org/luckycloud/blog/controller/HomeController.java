@@ -41,7 +41,7 @@ public class HomeController {
      */
     @PostMapping("/get-blog-list")
     public PageResponse<BlogBaseResponse> getBlogList(@RequestBody BlogQuery request) {
-        return homeService.getBlogList(request);
+        return homeService.getPublicBlogList(request);
     }
 
     @PostMapping("/get-hot-blog")

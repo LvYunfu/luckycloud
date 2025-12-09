@@ -156,6 +156,18 @@ public class BlogController {
         return Response.successData(blogService.getBlogAuthor(userId));
 
     }
+    /**
+     * 功能描述：收藏文章
+     *
+     * @param command
+     * @return
+     */
+    @PostMapping("/collect-blog")
+    public Response<Void> collectBlog(@RequestBody BlogOperateCommand command) {
+
+        return Response.success(blogService.collectBlog(command));
+
+    }
 
 
 }

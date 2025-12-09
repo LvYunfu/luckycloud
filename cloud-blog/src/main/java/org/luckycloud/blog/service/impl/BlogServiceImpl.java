@@ -56,7 +56,6 @@ public class BlogServiceImpl implements BlogService {
     @Resource
     private BlogConvert blogConvert;
 
-
     @Resource
     private CloudBlogInfoMapper blogInfoMapper;
     @Resource
@@ -77,14 +76,15 @@ public class BlogServiceImpl implements BlogService {
     @Resource
     private CloudFollowUserMapper followUserMapper;
 
-
+    @Resource
+    private UploadUtils uploadUtils;
 
     @Override
     public void createBlog(BlogInfoCommand request) {
 
         CloudBlogInfoDO blogDO = blogConvert.convertToBlogDO(request);
         blogDO.setBlogId(GenerateIdUtils.generateId());
-        List<CloudBlogTagDO> tagList = BlogConvertFactory.convertToBlogTagDOList(request.getTags(), blogDO.getBlogId(),blogDO.getCategoryId());
+        List<CloudBlogTagDO> tagList = BlogConvertFactory.convertToBlogTagDOList(request.getTags(), blogDO.getBlogId(), blogDO.getCategoryId());
 
         transactionalUtils.executeInTransaction(List.of(
                 () -> blogInfoMapper.insert(blogDO),
@@ -96,7 +96,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void updateBlog(BlogInfoCommand request) {
         CloudBlogInfoDO blogDO = blogConvert.convertToBlogDO(request);
-        List<CloudBlogTagDO> tagList = BlogConvertFactory.convertToBlogTagDOList(request.getTags(), blogDO.getBlogId(),blogDO.getCategoryId());
+        List<CloudBlogTagDO> tagList = BlogConvertFactory.convertToBlogTagDOList(request.getTags(), blogDO.getBlogId(), blogDO.getCategoryId());
 
         transactionalUtils.executeInTransaction(List.of(
                 () -> blogInfoMapper.updateByPrimaryKey(blogDO),
@@ -110,7 +110,7 @@ public class BlogServiceImpl implements BlogService {
         CloudBlogInfoDO blogInfoDO = blogInfoMapper.selectByBlogId(blogId);
         BlogInfoResponse blogInfo = blogConvert.toBlogInfo(blogInfoDO);
         blogInfo.setTags(blogTagMapper.selectBlogTag(List.of(blogId)).stream().map(CloudBlogTagDO::getTagName).toList());
-        List<String> operateType = blogOperateMapper.selectUserBlogOperate(BlogConvertFactory.buildOperateQuery(blogId));
+        List<String> operateType = blogOperateMapper.selectUserBlogOperate(BlogConvertFactory.buildOperateQuery(blogId,List.of(LIKE,COLLECT)));
         blogInfo.setLikeFlag(operateType.contains(LIKE));
         blogInfo.setCollectFlag(operateType.contains(COLLECT));
         return blogInfo;
@@ -159,12 +159,23 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public String likeBlog(BlogOperateCommand command) {
+        operateBlog(command, LIKE);
+        return DISABLE.equals(command.getStatus()) ? "取消点赞" : "点赞成功";
 
-        BlogOperateQuery query = BlogConvertFactory.buildLikeOperateQuery(command.getBlogId());
+    }
+
+    @Override
+    public String collectBlog(BlogOperateCommand command) {
+        operateBlog(command, COLLECT);
+        return DISABLE.equals(command.getStatus()) ? "取消收藏" : "收藏成功";
+    }
+
+    private void operateBlog(BlogOperateCommand command, String collect) {
+        BlogOperateQuery query = BlogConvertFactory.buildOperateQuery(command.getBlogId(), collect);
         List<CloudBlogOperateDO> operateList = blogOperateMapper.selectOperateRecord(query);
         if (CollectionUtils.isEmpty(operateList)) {
             CloudBlogOperateDO operateDO = blogConvert.convertToBlogOperateDO(command);
-            operateDO.setOperateType(LIKE);
+            operateDO.setOperateType(collect);
             blogOperateMapper.insert(operateDO);
         } else {
             CloudBlogOperateDO operateDO = new CloudBlogOperateDO();
@@ -172,9 +183,6 @@ public class BlogServiceImpl implements BlogService {
             operateDO.setStatus(command.getStatus());
             blogOperateMapper.updateByPrimaryKeySelective(operateDO);
         }
-
-        return DISABLE.equals(command.getStatus()) ? "取消点赞" : "点赞成功";
-
     }
 
     @Override
@@ -183,7 +191,6 @@ public class BlogServiceImpl implements BlogService {
         operateDO.setOperateType(VIEW);
         blogOperateMapper.insert(operateDO);
     }
-
 
 
     @Override
@@ -202,10 +209,11 @@ public class BlogServiceImpl implements BlogService {
         response.setUserId(cloudUserInfoDO.getUserId());
         response.setUserName(cloudUserInfoDO.getUserName());
         response.setProfile(cloudUserInfoDO.getProfile());
+        response.setAvatar(uploadUtils.getFileUrl(cloudUserInfoDO.getUserId(), cloudUserInfoDO.getAvatar()));
         response.setFanCount(followUserMapper.countFollowFans(userId));
         response.setBlogCount(blogInfoMapper.countBlogByUserId(userId));
         response.setLikeCount(blogInfoMapper.countLikeByUserId(userId));
-        response.setFollowFlag(followUserMapper.checkFollowUser(UserUtils.getUserId(),userId) > 0);
+        response.setFollowFlag(followUserMapper.checkFollowUser(UserUtils.getUserId(), userId) > 0);
         return response;
     }
 }

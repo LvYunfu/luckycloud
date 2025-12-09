@@ -31,19 +31,25 @@ public class BlogConvertFactory {
 
     }
 
-    public static BlogOperateQuery buildOperateQuery(String blogId) {
+    public static BlogOperateQuery buildOperateQuery(String blogId,List<String> operateType) {
         BlogOperateQuery query = new BlogOperateQuery();
         query.setBlogId(blogId);
-        query.setOperateType(List.of(LIKE,COLLECT));
+        query.setOperateType(operateType);
+        query.setUserId(UserUtils.getUserId());
+        return query;
+    }
+    public static BlogOperateQuery buildOperateQuery(List<String> operateType) {
+        BlogOperateQuery query = new BlogOperateQuery();
+        query.setOperateType(operateType);
+        query.setUserId(UserUtils.getUserId());
+        return query;
+    }
+    public static BlogOperateQuery buildOperateQuery(String blogId,String operateType) {
+        BlogOperateQuery query = new BlogOperateQuery();
+        query.setBlogId(blogId);
+        query.setOperateType(List.of(operateType));
         query.setUserId(UserUtils.getUserId());
         return query;
     }
 
-    public static BlogOperateQuery buildLikeOperateQuery(String blogId) {
-        BlogOperateQuery query = new BlogOperateQuery();
-        query.setBlogId(blogId);
-        query.setOperateType(List.of(LIKE));
-        query.setUserId(UserUtils.getUserId());
-        return query;
-    }
 }

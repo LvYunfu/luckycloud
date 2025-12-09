@@ -23,4 +23,6 @@ public interface HomeService {
     List<String> getHotTag(HostBlogQuery request);
 
     PageResponse<BlogBaseResponse> getPersonalBlog(BlogQuery request);
+
+    PageResponse<BlogBaseResponse> getCollectList(BlogQuery request);
 }

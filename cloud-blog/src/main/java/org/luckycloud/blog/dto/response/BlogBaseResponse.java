@@ -72,6 +72,8 @@ public class BlogBaseResponse {
      */
     private int viewCount;
 
+    private int collectCount;
+
     /**
      * 标签
      */

@@ -36,4 +36,6 @@ public interface BlogService {
     BlogAuthorResponse getBlogAuthor(String userId);
 
     void updateBlog(BlogInfoCommand request);
+
+    String collectBlog(BlogOperateCommand command);
 }

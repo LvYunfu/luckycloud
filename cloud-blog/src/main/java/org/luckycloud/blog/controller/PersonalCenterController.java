@@ -34,4 +34,15 @@ public class PersonalCenterController {
         return homeService.getPersonalBlog(request);
     }
 
+    /**
+     * 获取收藏博客列表
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/get-collect-list")
+    public PageResponse<BlogBaseResponse> getCollectList(@RequestBody BlogQuery request) {
+        return homeService.getCollectList(request);
+    }
+
 }

@@ -3,6 +3,7 @@ package org.luckycloud.blog.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.page.PageMethod;
 import jakarta.annotation.Resource;
+import org.luckycloud.blog.convert.BlogConvertFactory;
 import org.luckycloud.blog.convert.HomeConvert;
 import org.luckycloud.blog.dto.request.BlogQuery;
 import org.luckycloud.blog.dto.request.HostBlogQuery;
@@ -11,6 +12,7 @@ import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
 import org.luckycloud.blog.service.HomeService;
 import org.luckycloud.domain.blog.CloudBlogCategoriesDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
+import org.luckycloud.domain.blog.CloudBlogOperateDO;
 import org.luckycloud.domain.blog.CloudBlogTagDO;
 import org.luckycloud.dto.blog.response.BlogStatics;
 import org.luckycloud.dto.blog.response.CategoryCount;
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.luckycloud.constant.BlogConstant.BlogOperateType.COLLECT;
+import static org.luckycloud.constant.BlogConstant.BlogOperateType.LIKE;
 import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
 
 /**
@@ -130,9 +134,21 @@ public class HomeServiceImpl implements HomeService {
             BlogStatics statics = staticsMap.getOrDefault(e.getBlogId(), new BlogStatics());
             e.setLikeCount(statics.getLikeCount());
             e.setViewCount(statics.getViewCount());
+            e.setCollectCount(statics.getCollectCount());
             e.setCommentCount(commentCountMap.getOrDefault(e.getBlogId(), 0));
 
         });
         return new PageResponse<>(blogPage.getTotal(), baseResponses);
+    }
+
+    @Override
+    public PageResponse<BlogBaseResponse> getCollectList(BlogQuery request) {
+        List<CloudBlogOperateDO> blogList = blogOperateMapper.selectOperateRecord(BlogConvertFactory.buildOperateQuery(List.of(COLLECT)));
+        if (!ObjectUtils.isEmpty(blogList)) {
+            List<String> collectBlogIds = blogList.stream().map(CloudBlogOperateDO::getBlogId).toList();
+            request.setBlogIdList(collectBlogIds);
+            return this.getBlogList(request);
+        }
+        return new PageResponse<>();
     }
 }

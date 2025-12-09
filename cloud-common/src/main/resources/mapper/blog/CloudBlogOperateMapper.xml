@@ -72,17 +72,21 @@
     </select>
     <select id="selectOperateRecord" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from cloud_blog_operate
         <where>
             user_id = #{query.userId}
-            and blog_id = #{query.blogId}
+            and status = '1'
             and operate_type in
             <foreach item="item" index="index" collection="query.operateType" open="(" separator="," close=")">
                 #{item}
             </foreach>
+            <if test="query.blogId != null and query.blogId != ''">
+                and blog_id = #{query.blogId}
+            </if>
         </where>
     </select>
+
     <select id="queryHotBlogList" resultType="java.lang.String">
         select blog_id
         from cloud_blog_operate
