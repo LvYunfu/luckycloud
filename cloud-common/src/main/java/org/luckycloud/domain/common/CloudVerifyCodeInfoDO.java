@@ -3,6 +3,7 @@ package org.luckycloud.domain.common;
 import lombok.Data;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -57,7 +58,7 @@ public class CloudVerifyCodeInfoDO {
      *  发送时间
 
      */
-    private Date sendTime;
+    private LocalDateTime sendTime;
 
     /**
      * 过期时间 ms
@@ -73,7 +74,7 @@ public class CloudVerifyCodeInfoDO {
      *
 
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      *
@@ -81,7 +82,7 @@ public class CloudVerifyCodeInfoDO {
      *
 
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 1 有效 0无效

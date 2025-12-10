@@ -16,10 +16,13 @@ public interface CloudVerifyCodeInfoMapper {
 
     int insertSelective(CloudVerifyCodeInfoDO record);
 
-    CloudVerifyCodeInfoDO selectByPrimaryKey(Long id);
+    CloudVerifyCodeInfoDO selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(CloudVerifyCodeInfoDO record);
 
     int updateByPrimaryKey(CloudVerifyCodeInfoDO record);
 
+    CloudVerifyCodeInfoDO getVerifyCodeInfo(String mail, String ip, String type);
+
+    void setVerifyCodeInvalid(String verifyId);
 }

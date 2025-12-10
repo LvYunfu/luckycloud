@@ -4,6 +4,7 @@ import org.luckycloud.dto.common.Response;
 import org.luckycloud.dto.secruity.SysUserToken;
 import org.luckycloud.security.dto.LoginRequest;
 import org.luckycloud.security.dto.RegisterRequest;
+import org.luckycloud.security.dto.SendCodeRequest;
 import org.luckycloud.security.dto.UserInfoResponse;
 import org.luckycloud.security.service.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,5 +38,11 @@ public class AuthController {
 
     }
 
+    @PostMapping("/send-code")
+    public Response<String> sendCode(@RequestBody SendCodeRequest request) {
+
+        return Response.successData(authService.sendCode(request));
+
+    }
 
 }

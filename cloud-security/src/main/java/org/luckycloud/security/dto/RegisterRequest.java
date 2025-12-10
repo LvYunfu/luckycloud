@@ -14,4 +14,8 @@ public class RegisterRequest {
     private String profile;
 
     private String avatar;
+
+    private String verifyCode;
+
+    private String verifyId;
 }

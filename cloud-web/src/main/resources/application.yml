@@ -1,6 +1,7 @@
 spring:
   application:
     name: luckycloud
+
   profiles:
     active: dev
   banner:
