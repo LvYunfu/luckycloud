@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class UploadUtils {
     }
 
     public String getFileUrl(String userId, String fileId) {
+        if (ObjectUtils.isEmpty(fileId)) {
+            return null;
+        }
         return githubCdn + getFilePath(userId, fileId);
     }
 

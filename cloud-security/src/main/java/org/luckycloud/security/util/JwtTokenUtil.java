@@ -6,22 +6,18 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.luckycloud.security.entity.SysUserDetail;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenUtil {
 
-    @Value("${jwt.secret:luckyqweqwffsgesyrthssssssssssssssssdfgrwqergsdfhjtry}")
+    @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.expiration:86400}")

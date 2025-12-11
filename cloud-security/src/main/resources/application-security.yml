@@ -9,7 +9,7 @@ spring:
     #发送者邮箱
     username: cloud_lucky@163.com
     #配置密码,注意不是真正的密码，而是刚刚申请到的授权码
-    password: HLKTLXNENUIBZCLU
+    password: ${Mail_Key}
     properties:
       mail:
         smtp:
@@ -25,5 +25,5 @@ spring:
               enable: true
     sender-name: 零雨 # 自定义发件人名称
 jwt:
-  secret: luckycloud
+  secret: M3Fj8rjRRyl3Y5z0KNdST+TglLXgMoEwjRQplekfTQ8=
   expiration: 86400  # 24小时
