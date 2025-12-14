@@ -1,9 +1,8 @@
 package org.luckycloud.security.config;
 
 
-import org.luckycloud.security.component.VerifyCodeAuthenticationProvider;
+import org.luckycloud.security.components.loginProvider.VerifyCodeAuthenticationProvider;
 import org.luckycloud.security.service.AuthCommonService;
-import org.luckycloud.security.service.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

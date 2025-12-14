@@ -1,4 +1,4 @@
-package org.luckycloud.security.component;
+package org.luckycloud.security.components.loginProvider;
 
 import lombok.Getter;
 import org.luckycloud.security.dto.LoginRequest;

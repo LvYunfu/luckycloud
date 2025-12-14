@@ -1,4 +1,4 @@
-package org.luckycloud.security.component;
+package org.luckycloud.security.components.loginProvider;
 
 import org.luckycloud.security.dto.LoginRequest;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
