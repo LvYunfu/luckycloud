@@ -25,4 +25,6 @@ public interface CloudUserInfoMapper {
     CloudUserInfoDO findByUsername(String userName);
 
     CloudUserInfoDO findByMail(String mail);
+
+    void updateByMailSelective(CloudUserInfoDO user);
 }

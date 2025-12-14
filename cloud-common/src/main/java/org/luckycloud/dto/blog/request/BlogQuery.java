@@ -15,6 +15,7 @@ public class BlogQuery {
     private String content;
 
     private String categoryId;
+    private String userId;
 
 
     private List<String> blogStatus;

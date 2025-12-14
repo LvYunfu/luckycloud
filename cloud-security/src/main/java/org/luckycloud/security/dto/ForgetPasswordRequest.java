@@ -5,21 +5,16 @@ import lombok.Data;
 /**
  * @author lvyf
  * @description:
- * @date 2024/7/3
+ * @date 2025/12/3
  */
 @Data
-public class LoginRequest {
-
-    private String mail;
+public class ForgetPasswordRequest {
 
     private String password;
-
-    private String loginType;
-
-    private String userId;
 
     private String verifyCode;
 
     private String verifyId;
-}
 
+    private String mail;
+}

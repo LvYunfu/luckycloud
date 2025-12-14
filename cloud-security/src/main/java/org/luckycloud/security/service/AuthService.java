@@ -10,7 +10,10 @@ import org.luckycloud.mapper.common.CloudVerifyCodeInfoMapper;
 import org.luckycloud.mapper.user.CloudUserInfoMapper;
 import org.luckycloud.security.components.loginProcess.LoginTypeFactory;
 import org.luckycloud.security.components.loginProcess.LoginTypeService;
-import org.luckycloud.security.dto.*;
+import org.luckycloud.security.dto.ForgetPasswordRequest;
+import org.luckycloud.security.dto.LoginRequest;
+import org.luckycloud.security.dto.RegisterRequest;
+import org.luckycloud.security.dto.SendCodeRequest;
 import org.luckycloud.security.entity.SysUserDetail;
 import org.luckycloud.security.util.JwtTokenUtil;
 import org.luckycloud.security.util.RequestUtils;
@@ -26,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 import static org.luckycloud.constant.SystemConstant.DISABLE;
 import static org.luckycloud.constant.SystemConstant.ENABLE;
@@ -43,13 +45,15 @@ public class AuthService {
     private final SendMailUtils sendMailUtils;
 
     private final CloudVerifyCodeInfoMapper verifyCodeInfoMapper;
+    private final AuthCommonService authCommonService;
 
     public AuthService(AuthenticationManager authenticationManager,
                        JwtTokenUtil jwtTokenUtil,
                        CloudUserInfoMapper userMapper,
                        PasswordEncoder passwordEncoder,
                        SendMailUtils sendMailUtils,
-                       CloudVerifyCodeInfoMapper verifyCodeInfoMapper
+                       CloudVerifyCodeInfoMapper verifyCodeInfoMapper,
+                       AuthCommonService authCommonService
 
     ) {
         this.authenticationManager = authenticationManager;
@@ -58,6 +62,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.sendMailUtils = sendMailUtils;
         this.verifyCodeInfoMapper = verifyCodeInfoMapper;
+        this.authCommonService = authCommonService;
 
     }
 
@@ -75,7 +80,7 @@ public class AuthService {
 
     @Transactional
     public void register(RegisterRequest request) {
-        checkVerifyCode(request.getVerifyId(), request.getVerifyCode());
+        authCommonService.checkVerifyCode(request.getVerifyId(), request.getVerifyCode());
         // 检查用户名是否已存在
         if (userMapper.findByUsername(request.getUserName()) != null) {
             throw new BusinessException(SUCCESS, "用户名已存在");
@@ -131,20 +136,15 @@ public class AuthService {
         return verifyCodeInfoDO.getVerifyId();
     }
 
-    public void checkVerifyCode(String verifyId, String verifyCode) {
-
-        CloudVerifyCodeInfoDO verifyCodeInfo = verifyCodeInfoMapper.selectByPrimaryKey(verifyId);
-        if (Objects.isNull(verifyCodeInfo) || DISABLE.equals(verifyCodeInfo.getStatus())) {
-            throw new BusinessException(OPERATE_FAILED, "验证码失效，请重新发送");
-        }
-        LocalDateTime sendTime = verifyCodeInfo.getSendTime();
-        if (sendTime.plusSeconds(verifyCodeInfo.getExpireTime()).isBefore(LocalDateTime.now())) {
-            throw new BusinessException(OPERATE_FAILED, "验证码过期，请重新发送");
-        }
-        if (!verifyCode.equals(verifyCodeInfo.getVerifyCode())) {
-            throw new BusinessException(OPERATE_FAILED, "验证码错误");
-        }
-        verifyCodeInfoMapper.setVerifyCodeInvalid(verifyId);
-
+    public void forgetPassword(ForgetPasswordRequest request) {
+        authCommonService.checkVerifyCode(request.getVerifyId(), request.getVerifyCode());
+        // 更新密码
+        CloudUserInfoDO user = new CloudUserInfoDO();
+        user.setMail(request.getMail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userMapper.updateByMailSelective(user);
     }
+
+
+
 }

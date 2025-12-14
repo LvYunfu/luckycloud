@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 public interface LoginTypeService {
 
     LoginType getLoginType();
+
     Authentication loginProcess(LoginRequest userInfo);
 
 }

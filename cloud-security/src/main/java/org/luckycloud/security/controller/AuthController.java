@@ -2,10 +2,7 @@ package org.luckycloud.security.controller;
 
 import org.luckycloud.dto.common.Response;
 import org.luckycloud.dto.secruity.SysUserToken;
-import org.luckycloud.security.dto.LoginRequest;
-import org.luckycloud.security.dto.RegisterRequest;
-import org.luckycloud.security.dto.SendCodeRequest;
-import org.luckycloud.security.dto.UserInfoResponse;
+import org.luckycloud.security.dto.*;
 import org.luckycloud.security.service.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,12 +32,17 @@ public class AuthController {
     public Response<Void> register(@RequestBody RegisterRequest request) {
         authService.register(request);
         return Response.success("注册成功");
+    }
+
+    @PostMapping("/forget-password")
+    public Response<Void> forgetPassword(@RequestBody ForgetPasswordRequest request) {
+        authService.forgetPassword(request);
+        return Response.success("密码修改成功");
 
     }
 
     @PostMapping("/send-code")
     public Response<String> sendCode(@RequestBody SendCodeRequest request) {
-
         return Response.successData(authService.sendCode(request));
 
     }

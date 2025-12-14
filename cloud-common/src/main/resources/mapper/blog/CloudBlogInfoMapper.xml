@@ -66,6 +66,9 @@
         <if test="query.categoryId != null and query.categoryId != ''">
             and category_id = #{query.categoryId,jdbcType=VARCHAR}
         </if>
+        <if test="query.userId != null and query.userId != ''">
+            and user_Id = #{query.userId,jdbcType=VARCHAR}
+        </if>
         <if test="query.blogStatus != null and query.blogStatus.size()>0">
             and blog_status in
             <foreach item="item" index="index" collection="query.blogStatus"

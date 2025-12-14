@@ -92,9 +92,6 @@
             <if test="password != null">
                 password = #{password,jdbcType=VARCHAR},
             </if>
-            <if test="mail != null">
-                mail = #{mail,jdbcType=VARCHAR},
-            </if>
             <if test="profile != null">
                 profile = #{profile,jdbcType=VARCHAR},
             </if>
@@ -112,6 +109,34 @@
             </if>
         </set>
         where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByMailSelective">
+        update cloud_user_info
+        <set>
+            update_time = current_timestamp,
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="profile != null">
+                profile = #{profile,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountStatus != null">
+                account_status = #{accountStatus,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+        </set>
+        where mail = #{mail,jdbcType=VARCHAR}
     </update>
 
 </mapper>
