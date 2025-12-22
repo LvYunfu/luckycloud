@@ -10,5 +10,5 @@ lucky:
   cloud:
     file:
       file-path: LvYunfu/lucky-picture
-      github-token: ${GitHub_Token}
+      github-token: ${GITHUB_TOKEN}
       github-cdn: https://cdn.jsdelivr.net/gh/LvYunfu/lucky-picture@main/

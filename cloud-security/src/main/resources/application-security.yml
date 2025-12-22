@@ -7,9 +7,9 @@ spring:
     port: 465
     protocol: smtps
     #发送者邮箱
-    username: cloud_lucky@163.com
+    username: ${MAIL_USERNAME}
     #配置密码,注意不是真正的密码，而是刚刚申请到的授权码
-    password: ${Mail_Key}
+    password: ${MAIL_KEY}
     properties:
       mail:
         smtp:
@@ -25,5 +25,5 @@ spring:
               enable: true
     sender-name: 零雨 # 自定义发件人名称
 jwt:
-  secret: M3Fj8rjRRyl3Y5z0KNdST+TglLXgMoEwjRQplekfTQ8=
+  secret: ${JWT_SECRET}
   expiration: 86400  # 24小时
