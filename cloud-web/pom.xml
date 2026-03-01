@@ -41,6 +41,10 @@
 			<groupId>org.luckycloud</groupId>
 			<artifactId>cloud-blog</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.luckycloud</groupId>
+			<artifactId>cloud-ai</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

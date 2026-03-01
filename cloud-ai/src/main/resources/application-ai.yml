@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: cloud-ai
+  ai:
+    openai:
+      api-key: cc67c086-0e8f-40aa-9825-e9df7c049d9a
+      base-url: https://ark.cn-beijing.volces.com
+      chat:
+        options:
+          model: doubao-seed-1-8-251228
+          temperature: 0.7
+          max-tokens: 500
+  config:
+    import: "classpath:/prompts/chat-prompts.yml"
+# AI陪练服务配置
+ai-training:
+  # 会话超时时间（分钟）
+  session-timeout: 30
+  # 最大会话数限制
+  max-sessions-per-user: 10
+  # 测评开关
+  evaluation-enabled: true
+  # 日志级别
+  log-level: INFO
+
+# 模型配置
+#ai-models:
+#  - id: gpt-3.5-turbo
+#    name: GPT-3.5 Turbo
+#    enabled: true
+#    timeout: 30000
+#  - id: gpt-4
+#    name: GPT-4
+#    enabled: true
+#    timeout: 60000
+#  - id: doubao-seed-1-8-251228
+#    name: 豆包Seed
+#    enabled: true
+#    timeout: 30000
+
+
+  # 客户画像配置
+  profiles:
+    config-path: profiles/customer-profiles.json
+    cache-enabled: true
+    reload-interval: 300 # 5分钟检查一次配置更新

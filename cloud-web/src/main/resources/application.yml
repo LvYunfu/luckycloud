@@ -12,6 +12,7 @@ spring:
       - optional:classpath:/application-security.yml
       - optional:classpath:/application-blog.yml
       - optional:classpath:/application-web.yml
+      - optional:classpath:/application-ai.yml
   servlet:
     multipart:
       max-file-size: 10MB

@@ -4,6 +4,8 @@ import org.luckycloud.security.dto.LoginRequest;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+
 /**
  * @author lvyf
  * @description:
@@ -17,11 +19,11 @@ public class VerifyCodeAuthenticationToken extends AbstractAuthenticationToken {
     private LoginRequest credentials;
 
     public VerifyCodeAuthenticationToken() {
-        super(null);
+        super(new ArrayList<>());
     }
 
     public VerifyCodeAuthenticationToken(LoginRequest sysUserDetail) {
-        super(null);
+        super(new ArrayList<>());
         this.credentials = sysUserDetail;
     }
 

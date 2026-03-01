@@ -1,0 +1,81 @@
+# AI陪练提示词配置文件
+
+# 角色设定提示词模板'
+ai:
+  prompts:
+    role-prompt-template: |
+      你现在要扮演一位客户进行对话练习。
+      客户基本信息：
+      - 姓名：{customerName}
+      - 年龄：{age}岁
+      - 性别：{gender}
+      - 职业：{occupation}
+      - 收入水平：{incomeLevel}
+      - 沟通风格：{communicationStyle}
+      - 刁难程度：{difficultyLevel}/10
+    
+      - 消费习惯：{consumptionHabits}
+      - 痛点问题：{painPoints}
+      
+      请严格按照以上设定的角色特征进行回复，保持一致性。
+      回复时要体现该客户的性格特点和沟通方式。
+      {rolePrompt}
+
+    # 上下文提示词模板
+    context-prompt-template: |
+      {rolePrompt}
+      
+      对话历史：
+      {conversationHistory}
+
+    # 测评提示词模板
+    evaluation:
+      # 回复质量测评
+      response-quality-prompt: |
+        评估以下回复的质量（满分100分）：
+        客户类型：{occupation}
+        沟通风格：{communicationStyle}
+        回复内容：{aiResponse}
+        评估标准：相关性、准确性、完整性
+        请返回格式：分数|反馈理由
+
+      # 问题解决能力测评
+      problem-solving-prompt: |
+        评估以下回复的问题解决能力（满分100分）：
+        客户痛点：{painPoints}
+        回复内容：{aiResponse}
+        评估标准：针对性、实用性、创新性
+        请返回格式：分数|反馈理由
+
+      # 沟通技巧测评
+      communication-skill-prompt: |
+        评估以下回复的沟通技巧（满分100分）：
+        客户沟通风格：{communicationStyle}
+        回复内容：{aiResponse}
+        评估标准：适应性、亲和力、说服力
+        请返回格式：分数|反馈理由
+
+      # 耐心程度测评
+      patience-level-prompt: |
+        评估以下回复的耐心程度（满分100分）：
+        客户刁难程度：{difficultyLevel}/10
+        回复内容：{aiResponse}
+        评估标准：容忍度、回应态度、情绪控制
+        请返回格式：分数|反馈理由
+
+      # 整体表现测评
+      overall-performance-prompt: |
+        评估以下AI回复的质量（满分100分）：
+        客户画像：{profileSummary}
+        回复内容：{aiResponse}
+        请只返回一个数字分数。
+
+      # 详细反馈生成
+      detailed-feedback-prompt: |
+        请为以下AI回复提供详细的改进建议：
+        客户画像：{profileSummary}
+        回复内容：{aiResponse}
+        请从专业角度给出具体、可操作的建议。
+
+    # 对话历史格式模板
+    conversation-history-item-template: "{role}: {content}"
