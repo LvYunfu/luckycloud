@@ -2,6 +2,7 @@ package org.luckycloud.blog.controller;
 
 import jakarta.annotation.Resource;
 import org.luckycloud.blog.dto.request.*;
+import org.luckycloud.blog.dto.response.TodoActivityLogResponse;
 import org.luckycloud.blog.dto.response.TodoItemResponse;
 import org.luckycloud.blog.dto.response.TodoListResponse;
 import org.luckycloud.blog.service.TodoListService;
@@ -61,11 +62,18 @@ public class TodoListController {
     /**
      * 获取单个待办清单详情
      */
-    @GetMapping("/get-detail")
-    public Response<TodoListResponse> getTodoListDetail(@RequestParam String listId) {
-        TodoListResponse detail = todoListService.getTodoListDetail(listId);
+    @PostMapping("/get-detail")
+    public Response<TodoListResponse> getTodoListDetail(@RequestBody TodoItemQuery itemQuery) {
+        TodoListResponse detail = todoListService.getTodoListDetail(itemQuery);
         return Response.successData(detail);
     }
+
+    @PostMapping("/get-activity-log")
+    public Response<List<TodoActivityLogResponse>> getTodoListActivityLog(@RequestBody TodoItemQuery itemQuery) {
+        List<TodoActivityLogResponse> list = todoListService.getTodoListActivityLog(itemQuery);
+        return Response.successData(list);
+    }
+
 
     /**
      * 创建任务项

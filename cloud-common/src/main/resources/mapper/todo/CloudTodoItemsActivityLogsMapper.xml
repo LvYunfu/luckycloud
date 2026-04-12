@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.luckycloud.mapper.todo.CloudTodoItemsActivityLogsMapper">
+
+    <resultMap id="BaseResultMap" type="org.luckycloud.domain.todo.CloudTodoItemsActivityLogsDO">
+            <id property="logId" column="log_id" jdbcType="VARCHAR"/>
+            <result property="itemId" column="item_id" jdbcType="VARCHAR"/>
+            <result property="contentText" column="content_text" jdbcType="VARCHAR"/>
+            <result property="imageUrls" column="image_urls" jdbcType="OTHER"/>
+            <result property="location" column="location" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        log_id,item_id,content_text,
+        image_urls,location,create_time,
+        update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_todo_items_activity_logs
+        where  log_id = #{logId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from cloud_todo_items_activity_logs
+        where  log_id = #{logId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" keyColumn="log_id" keyProperty="logId" parameterType="org.luckycloud.domain.todo.CloudTodoItemsActivityLogsDO" useGeneratedKeys="true">
+        insert into cloud_todo_items_activity_logs
+        ( log_id,item_id,content_text
+        ,image_urls,location,create_time
+        ,update_time)
+        values (#{logId,jdbcType=VARCHAR},#{itemId,jdbcType=VARCHAR},#{contentText,jdbcType=VARCHAR}
+        ,#{imageUrls,jdbcType=OTHER},#{location,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}
+        ,#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.todo.CloudTodoItemsActivityLogsDO">
+        update cloud_todo_items_activity_logs
+        <set>
+                <if test="itemId != null">
+                    item_id = #{itemId,jdbcType=VARCHAR},
+                </if>
+                <if test="contentText != null">
+                    content_text = #{contentText,jdbcType=VARCHAR},
+                </if>
+                <if test="imageUrls != null">
+                    image_urls = #{imageUrls,jdbcType=OTHER},
+                </if>
+                <if test="location != null">
+                    location = #{location,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+        </set>
+        where   log_id = #{logId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.todo.CloudTodoItemsActivityLogsDO">
+        update cloud_todo_items_activity_logs
+        set
+            item_id =  #{itemId,jdbcType=VARCHAR},
+            content_text =  #{contentText,jdbcType=VARCHAR},
+            image_urls =  #{imageUrls,jdbcType=OTHER},
+            location =  #{location,jdbcType=VARCHAR},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            update_time =  #{updateTime,jdbcType=TIMESTAMP}
+        where   log_id = #{logId,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 根据任务ID查询活动记录列表 -->
+    <select id="selectByItemId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_todo_items_activity_logs
+        where item_id = #{itemId,jdbcType=VARCHAR}
+        order by create_time desc
+    </select>
+</mapper>
