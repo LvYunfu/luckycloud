@@ -1,11 +1,11 @@
 package org.luckycloud.ai.service;
 
-import org.luckycloud.ai.domain.CustomerProfile;
 import org.luckycloud.ai.domain.TrainingSession;
 import org.luckycloud.ai.dto.TrainingRequest;
 import org.luckycloud.ai.dto.TrainingResponse;
 import org.luckycloud.ai.dto.TrainingSessionRequest;
 import org.luckycloud.ai.enums.AiModelEnum;
+import reactor.core.publisher.Flux;
 import java.util.List;
 
 /**
@@ -16,12 +16,12 @@ public interface AiTrainingService {
     /**
      * 开始新的培训会话
      */
-    TrainingResponse startNewSession(TrainingRequest request);
+    Flux<TrainingResponse> startNewSession(TrainingRequest request);
 
     /**
      * 继续现有会话
      */
-    TrainingResponse continueSession(TrainingSessionRequest sessionRequest);
+    Flux<TrainingResponse> continueSession(TrainingSessionRequest sessionRequest);
 
     /**
      * 结束会话
@@ -49,4 +49,5 @@ public interface AiTrainingService {
      * 切换会话中的AI模型
      */
     boolean switchAiModel(String sessionId, AiModelEnum newModel);
+
 }

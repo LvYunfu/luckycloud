@@ -14,6 +14,7 @@ import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -39,11 +40,9 @@ public class PromptServiceImpl implements PromptService {
         String template = promptConfig.getRolePromptTemplate();
         // 2. 创建 PromptTemplate 对象
         PromptTemplate promptTemplate = new PromptTemplate(template);
-
         // 3. 准备参数 Map
-        Map<String, Object> variables = objectMapper.convertValue(profile, new TypeReference<Map<String, Object>>() {});
-
-
+        Map<String, Object> variables = objectMapper.convertValue(profile, new TypeReference<>() {
+        });
         // 4. 渲染模板生成 Prompt 对象
         Prompt prompt = promptTemplate.create(variables);
         return prompt.toString();
@@ -58,39 +57,38 @@ public class PromptServiceImpl implements PromptService {
         }
 
         String promptTemplate = getEvaluationPromptTemplate(promptType);
-        if (!StringUtils.hasText(promptTemplate)) {
-            log.warn("未找到测评提示词模板: {}", promptType);
-            return buildDefaultEvaluationPrompt(promptType, profile, aiResponse);
-        }
+
+        PromptTemplate template = new PromptTemplate(promptTemplate);
+
 
         // 根据不同类型的测评替换相应变量
-        switch (promptType) {
-            case "responseQuality":
-                return promptTemplate.replace("{occupation}", profile.getOccupation() != null ? profile.getOccupation() : "")
-                                    .replace("{communicationStyle}", profile.getCommunicationStyle() != null ? profile.getCommunicationStyle().getDescription() : "")
-                                    .replace("{aiResponse}", aiResponse);
-            case "problemSolving":
+        return switch (promptType) {
+            case "roleConsistency" -> buildRoleConsistencyPrompt(template, profile, aiResponse);
+            case "responseQuality" ->
+                    promptTemplate.replace("{occupation}", profile.getOccupation() != null ? profile.getOccupation() : "")
+                            .replace("{communicationStyle}", profile.getCommunicationStyle() != null ? profile.getCommunicationStyle().getDescription() : "")
+                            .replace("{aiResponse}", aiResponse);
+            case "problemSolving" -> {
                 String painPoints = profile.getPainPoints() != null ? String.join("、", profile.getPainPoints()) : "";
-                return promptTemplate.replace("{painPoints}", painPoints)
-                                    .replace("{aiResponse}", aiResponse);
-            case "communicationSkill":
-                return promptTemplate.replace("{communicationStyle}", profile.getCommunicationStyle() != null ? profile.getCommunicationStyle().getDescription() : "")
-                                    .replace("{aiResponse}", aiResponse);
-            case "patienceLevel":
-                return promptTemplate.replace("{difficultyLevel}", profile.getDifficultyLevel() != null ? profile.getDifficultyLevel().toString() : "5")
-                                    .replace("{aiResponse}", aiResponse);
-            case "overallPerformance":
+                yield promptTemplate.replace("{painPoints}", painPoints)
+                        .replace("{aiResponse}", aiResponse);
+            }
+            case "communicationSkill" ->
+                    promptTemplate.replace("{communicationStyle}", profile.getCommunicationStyle() != null ? profile.getCommunicationStyle().getDescription() : "")
+                            .replace("{aiResponse}", aiResponse);
+            case "patienceLevel" ->
+                    promptTemplate.replace("{difficultyLevel}", profile.getDifficultyLevel() != null ? profile.getDifficultyLevel().toString() : "5")
+                            .replace("{aiResponse}", aiResponse);
+            case "overallPerformance", "detailedFeedback" -> {
                 String profileSummary = buildProfileSummary(profile);
-                return promptTemplate.replace("{profileSummary}", profileSummary)
-                                    .replace("{aiResponse}", aiResponse);
-            case "detailedFeedback":
-                profileSummary = buildProfileSummary(profile);
-                return promptTemplate.replace("{profileSummary}", profileSummary)
-                                    .replace("{aiResponse}", aiResponse);
-            default:
+                yield promptTemplate.replace("{profileSummary}", profileSummary)
+                        .replace("{aiResponse}", aiResponse);
+            }
+            default -> {
                 log.warn("未知的测评类型: {}", promptType);
-                return buildDefaultEvaluationPrompt(promptType, profile, aiResponse);
-        }
+                yield "";
+            }
+        };
     }
 
 
@@ -106,45 +104,16 @@ public class PromptServiceImpl implements PromptService {
             return null;
         }
 
-        switch (promptType) {
-            case "responseQuality":
-                return evaluation.getResponseQualityPrompt();
-            case "problemSolving":
-                return evaluation.getProblemSolvingPrompt();
-            case "communicationSkill":
-                return evaluation.getCommunicationSkillPrompt();
-            case "patienceLevel":
-                return evaluation.getPatienceLevelPrompt();
-            case "overallPerformance":
-                return evaluation.getOverallPerformancePrompt();
-            case "detailedFeedback":
-                return evaluation.getDetailedFeedbackPrompt();
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * 构建默认测评提示词
-     */
-    private String buildDefaultEvaluationPrompt(String promptType, CustomerProfile profile, String aiResponse) {
-        switch (promptType) {
-            case "responseQuality":
-                return String.format("评估以下回复的质量（满分100分）：\n客户类型：%s\n沟通风格：%s\n回复内容：%s\n评估标准：相关性、准确性、完整性\n请返回格式：分数|反馈理由",
-                        profile.getOccupation(), profile.getCommunicationStyle().getDescription(), aiResponse);
-            case "problemSolving":
-                String painPoints = profile.getPainPoints() != null ? String.join("、", profile.getPainPoints()) : "";
-                return String.format("评估以下回复的问题解决能力（满分100分）：\n客户痛点：%s\n回复内容：%s\n评估标准：针对性、实用性、创新性\n请返回格式：分数|反馈理由",
-                        painPoints, aiResponse);
-            case "communicationSkill":
-                return String.format("评估以下回复的沟通技巧（满分100分）：\n客户沟通风格：%s\n回复内容：%s\n评估标准：适应性、亲和力、说服力\n请返回格式：分数|反馈理由",
-                        profile.getCommunicationStyle().getDescription(), aiResponse);
-            case "patienceLevel":
-                return String.format("评估以下回复的耐心程度（满分100分）：\n客户刁难程度：%d/10\n回复内容：%s\n评估标准：容忍度、回应态度、情绪控制\n请返回格式：分数|反馈理由",
-                        profile.getDifficultyLevel(), aiResponse);
-            default:
-                return String.format("评估以下AI回复：%s\n回复内容：%s", promptType, aiResponse);
-        }
+        return switch (promptType) {
+            case "roleConsistency" -> evaluation.getRoleConsistencyPrompt();
+            case "responseQuality" -> evaluation.getResponseQualityPrompt();
+            case "problemSolving" -> evaluation.getProblemSolvingPrompt();
+            case "communicationSkill" -> evaluation.getCommunicationSkillPrompt();
+            case "patienceLevel" -> evaluation.getPatienceLevelPrompt();
+            case "overallPerformance" -> evaluation.getOverallPerformancePrompt();
+            case "detailedFeedback" -> evaluation.getDetailedFeedbackPrompt();
+            default -> null;
+        };
     }
 
     /**
@@ -159,5 +128,13 @@ public class PromptServiceImpl implements PromptService {
                 profile.getIncomeLevel().getDescription(),
                 profile.getCommunicationStyle().getDescription(),
                 profile.getDifficultyLevel());
+    }
+
+    private String buildRoleConsistencyPrompt(PromptTemplate template, CustomerProfile profile,String aiResponse) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("profile",buildProfileSummary(profile));
+        variables.put("aiResponse",aiResponse);
+        Prompt prompt = template.create(variables);
+        return prompt.toString();
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * @description:
  * @date 2025/8/9
  */
-public interface HomeService {
+public interface BlogListService {
     List<BlogCategoryCountResponse> getCategoryNum(String categoryId);
 
     PageResponse<BlogBaseResponse> getPublicBlogList(BlogQuery request);

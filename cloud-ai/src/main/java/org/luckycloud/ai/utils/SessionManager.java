@@ -1,11 +1,14 @@
 package org.luckycloud.ai.utils;
 
 import org.luckycloud.ai.domain.TrainingSession;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 会话管理器工具类
@@ -73,5 +76,37 @@ public class SessionManager {
         return (int) sessions.values().stream()
                 .filter(session -> userId.equals(session.getUserId()))
                 .count();
+    }
+    
+    /**
+     * 获取用户的所有会话
+     */
+    public List<TrainingSession> getUserSessions(String userId) {
+        return sessions.values().stream()
+                .filter(session -> userId.equals(session.getUserId()))
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * 定时清理过期会话（每5分钟执行一次）
+     */
+    @Scheduled(fixedRate = 300000)
+    public void scheduledCleanup() {
+        cleanupExpiredSessions();
+    }
+    
+    /**
+     * 检查会话是否存在且有效
+     */
+    public boolean isValidSession(String sessionId) {
+        TrainingSession session = getSession(sessionId);
+        if (session == null) {
+            return false;
+        }
+        
+        // 检查会话状态和过期时间
+        LocalDateTime expireTime = LocalDateTime.now().minusMinutes(SESSION_EXPIRE_MINUTES);
+        return session.getStatus() == TrainingSession.SessionStatus.ACTIVE 
+                && session.getStartTime().isAfter(expireTime);
     }
 }

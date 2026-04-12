@@ -9,7 +9,7 @@ import org.luckycloud.blog.dto.request.BlogQuery;
 import org.luckycloud.blog.dto.request.HostBlogQuery;
 import org.luckycloud.blog.dto.response.BlogBaseResponse;
 import org.luckycloud.blog.dto.response.BlogCategoryCountResponse;
-import org.luckycloud.blog.service.HomeService;
+import org.luckycloud.blog.service.BlogListService;
 import org.luckycloud.domain.blog.CloudBlogCategoriesDO;
 import org.luckycloud.domain.blog.CloudBlogInfoDO;
 import org.luckycloud.domain.blog.CloudBlogOperateDO;
@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.luckycloud.constant.BlogConstant.BlogOperateType.COLLECT;
-import static org.luckycloud.constant.BlogConstant.BlogOperateType.LIKE;
 import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
 
 /**
@@ -36,7 +35,7 @@ import static org.luckycloud.constant.BlogConstant.BlogStatus.PUBLIC;
  * @date 2025/8/9
  */
 @Service
-public class HomeServiceImpl implements HomeService {
+public class BlogListServiceImpl implements BlogListService {
 
     @Resource
     private CloudBlogCategoriesMapper blogCategoriesMapper;

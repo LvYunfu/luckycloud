@@ -3,6 +3,7 @@ package org.luckycloud.ai.service.impl;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.luckycloud.ai.domain.CustomerProfile;
+import org.luckycloud.ai.domain.EvaluationResult;
 import org.luckycloud.ai.domain.TrainingSession;
 import org.luckycloud.ai.dto.TrainingRequest;
 import org.luckycloud.ai.dto.TrainingResponse;
@@ -14,14 +15,15 @@ import org.luckycloud.ai.service.EvaluationService;
 import org.luckycloud.ai.service.PromptService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * AI陪练服务实现类
@@ -46,7 +48,7 @@ public class AiTrainingServiceImpl implements AiTrainingService {
     private final Map<String, TrainingSession> sessionMap = new ConcurrentHashMap<>();
 
     @Override
-    public TrainingResponse startNewSession(TrainingRequest request) {
+    public Flux<TrainingResponse> startNewSession(TrainingRequest request) {
         try {
 
             // 获取或创建客户画像
@@ -62,39 +64,35 @@ public class AiTrainingServiceImpl implements AiTrainingService {
 
             // 使用提示词服务构建角色设定提示词
             String prompt = promptService.buildRolePrompt(profile);
-
-            // 初始化AI对话
-            String initialResponse = generateInitialResponse(prompt, request.getUserMessage());
-
+            log.info("成功创建新的培训会话，sessionId: {}", session.getSessionId());
             // 添加初始消息到会话
             session.addUserMessage(request.getUserMessage());
-            session.addAiMessage(initialResponse);
 
             // 存储会话
             sessionMap.put(session.getSessionId(), session);
 
-            log.info("成功创建新的培训会话，sessionId: {}", session.getSessionId());
+            // 初始化AI对话
+            return generateInitialResponse(prompt, request.getUserMessage(), session);
 
-            return TrainingResponse.success(session.getSessionId(), initialResponse);
 
         } catch (Exception e) {
             log.error("创建培训会话失败", e);
-            return TrainingResponse.error("创建会话失败: " + e.getMessage());
+            return Flux.just(TrainingResponse.error("创建会话失败: " + e.getMessage()));
         }
     }
 
     @Override
-    public TrainingResponse continueSession(TrainingSessionRequest sessionRequest) {
+    public Flux<TrainingResponse> continueSession(TrainingSessionRequest sessionRequest) {
         String sessionId = sessionRequest.getSessionId();
         try {
             // 验证会话是否存在
             TrainingSession session = sessionMap.get(sessionId);
             if (session == null) {
-                return TrainingResponse.error("会话不存在或已过期");
+                return Flux.just(TrainingResponse.error("会话不存在或已过期"));
             }
 
             if (session.getStatus() != TrainingSession.SessionStatus.ACTIVE) {
-                return TrainingResponse.error("会话已结束或已暂停");
+                return Flux.just(TrainingResponse.error("会话已结束或已暂停"));
             }
 
             // 添加用户消息
@@ -105,31 +103,15 @@ public class AiTrainingServiceImpl implements AiTrainingService {
 
             // 使用提示词服务构建上下文提示词
             String contextPrompt = promptService.buildRolePrompt(profile);
-
-            // 生成AI回复
-            String aiResponse = generateResponse(contextPrompt, sessionRequest.getUserMessage(), session.getMessages());
-
-            // 添加AI回复
-            session.addAiMessage(aiResponse);
-
-            // 执行测评（如果需要）
-            List<org.luckycloud.ai.domain.EvaluationResult> evaluations = new ArrayList<>();
-            if (Boolean.TRUE.equals(sessionRequest.getNeedEvaluation())) {
-                evaluations = evaluationService.evaluateResponse(session, aiResponse);
-                session.getEvaluations().addAll(evaluations);
-            }
-
             log.info("会话继续成功，sessionId: {}", sessionId);
 
-            if (!evaluations.isEmpty()) {
-                return TrainingResponse.successWithEvaluation(sessionId, aiResponse, evaluations);
-            } else {
-                return TrainingResponse.success(sessionId, aiResponse);
-            }
+            // 生成AI回复
+            return generateResponse(contextPrompt, sessionRequest.getUserMessage(), session);
+
 
         } catch (Exception e) {
             log.error("继续会话失败，sessionId: {}", sessionId, e);
-            return TrainingResponse.error("继续会话失败: " + e.getMessage());
+            return Flux.just(TrainingResponse.error("继续会话失败: " + e.getMessage()));
         }
     }
 
@@ -163,7 +145,7 @@ public class AiTrainingServiceImpl implements AiTrainingService {
         if (existingProfile != null) {
             return existingProfile;
         }
-        return  customerProfileService.getProfileById("difficult_customer_001");
+        return customerProfileService.getProfileById("difficult_customer_001");
 
 
     }
@@ -187,33 +169,84 @@ public class AiTrainingServiceImpl implements AiTrainingService {
     /**
      * 生成初始回复
      */
-    private String generateInitialResponse(String rolePrompt, String userMessage) {
+    private Flux<TrainingResponse> generateInitialResponse(String rolePrompt, String userMessage, TrainingSession session) {
         String fullPrompt = rolePrompt + "\n\n现在开始对话，用户的开场白是：" + userMessage;
-        return callAiModel(fullPrompt,new ArrayList<>());
+        return callAiModel(fullPrompt, session);
     }
 
     /**
      * 生成回复
      */
-    private String generateResponse(String contextPrompt, String userMessage,List<Message> history) {
+    private Flux<TrainingResponse> generateResponse(String contextPrompt, String userMessage, TrainingSession session) {
         String fullPrompt = contextPrompt + "\n用户说：" + userMessage + "\n请以客户身份回复：";
-        return callAiModel(fullPrompt,history);
+        return callAiModel(fullPrompt, session);
     }
 
     /**
      * 调用AI模型
      */
-    private String callAiModel(String prompt, List<Message> history) {
+    private Flux<TrainingResponse> callAiModel(String prompt, TrainingSession session) {
+        AtomicReference<StringBuilder> contentBuilder = new AtomicReference<>(new StringBuilder());
+
         try {
-            return chatClient.prompt()
-                    .user(prompt)
-                    .messages(history)
-                    .call()
-                    .content();
+            //mock 数据 两个字符发送一次
+            String mockResponse = "你好，我上周在你们旗舰店买的智能落地灯，收到货用了不到三天就坏了，完全不亮了，这质量也太差了吧！";
+            Flux<TrainingResponse> originalFlux = Flux.fromArray(mockResponse.split("(?<=\\G.{2})")) // 每两个字符分割一次
+                    .delayElements(java.time.Duration.ofMillis(200)) // 模拟每个分段的延迟
+                    .map(content -> {
+                        contentBuilder.get().append(content);
+                        return TrainingResponse.success(session.getSessionId(), content);
+                    });
+
+//
+//            Flux<TrainingResponse> originalFlux = chatClient.prompt()
+//                    .user(prompt)
+//                    .messages(session.getMessages())
+//                    .stream()
+//                    .content()
+//                    .doOnNext(e -> contentBuilder.get().append(e))
+//                    .map(content -> TrainingResponse.success(session.getSessionId(), content));
+            // 3. 定义测评并追加内容的逻辑
+            Mono<Flux<TrainingResponse>> extraFluxMono = Mono.fromRunnable(() -> {
+                        session.addAiMessage(contentBuilder.get().toString());
+
+                        // 执行角色一致性测评
+//                            Integer roleConsistency = evaluationService.evaluateRoleConsistency(session, contentBuilder.get().toString());
+                        Integer roleConsistency = 50;
+                        // 得分<80时，需要追加内容
+                        if (roleConsistency < 80) {
+                            // 记录需要追加的内容（用ThreadLocal或直接传递）
+                            contentBuilder.get().append("追加的内容");
+                        }
+
+                    })
+                    .subscribeOn(Schedulers.boundedElastic())
+                    .then(Mono.defer(() -> {
+                        // 判断是否需要追加内容
+
+//                        Integer roleConsistency = evaluationService.evaluateRoleConsistency(session, contentBuilder.get().toString());
+                        Integer roleConsistency = 50;
+                        if (roleConsistency < 80) {
+                            // 流式输出追加的内容（逐字符/逐段，保持流式特性）
+                            return Mono.just(Flux.fromArray("追加的内容".split("")) // 按字符拆分实现流式
+                                    .map(charContent -> TrainingResponse.success(session.getSessionId(), charContent)));
+                        }
+
+                        // 不需要追加时，返回空流
+                        return Mono.just(Flux.empty());
+                    }));
+            Flux<TrainingResponse> ff = Flux.create(sink -> {
+                System.out.println("asd");
+                sink.next(TrainingResponse.success("", ""));
+                sink.complete();
+            });
+            // 4. 拼接原流 + 追加流（保证顺序执行）
+            return originalFlux.concatWith(extraFluxMono.flatMapMany(flux -> flux)).concatWith(ff);
         } catch (Exception e) {
             log.error("调用AI模型失败", e);
-            return "抱歉，我现在无法回复，请稍后再试。";
+            return Flux.just(TrainingResponse.error("抱歉，我现在无法回复，请稍后再试。"));
         }
     }
+
 
 }

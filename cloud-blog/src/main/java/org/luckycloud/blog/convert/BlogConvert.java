@@ -1,5 +1,6 @@
 package org.luckycloud.blog.convert;
 
+import jakarta.annotation.Resource;
 import org.luckycloud.blog.dto.request.*;
 import org.luckycloud.blog.dto.response.BlogCommentResponse;
 import org.luckycloud.blog.dto.response.BlogInfoResponse;
@@ -10,6 +11,7 @@ import org.luckycloud.domain.blog.CloudBlogOperateDO;
 import org.luckycloud.domain.blog.CloudFollowUserDO;
 import org.luckycloud.dto.blog.request.BlogCommentQuery;
 import org.luckycloud.dto.blog.response.BlogStatics;
+import org.luckycloud.utils.UploadUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -23,13 +25,16 @@ import static org.luckycloud.constant.SystemConstant.ENABLE;
  * @date 2025/8/5
  */
 @Mapper(componentModel = "spring")
-public interface BlogConvert {
+public abstract class BlogConvert {
+
+    @Resource
+    protected UploadUtils uploadUtils;
 
     @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "status", constant = ENABLE)
     @Mapping(target = "userId", expression = "java(org.luckycloud.security.util.UserUtils.getUserId())")
-    CloudBlogInfoDO convertToBlogDO(BlogInfoCommand request);
+    public abstract CloudBlogInfoDO convertToBlogDO(BlogInfoCommand request);
 
 
     @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
@@ -38,26 +43,27 @@ public interface BlogConvert {
     @Mapping(target = "likeCount", constant = "0")
     @Mapping(target = "userId", expression = "java(org.luckycloud.security.util.UserUtils.getUserId())")
     @Mapping(target = "commentId", expression = "java(org.luckycloud.utils.GenerateIdUtils.generateId())")
-    CloudBlogCommentsDO convertToBlogCommentsDO(CommentBlogCommand request);
+    public abstract CloudBlogCommentsDO convertToBlogCommentsDO(CommentBlogCommand request);
 
-    BlogCommentQuery toCommentQuery(CommentQuery query);
+    public abstract BlogCommentQuery toCommentQuery(CommentQuery query);
 
-    List<BlogCommentResponse> toBlogCommentDOList(List<CloudBlogCommentsDO> commands);
-
-
-    BlogCommentResponse convertToBlogCommentResponse(CloudBlogCommentsDO commentDO);
+    public abstract List<BlogCommentResponse> toBlogCommentDOList(List<CloudBlogCommentsDO> commands);
 
 
+    public abstract BlogCommentResponse convertToBlogCommentResponse(CloudBlogCommentsDO commentDO);
 
-    BlogInfoResponse toBlogInfo(CloudBlogInfoDO blogInfoDO);
 
-    BlogStaticsResponse convertStatics(BlogStatics statics);
+    @Mapping(target = "coverImage", expression = "java(uploadUtils.getFileUrl(blogInfoDO.getUserId(), blogInfoDO.getCoverImage()))")
+    public abstract BlogInfoResponse toBlogInfo(CloudBlogInfoDO blogInfoDO);
+
+    public abstract BlogStaticsResponse convertStatics(BlogStatics statics);
+
     @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "userId", expression = "java(org.luckycloud.security.util.UserUtils.getUserId())")
-    CloudBlogOperateDO convertToBlogOperateDO(BlogOperateCommand command);
+    public abstract CloudBlogOperateDO convertToBlogOperateDO(BlogOperateCommand command);
 
 
-    CloudFollowUserDO toFollowUserDO(BlogFollowCommand command);
+    public abstract CloudFollowUserDO toFollowUserDO(BlogFollowCommand command);
 
 }

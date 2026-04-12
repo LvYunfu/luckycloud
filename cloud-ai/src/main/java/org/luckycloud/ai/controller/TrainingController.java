@@ -6,6 +6,9 @@ import org.luckycloud.ai.dto.TrainingResponse;
 import org.luckycloud.ai.dto.TrainingSessionRequest;
 import org.luckycloud.ai.enums.AiModelEnum;
 import org.luckycloud.ai.service.AiTrainingService;
+import org.luckycloud.dto.common.Response;
+import org.springframework.http.MediaType;
+import reactor.core.publisher.Flux;
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -24,20 +27,20 @@ public class TrainingController {
     /**
      * 开始新的培训会话
      */
-    @PostMapping("/start")
-    public TrainingResponse startNewSession(@RequestBody TrainingRequest request) {
+    @PostMapping(path = "/start", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Response<TrainingResponse>> startNewSession(@RequestBody TrainingRequest request) {
         log.info("收到开始新会话请求，userId: {}", request.getUserId());
-        return aiTrainingService.startNewSession(request);
+        return aiTrainingService.startNewSession(request).map(Response::successData);
     }
 
     /**
      * 继续现有会话
      */
-    @PostMapping("/continue")
-    public TrainingResponse continueSession(@RequestBody TrainingSessionRequest request) {
+    @PostMapping(path = "/continue", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Response<TrainingResponse>> continueSession(@RequestBody TrainingSessionRequest request) {
 
         log.info("收到继续会话请求，sessionId: {}", request.getSessionId());
-        return aiTrainingService.continueSession(request);
+        return aiTrainingService.continueSession(request).map(Response::successData);
     }
 
     /**
@@ -92,6 +95,8 @@ public class TrainingController {
             return false;
         }
     }
+
+    /**
 
     /**
      * 健康检查接口

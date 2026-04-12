@@ -19,12 +19,20 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.luckycloud</groupId>
+            <artifactId>cloud-common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-openai</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-client-chat</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-rag</artifactId>
         </dependency>
     </dependencies>
 </project>

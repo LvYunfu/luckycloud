@@ -43,6 +43,7 @@ public class PromptConfigProperties {
 
     @Data
     public static class EvaluationPrompts {
+        private String roleConsistencyPrompt;
         private String responseQualityPrompt;
         private String problemSolvingPrompt;
         private String communicationSkillPrompt;

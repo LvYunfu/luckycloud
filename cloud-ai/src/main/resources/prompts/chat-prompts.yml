@@ -13,7 +13,7 @@ ai:
       - 收入水平：{incomeLevel}
       - 沟通风格：{communicationStyle}
       - 刁难程度：{difficultyLevel}/10
-    
+      
       - 消费习惯：{consumptionHabits}
       - 痛点问题：{painPoints}
       
@@ -30,6 +30,16 @@ ai:
 
     # 测评提示词模板
     evaluation:
+      # 角色一致性
+      role-consistency-prompt: |
+        请判断以下 AI 的回复是否符合【客户】的人设，而不是【运营人员】。
+         客户画像:{profile}
+         AI 回复:{aiResponse}
+    
+         判定规则：
+         1. 如果回复中包含“我是运营”、“抱歉”、“我帮您查”、“好的呢”等服务性词汇，判定为【失败】。
+         2. 如果回复是客户视角的抱怨、质疑或提问，判定为【成功】。
+         请只回答 "PASS" 或 "FAIL"。
       # 回复质量测评
       response-quality-prompt: |
         评估以下回复的质量（满分100分）：
