@@ -18,6 +18,7 @@ import org.luckycloud.mapper.todo.CloudTodoItemsMapper;
 import org.luckycloud.mapper.todo.CloudTodoListsMapper;
 import org.luckycloud.security.util.UserUtils;
 import org.luckycloud.utils.GenerateIdUtils;
+import org.luckycloud.utils.JsonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -109,26 +110,28 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     @Override
-    public TodoListResponse getTodoListDetail(TodoItemQuery query) {
+    public TodoListResponse getTodoTask(TodoItemQuery query) {
         CloudTodoListsDO todoList = checkListId(query.getListId());
         TodoListResponse response = todoConvert.convert2TodoListResponse(todoList);
         List<TodoItemStatistics> statisticsList = todoItemsMapper.countTodoItems(Collections.singletonList(response.getListId()));
         TodoItemStatistics statistics = statisticsList.get(0);
-        // 查询任务项列表
-        List<CloudTodoItemsDO> items = todoItemsMapper.selectByList(todoConvert.convert2Query(query));
-        if (!CollectionUtils.isEmpty(items)) {
-            List<TodoItemResponse> itemResponses = items.stream()
-                    .map(e -> todoConvert.convert2TodoItemResponse(e))
-                    .toList();
-            response.setItems(itemResponses);
-        } else {
-            response.setItems(Collections.emptyList());
-        }
         if (!Objects.isNull(statistics)) {
             response.setTotal(statistics.getTotalCount());
             response.setCompleted(statistics.getCompletedCount());
         }
         return response;
+    }
+
+    @Override
+    public List<TodoItemResponse> getTodoItems(TodoItemQuery query) {
+        // 查询任务项列表
+        List<CloudTodoItemsDO> items = todoItemsMapper.selectByList(todoConvert.convert2Query(query));
+        if (!CollectionUtils.isEmpty(items)) {
+           return items.stream()
+                    .map(e -> todoConvert.convert2TodoItemResponse(e))
+                    .toList();
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -193,7 +196,7 @@ public class TodoListServiceImpl implements TodoListService {
             logDO.setLogId(GenerateIdUtils.generateId());
             logDO.setItemId(command.getItemId());
             logDO.setContentText(command.getContentText());
-            logDO.setImageUrls(command.getImageUrls());
+            logDO.setImageUrls(JsonUtils.toJsonString(command.getImageUrls()));
             logDO.setLocation(command.getLocation());
             logDO.setCreateTime(LocalDateTime.now());
             logDO.setUpdateTime(LocalDateTime.now());
@@ -225,20 +228,35 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     @Override
-    public TodoItemResponse getRandomUncompletedItem(String listId) {
+    public TodoItemResponse getRandomUncompletedItem(TodoItemQuery query) {
         // 验证清单存在并检查权限
-        checkListId(listId);
+        checkListId(query.getListId());
 
         // 查询未完成的任务列表
-        List<CloudTodoItemsDO> uncompletedItems = todoItemsMapper.selectUncompletedByListId(listId);
+        List<CloudTodoItemsDO> uncompletedItems = todoItemsMapper.selectUncompletedByListId(query.getListId());
 
         if (CollectionUtils.isEmpty(uncompletedItems)) {
             throw new BusinessException(OPERATE_FAILED, "没有未完成的任务");
         }
 
-        // 随机选择一个
+        // 如果只有一个任务，直接返回
+        if (uncompletedItems.size() == 1) {
+            return todoConvert.convert2TodoItemResponse(uncompletedItems.get(0));
+        }
+
+        // 随机选择一个，最多重试3次避免选中相同的itemId
         Random random = new Random();
-        CloudTodoItemsDO selectedItem = uncompletedItems.get(random.nextInt(uncompletedItems.size()));
+        CloudTodoItemsDO selectedItem = null;
+        int maxRetries = 3;
+        
+        for (int i = 0; i < maxRetries; i++) {
+            CloudTodoItemsDO candidate = uncompletedItems.get(random.nextInt(uncompletedItems.size()));
+            // 如果随机到的itemId与查询的不同，或者已经是最后一次尝试，则选中
+            if (!candidate.getItemId().equals(query.getItemId()) || i == maxRetries - 1) {
+                selectedItem = candidate;
+                break;
+            }
+        }
 
         return todoConvert.convert2TodoItemResponse(selectedItem);
     }

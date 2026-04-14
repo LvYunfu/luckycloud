@@ -3,6 +3,7 @@ package org.luckycloud.blog.dto.response;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 活动记录响应
@@ -30,7 +31,7 @@ public class TodoActivityLogResponse {
     /**
      * 图片URL列表
      */
-    private Object imageUrls;
+    private List<String> imageUrls;
 
     /**
      * 地点

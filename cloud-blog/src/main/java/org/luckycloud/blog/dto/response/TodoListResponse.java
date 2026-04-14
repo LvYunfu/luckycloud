@@ -38,10 +38,6 @@ public class TodoListResponse {
 
     private int completed;
 
-    /**
-     * 任务项列表
-     */
-    private List<TodoItemResponse> items;
 
     /**
      * 创建时间

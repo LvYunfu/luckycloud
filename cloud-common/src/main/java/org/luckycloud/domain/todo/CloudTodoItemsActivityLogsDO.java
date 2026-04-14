@@ -28,7 +28,7 @@ public class CloudTodoItemsActivityLogsDO {
     /**
      * 图片URL列表
      */
-    private Object imageUrls;
+    private String imageUrls;
 
     /**
      * 地点

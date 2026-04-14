@@ -76,7 +76,9 @@ public interface TodoConvert {
     /**
      * DO转Response - 活动记录
      */
+    @Mapping(target = "imageUrls",expression = "java(org.luckycloud.utils.JsonUtils.parseList(log.getImageUrls(),new com.fasterxml.jackson.core.type.TypeReference<List<String>>(){}))")
     TodoActivityLogResponse convert2ActivityLogResponse(CloudTodoItemsActivityLogsDO log);
+
 
     List<TodoActivityLogResponse> convert2ActivityLogResponse(List<CloudTodoItemsActivityLogsDO> logs);
 

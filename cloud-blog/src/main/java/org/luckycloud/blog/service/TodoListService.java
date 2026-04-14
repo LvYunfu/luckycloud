@@ -37,7 +37,7 @@ public interface TodoListService {
     /**
      * 获取单个待办清单详情
      */
-    TodoListResponse getTodoListDetail(TodoItemQuery query);
+    TodoListResponse getTodoTask(TodoItemQuery query);
 
     /**
      * 创建任务项
@@ -67,7 +67,9 @@ public interface TodoListService {
     /**
      * 从未完成的任务中随机选择一个
      */
-    TodoItemResponse getRandomUncompletedItem(String listId);
+    TodoItemResponse getRandomUncompletedItem(TodoItemQuery query);
 
     List<TodoActivityLogResponse> getTodoListActivityLog(TodoItemQuery itemQuery);
+
+    List<TodoItemResponse> getTodoItems(TodoItemQuery itemQuery);
 }

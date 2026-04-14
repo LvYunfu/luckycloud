@@ -14,6 +14,6 @@ public class TodoItemQuery {
 
     private String itemId;
 
-    private String itemsStatus;
+    private String itemStatus;
 
 }

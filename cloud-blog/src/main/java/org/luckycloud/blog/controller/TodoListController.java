@@ -53,7 +53,7 @@ public class TodoListController {
     /**
      * 获取用户的待办清单列表
      */
-    @GetMapping("/get-user-lists")
+    @GetMapping("/get-user-todo")
     public Response<List<TodoListResponse>> getUserTodoLists() {
         List<TodoListResponse> lists = todoListService.getUserTodoLists();
         return Response.successData(lists);
@@ -62,12 +62,25 @@ public class TodoListController {
     /**
      * 获取单个待办清单详情
      */
-    @PostMapping("/get-detail")
-    public Response<TodoListResponse> getTodoListDetail(@RequestBody TodoItemQuery itemQuery) {
-        TodoListResponse detail = todoListService.getTodoListDetail(itemQuery);
+    @PostMapping("/get-todo")
+    public Response<TodoListResponse> getTodoTask(@RequestBody TodoItemQuery itemQuery) {
+        TodoListResponse detail = todoListService.getTodoTask(itemQuery);
         return Response.successData(detail);
     }
 
+    /**
+     * 获取单个待办清单详情
+     */
+    @PostMapping("/get-todo-items")
+    public Response<List<TodoItemResponse>> getTodoItems(@RequestBody TodoItemQuery itemQuery) {
+        List<TodoItemResponse> list = todoListService.getTodoItems(itemQuery);
+        return Response.successData(list);
+    }
+    /**
+     * 获取待办清单的动态日志
+     * @param itemQuery
+     * @return
+     */
     @PostMapping("/get-activity-log")
     public Response<List<TodoActivityLogResponse>> getTodoListActivityLog(@RequestBody TodoItemQuery itemQuery) {
         List<TodoActivityLogResponse> list = todoListService.getTodoListActivityLog(itemQuery);
@@ -123,9 +136,9 @@ public class TodoListController {
     /**
      * 从未完成的任务中随机选择一个
      */
-    @GetMapping("/random-uncompleted")
-    public Response<TodoItemResponse> getRandomUncompletedItem(@RequestParam String listId) {
-        TodoItemResponse item = todoListService.getRandomUncompletedItem(listId);
+    @PostMapping("/random-uncompleted")
+    public Response<TodoItemResponse> getRandomUncompletedItem(@RequestBody TodoItemQuery query) {
+        TodoItemResponse item = todoListService.getRandomUncompletedItem(query);
         return Response.successData(item);
     }
 }

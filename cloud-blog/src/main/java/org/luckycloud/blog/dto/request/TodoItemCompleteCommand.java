@@ -2,6 +2,8 @@ package org.luckycloud.blog.dto.request;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 完成任务请求
  * @author lvyf
@@ -23,7 +25,7 @@ public class TodoItemCompleteCommand {
     /**
      * 图片URL列表
      */
-    private String imageUrls;
+    private List<String> imageUrls;
 
     /**
      * 地点
