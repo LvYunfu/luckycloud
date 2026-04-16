@@ -101,7 +101,10 @@
                 and item_status = #{query.itemStatus,jdbcType=CHAR}
             </if>
         </where>
-        order by item_status, sort_order asc, update_time asc
+        order by
+        item_status asc,
+        case when item_status = 'IS00' then sort_order else null end asc,
+        case when item_status != 'IS00' then update_time else null end desc
     </select>
 
     <!-- 根据任务ID查询 -->
