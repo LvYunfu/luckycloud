@@ -78,6 +78,7 @@
         <include refid="Base_Column_List" />
         from cloud_todo_lists
         where user_id = #{userId,jdbcType=VARCHAR}
+        and status = '1'
         order by create_time desc
     </select>
 
@@ -87,5 +88,6 @@
         <include refid="Base_Column_List" />
         from cloud_todo_lists
         where list_id = #{listId,jdbcType=VARCHAR}
+        and status = '1'
     </select>
 </mapper>

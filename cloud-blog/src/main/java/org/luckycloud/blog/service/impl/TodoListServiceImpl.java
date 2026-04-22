@@ -114,6 +114,9 @@ public class TodoListServiceImpl implements TodoListService {
         CloudTodoListsDO todoList = checkListId(query.getListId());
         TodoListResponse response = todoConvert.convert2TodoListResponse(todoList);
         List<TodoItemStatistics> statisticsList = todoItemsMapper.countTodoItems(Collections.singletonList(response.getListId()));
+        if (CollectionUtils.isEmpty(statisticsList)) {
+            return response;
+        }
         TodoItemStatistics statistics = statisticsList.get(0);
         if (!Objects.isNull(statistics)) {
             response.setTotal(statistics.getTotalCount());
@@ -127,7 +130,7 @@ public class TodoListServiceImpl implements TodoListService {
         // 查询任务项列表
         List<CloudTodoItemsDO> items = todoItemsMapper.selectByList(todoConvert.convert2Query(query));
         if (!CollectionUtils.isEmpty(items)) {
-           return items.stream()
+            return items.stream()
                     .map(e -> todoConvert.convert2TodoItemResponse(e))
                     .toList();
         }
@@ -168,9 +171,11 @@ public class TodoListServiceImpl implements TodoListService {
     public void deleteTodoItem(String itemId) {
         // 验证任务项存在并检查权限
         checkItemId(itemId);
-
-        // 物理删除任务项及其活动记录
-        todoItemsMapper.deleteByPrimaryKey(Long.parseLong(itemId));
+        CloudTodoItemsDO updateDO = new CloudTodoItemsDO();
+        updateDO.setItemId(itemId);
+        updateDO.setStatus(DISABLE);
+        updateDO.setUpdateTime(LocalDateTime.now());
+        todoItemsMapper.updateByPrimaryKeySelective(updateDO);
         log.info("删除任务项成功，itemId: {}", itemId);
     }
 
@@ -248,7 +253,7 @@ public class TodoListServiceImpl implements TodoListService {
         Random random = new Random();
         CloudTodoItemsDO selectedItem = null;
         int maxRetries = 3;
-        
+
         for (int i = 0; i < maxRetries; i++) {
             CloudTodoItemsDO candidate = uncompletedItems.get(random.nextInt(uncompletedItems.size()));
             // 如果随机到的itemId与查询的不同，或者已经是最后一次尝试，则选中
@@ -264,8 +269,8 @@ public class TodoListServiceImpl implements TodoListService {
 
     @Override
     public List<TodoActivityLogResponse> getTodoListActivityLog(TodoItemQuery itemQuery) {
-        List<CloudTodoItemsActivityLogsDO> list =  activityLogsMapper.selectByItemId(itemQuery.getItemId());
-        return todoConvert.convert2ActivityLogResponse( list);
+        List<CloudTodoItemsActivityLogsDO> list = activityLogsMapper.selectByItemId(itemQuery.getItemId());
+        return todoConvert.convert2ActivityLogResponse(list);
     }
 
     /**

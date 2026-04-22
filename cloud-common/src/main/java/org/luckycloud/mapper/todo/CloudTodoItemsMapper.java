@@ -24,8 +24,6 @@ public interface CloudTodoItemsMapper {
 
     int updateByPrimaryKeySelective(CloudTodoItemsDO record);
 
-    int updateByPrimaryKey(CloudTodoItemsDO record);
-
     /**
      * 根据清单ID查询任务列表
      */

@@ -35,6 +35,7 @@ public class CloudTodoItemsDO {
      */
     private String itemStatus;
 
+
     /**
      * 排序权重
      */
@@ -54,4 +55,6 @@ public class CloudTodoItemsDO {
      * 完成时间
      */
     private LocalDateTime completedTime;
+
+    private String status;
 }

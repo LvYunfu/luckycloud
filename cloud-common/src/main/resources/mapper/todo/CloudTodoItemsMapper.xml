@@ -14,13 +14,14 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="completedTime" column="completed_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="CHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         item_id
         ,list_id,title,
         description,item_status,sort_order,
-        create_time,update_time,completed_time
+        create_time,update_time,completed_time,status
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -30,20 +31,15 @@
         where item_id = #{itemId,jdbcType=VARCHAR}
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete
-        from cloud_todo_items
-        where item_id = #{itemId,jdbcType=VARCHAR}
-    </delete>
     <insert id="insert" parameterType="org.luckycloud.domain.todo.CloudTodoItemsDO">
         insert into cloud_todo_items
         ( item_id, list_id, title
         , description, item_status, sort_order
-        , create_time, update_time, completed_time)
+        , create_time, update_time, completed_time,status)
         values ( #{itemId,jdbcType=VARCHAR}, #{listId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}
                , #{description,jdbcType=VARCHAR}, #{itemStatus,jdbcType=CHAR}, #{sortOrder,jdbcType=INTEGER}
                , #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-               , #{completedTime,jdbcType=TIMESTAMP})
+               , #{completedTime,jdbcType=TIMESTAMP},#{status,jdbcType=CHAR})
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.todo.CloudTodoItemsDO">
         update cloud_todo_items
@@ -72,19 +68,10 @@
             <if test="completedTime != null">
                 completed_time = #{completedTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
         </set>
-        where item_id = #{itemId,jdbcType=VARCHAR}
-    </update>
-    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.todo.CloudTodoItemsDO">
-        update cloud_todo_items
-        set list_id        = #{listId,jdbcType=VARCHAR},
-            title          = #{title,jdbcType=VARCHAR},
-            description    = #{description,jdbcType=VARCHAR},
-            item_status    = #{itemStatus,jdbcType=CHAR},
-            sort_order     = #{sortOrder,jdbcType=INTEGER},
-            create_time    = #{createTime,jdbcType=TIMESTAMP},
-            update_time    = #{updateTime,jdbcType=TIMESTAMP},
-            completed_time = #{completedTime,jdbcType=TIMESTAMP}
         where item_id = #{itemId,jdbcType=VARCHAR}
     </update>
 
@@ -94,6 +81,7 @@
         <include refid="Base_Column_List"/>
         from cloud_todo_items
         <where>
+             status ='1'
             <if test="query.listId != null">
                 and list_id = #{query.listId,jdbcType=VARCHAR}
             </if>
@@ -113,6 +101,7 @@
         <include refid="Base_Column_List"/>
         from cloud_todo_items
         where item_id = #{itemId,jdbcType=VARCHAR}
+        and status ='1'
     </select>
 
     <!-- 查询未完成的任务列表 -->
@@ -122,6 +111,7 @@
         from cloud_todo_items
         where list_id = #{listId,jdbcType=VARCHAR}
         and item_status = 'IS00'
+        and status ='1'
         order by sort_order asc, create_time asc
     </select>
 
@@ -135,9 +125,10 @@
         from cloud_todo_items
         where
         list_id in
-        <foreach collection="listIds" close=")" item="listId" index="index" separator=" or " open="(">
+        <foreach collection="listIds" close=")" item="listId" index="index" separator="," open="(">
             #{listId}
         </foreach>
+        and status ='1'
         group by list_id
     </select>
 </mapper>
