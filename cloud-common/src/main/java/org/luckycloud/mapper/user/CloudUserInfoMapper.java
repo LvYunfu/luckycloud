@@ -1,6 +1,9 @@
 package org.luckycloud.mapper.user;
 
+import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.user.CloudUserInfoDO;
+
+import java.util.List;
 
 /**
 * @author lvyf
@@ -27,4 +30,9 @@ public interface CloudUserInfoMapper {
     CloudUserInfoDO findByMail(String mail);
 
     void updateByMailSelective(CloudUserInfoDO user);
+
+    /**
+     * 根据用户名或邮箱搜索用户
+     */
+    List<CloudUserInfoDO> searchUsers(@Param("keyword") String keyword);
 }

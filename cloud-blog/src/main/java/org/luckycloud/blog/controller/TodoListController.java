@@ -4,7 +4,9 @@ import jakarta.annotation.Resource;
 import org.luckycloud.blog.dto.request.*;
 import org.luckycloud.blog.dto.response.TodoActivityLogResponse;
 import org.luckycloud.blog.dto.response.TodoItemResponse;
+import org.luckycloud.blog.dto.response.TodoListParticipantResponse;
 import org.luckycloud.blog.dto.response.TodoListResponse;
+import org.luckycloud.blog.dto.response.UserSearchResponse;
 import org.luckycloud.blog.service.TodoListService;
 import org.luckycloud.dto.common.Response;
 import org.springframework.web.bind.annotation.*;
@@ -140,5 +142,59 @@ public class TodoListController {
     public Response<TodoItemResponse> getRandomUncompletedItem(@RequestBody TodoItemQuery query) {
         TodoItemResponse item = todoListService.getRandomUncompletedItem(query);
         return Response.successData(item);
+    }
+
+    /**
+     * 邀请用户参与清单
+     */
+    @PostMapping("/invite-user")
+    public Response<Void> inviteUser(@RequestBody TodoListInviteCommand command) {
+        todoListService.inviteUser(command);
+        return Response.success("邀请成功");
+    }
+
+    /**
+     * 获取清单的参与者列表
+     */
+    @GetMapping("/get-participants")
+    public Response<List<TodoListParticipantResponse>> getListParticipants(@RequestParam String listId) {
+        List<TodoListParticipantResponse> participants = todoListService.getListParticipants(listId);
+        return Response.successData(participants);
+    }
+
+    /**
+     * 退出清单(参与者主动退出)
+     */
+    @PostMapping("/quit-list")
+    public Response<Void> quitList(@RequestParam String listId) {
+        todoListService.quitList(listId);
+        return Response.success("已退出清单");
+    }
+
+    /**
+     * 移除参与者(清单创建者剔除参与者)
+     */
+    @PostMapping("/remove-participant")
+    public Response<Void> removeParticipant(@RequestParam String listId, @RequestParam String userId) {
+        todoListService.removeParticipant(listId, userId);
+        return Response.success("已移除参与者");
+    }
+
+    /**
+     * 获取用户参与的清单列表
+     */
+    @GetMapping("/get-joined-todo")
+    public Response<List<TodoListResponse>> getJoinedTodoLists() {
+        List<TodoListResponse> lists = todoListService.getJoinedTodoLists();
+        return Response.successData(lists);
+    }
+
+    /**
+     * 搜索用户(通过用户名或邮箱)
+     */
+    @PostMapping("/search-users")
+    public Response<List<UserSearchResponse>> searchUsers(@RequestBody UserSearchCommand command) {
+        List<UserSearchResponse> users = todoListService.searchUsers(command);
+        return Response.successData(users);
     }
 }

@@ -139,4 +139,17 @@
         where mail = #{mail,jdbcType=VARCHAR}
     </update>
 
+    <select id="searchUsers" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_user_info
+        where status = '1'
+        and (
+            user_name LIKE CONCAT('%', #{keyword}, '%')
+            OR mail LIKE CONCAT('%', #{keyword}, '%')
+        )
+        order by create_time desc
+        limit 20
+    </select>
+
 </mapper>

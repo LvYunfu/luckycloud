@@ -6,16 +6,23 @@ import org.luckycloud.blog.convert.TodoConvert;
 import org.luckycloud.blog.dto.request.*;
 import org.luckycloud.blog.dto.response.TodoActivityLogResponse;
 import org.luckycloud.blog.dto.response.TodoItemResponse;
+import org.luckycloud.blog.dto.response.TodoListParticipantResponse;
 import org.luckycloud.blog.dto.response.TodoListResponse;
+import org.luckycloud.blog.dto.response.UserSearchResponse;
 import org.luckycloud.blog.service.TodoListService;
+import org.luckycloud.cache.UserInfoCache;
 import org.luckycloud.domain.todo.CloudTodoItemsActivityLogsDO;
 import org.luckycloud.domain.todo.CloudTodoItemsDO;
 import org.luckycloud.domain.todo.CloudTodoListsDO;
+import org.luckycloud.domain.todo.CloudJoinTodoListsDO;
 import org.luckycloud.domain.todo.TodoItemStatistics;
+import org.luckycloud.domain.user.CloudUserInfoDO;
 import org.luckycloud.exception.BusinessException;
 import org.luckycloud.mapper.todo.CloudTodoItemsActivityLogsMapper;
 import org.luckycloud.mapper.todo.CloudTodoItemsMapper;
 import org.luckycloud.mapper.todo.CloudTodoListsMapper;
+import org.luckycloud.mapper.todo.CloudJoinTodoListsMapper;
+import org.luckycloud.mapper.user.CloudUserInfoMapper;
 import org.luckycloud.security.util.UserUtils;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.luckycloud.utils.JsonUtils;
@@ -29,6 +36,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.luckycloud.constant.SystemConstant.DISABLE;
+import static org.luckycloud.constant.SystemConstant.ENABLE;
 import static org.luckycloud.dto.common.ResponseCode.OPERATE_FAILED;
 
 /**
@@ -51,8 +59,16 @@ public class TodoListServiceImpl implements TodoListService {
     private CloudTodoItemsActivityLogsMapper activityLogsMapper;
 
     @Resource
+    private CloudJoinTodoListsMapper joinTodoListsMapper;
+
+    @Resource
+    private CloudUserInfoMapper userInfoMapper;
+
+    @Resource
     private TodoConvert todoConvert;
 
+    @Resource
+    private UserInfoCache userInfoCache;
     private static final String ITEM_STATUS_UNCOMPLETED = "IS00";
     private static final String ITEM_STATUS_COMPLETED = "IS01";
 
@@ -70,7 +86,7 @@ public class TodoListServiceImpl implements TodoListService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateTodoList(TodoListUpdateCommand command) {
-        checkListId(command.getListId());
+        checkListId(command.getListId(), true);
         CloudTodoListsDO updateDO = todoConvert.convert2DO(command);
         todoListsMapper.updateByPrimaryKeySelective(updateDO);
         log.info("更新待办清单成功，listId: {}", command.getListId());
@@ -79,7 +95,7 @@ public class TodoListServiceImpl implements TodoListService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteTodoList(String listId) {
-        checkListId(listId);
+        checkListId(listId, true);
         // 逻辑删除，将状态设置为禁用
         CloudTodoListsDO updateDO = new CloudTodoListsDO();
         updateDO.setListId(listId);
@@ -93,25 +109,12 @@ public class TodoListServiceImpl implements TodoListService {
     public List<TodoListResponse> getUserTodoLists() {
         String userId = UserUtils.getUserId();
         List<CloudTodoListsDO> lists = todoListsMapper.selectByUserId(userId);
-        if (CollectionUtils.isEmpty(lists)) {
-            return Collections.emptyList();
-        }
-        List<TodoItemStatistics> statisticsList = todoItemsMapper.countTodoItems(lists.stream().map(CloudTodoListsDO::getListId).toList());
-        Map<String, TodoItemStatistics> statisticsMap = statisticsList.stream()
-                .collect(Collectors.toMap(TodoItemStatistics::getListId, e -> e));
-        return lists.stream()
-                .map(e -> {
-                    TodoListResponse response = todoConvert.convert2TodoListResponse(e);
-                    TodoItemStatistics statistics = statisticsMap.getOrDefault(e.getListId(), new TodoItemStatistics());
-                    response.setTotal(statistics.getTotalCount());
-                    response.setCompleted(statistics.getCompletedCount());
-                    return response;
-                }).toList();
+        return buildTodoListResponses(lists);
     }
 
     @Override
     public TodoListResponse getTodoTask(TodoItemQuery query) {
-        CloudTodoListsDO todoList = checkListId(query.getListId());
+        CloudTodoListsDO todoList = checkListId(query.getListId(), false);
         TodoListResponse response = todoConvert.convert2TodoListResponse(todoList);
         List<TodoItemStatistics> statisticsList = todoItemsMapper.countTodoItems(Collections.singletonList(response.getListId()));
         if (CollectionUtils.isEmpty(statisticsList)) {
@@ -141,7 +144,7 @@ public class TodoListServiceImpl implements TodoListService {
     @Transactional(rollbackFor = Exception.class)
     public String createTodoItem(TodoItemCreateCommand command) {
         // 验证清单是否存在并检查权限
-        checkListId(command.getListId());
+        checkListId(command.getListId(), false);
 
         CloudTodoItemsDO item = todoConvert.convert2DO(command);
         item.setItemId(GenerateIdUtils.generateId());
@@ -235,7 +238,7 @@ public class TodoListServiceImpl implements TodoListService {
     @Override
     public TodoItemResponse getRandomUncompletedItem(TodoItemQuery query) {
         // 验证清单存在并检查权限
-        checkListId(query.getListId());
+        checkListId(query.getListId(), false);
 
         // 查询未完成的任务列表
         List<CloudTodoItemsDO> uncompletedItems = todoItemsMapper.selectUncompletedByListId(query.getListId());
@@ -273,15 +276,208 @@ public class TodoListServiceImpl implements TodoListService {
         return todoConvert.convert2ActivityLogResponse(list);
     }
 
-    /**
-     * 检查清单ID是否存在并验证权限
-     */
-    private CloudTodoListsDO checkListId(String listId) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void inviteUser(TodoListInviteCommand command) {
+
+        // 验证清单是否存在
+        CloudTodoListsDO todoList = checkListId(command.getListId(), true);
+        if (todoList.getUserId().equals(command.getInviteUserId())) {
+            throw new BusinessException(OPERATE_FAILED, "该用户已参与此清单");
+        }
+        // 验证被邀请用户是否已经参与
+        CloudJoinTodoListsDO existRecord = joinTodoListsMapper.selectByListIdAndUserId(
+                command.getListId(), command.getInviteUserId());
+        if (!ObjectUtils.isEmpty(existRecord)) {
+            throw new BusinessException(OPERATE_FAILED, "该用户已参与此清单");
+        }
+
+        // 创建参与记录
+        CloudJoinTodoListsDO joinRecord = new CloudJoinTodoListsDO();
+        joinRecord.setId(GenerateIdUtils.generateId());
+        joinRecord.setUserId(command.getInviteUserId());
+        joinRecord.setListId(command.getListId());
+        joinRecord.setCreateTime(LocalDateTime.now());
+        joinRecord.setUpdateTime(LocalDateTime.now());
+        joinRecord.setStatus(ENABLE);
+        joinTodoListsMapper.insert(joinRecord);
+
+        log.info("邀请用户成功，listId: {}, inviteUserId: {}", command.getListId(), command.getInviteUserId());
+    }
+
+    @Override
+    public List<TodoListParticipantResponse> getListParticipants(String listId) {
+        // 验证清单是否存在
         CloudTodoListsDO todoList = todoListsMapper.selectByListId(listId);
         if (ObjectUtils.isEmpty(todoList)) {
             throw new BusinessException(OPERATE_FAILED, "待办清单不存在");
         }
-        validateUserPermission(todoList.getUserId());
+        CloudJoinTodoListsDO create = new CloudJoinTodoListsDO();
+        create.setUserId(todoList.getUserId());
+        create.setListId(listId);
+        create.setCreateTime(todoList.getCreateTime());
+        List<CloudJoinTodoListsDO> userList = new ArrayList<>();
+        userList.add(create);
+        // 查询参与者列表
+        List<CloudJoinTodoListsDO> participants = joinTodoListsMapper.selectByListId(listId);
+        if (!CollectionUtils.isEmpty(participants)) {
+            userList.addAll(participants);
+        }
+        // 目前先返回基本信息
+        return userList.stream()
+                .map(p -> {
+                    TodoListParticipantResponse response = new TodoListParticipantResponse();
+                    response.setId(p.getId());
+                    response.setUserId(p.getUserId());
+                    response.setUserName(userInfoCache.getUserName(p.getUserId()));
+                    response.setListId(p.getListId());
+                    response.setCreateTime(p.getCreateTime());
+                    response.setStatus(p.getStatus());
+                    return response;
+                })
+                .toList();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void quitList(String listId) {
+        String currentUserId = UserUtils.getUserId();
+
+        // 验证清单是否存在
+        CloudTodoListsDO todoList = checkListId(listId, false);
+
+        // 不允许清单创建者退出
+        if (currentUserId.equals(todoList.getUserId())) {
+            throw new BusinessException(OPERATE_FAILED, "清单创建者不能退出清单，只能删除清单");
+        }
+
+        CloudJoinTodoListsDO joinRecord = new CloudJoinTodoListsDO();
+        joinRecord.setListId(listId);
+        joinRecord.setUserId(currentUserId);
+        // 逻辑删除参与记录
+        joinRecord.setStatus(DISABLE);
+        joinRecord.setUpdateTime(LocalDateTime.now());
+        joinTodoListsMapper.deleteUserJoin(joinRecord);
+
+        log.info("退出清单成功，listId: {}, userId: {}", listId, currentUserId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeParticipant(String listId, String targetUserId) {
+        CloudTodoListsDO todoList = checkListId(listId, true);
+        // 不能移除自己
+        if (todoList.getUserId().equals(targetUserId)) {
+            throw new BusinessException(OPERATE_FAILED, "不能移除自己，如需退出请删除清单");
+        }
+        CloudJoinTodoListsDO joinRecord = new CloudJoinTodoListsDO();
+        joinRecord.setListId(listId);
+        joinRecord.setUserId(targetUserId);
+        // 逻辑删除参与记录
+        joinRecord.setStatus(DISABLE);
+        joinRecord.setUpdateTime(LocalDateTime.now());
+        joinTodoListsMapper.deleteUserJoin(joinRecord);
+
+        log.info("移除参与者成功，listId: {}, targetUserId: {},", listId, targetUserId);
+    }
+
+    @Override
+    public List<TodoListResponse> getJoinedTodoLists() {
+        String userId = UserUtils.getUserId();
+
+        // 查询用户参与的清单ID列表
+        List<CloudJoinTodoListsDO> joinRecords = joinTodoListsMapper.selectByUserId(userId);
+        if (CollectionUtils.isEmpty(joinRecords)) {
+            return Collections.emptyList();
+        }
+
+        // 获取清单ID列表
+        List<String> listIds = joinRecords.stream()
+                .map(CloudJoinTodoListsDO::getListId)
+                .toList();
+
+        // 查询清单详情
+        List<CloudTodoListsDO> lists = listIds.stream()
+                .map(listId -> todoListsMapper.selectByListId(listId))
+                .filter(Objects::nonNull)
+                .toList();
+
+        return buildTodoListResponses(lists);
+    }
+
+    /**
+     * 构建待办清单响应列表(包含任务统计信息)
+     */
+    private List<TodoListResponse> buildTodoListResponses(List<CloudTodoListsDO> lists) {
+        if (CollectionUtils.isEmpty(lists)) {
+            return Collections.emptyList();
+        }
+
+        // 统计任务信息
+        List<TodoItemStatistics> statisticsList = todoItemsMapper.countTodoItems(
+                lists.stream().map(CloudTodoListsDO::getListId).toList());
+        Map<String, TodoItemStatistics> statisticsMap = statisticsList.stream()
+                .collect(Collectors.toMap(TodoItemStatistics::getListId, e -> e));
+
+        // 组装响应数据
+        return lists.stream()
+                .map(e -> {
+                    TodoListResponse response = todoConvert.convert2TodoListResponse(e);
+                    TodoItemStatistics statistics = statisticsMap.getOrDefault(e.getListId(), new TodoItemStatistics());
+                    response.setTotal(statistics.getTotalCount());
+                    response.setCompleted(statistics.getCompletedCount());
+                    response.setUserName(userInfoCache.getUserName(e.getUserId()));
+                    return response;
+                })
+                .toList();
+    }
+
+    @Override
+    public List<UserSearchResponse> searchUsers(UserSearchCommand command) {
+        if (ObjectUtils.isEmpty(command.getKeyword())) {
+            return Collections.emptyList();
+        }
+
+        // 搜索用户
+        List<CloudUserInfoDO> users = userInfoMapper.searchUsers(command.getKeyword());
+        if (CollectionUtils.isEmpty(users)) {
+            return Collections.emptyList();
+        }
+
+        // 转换为响应对象
+        return users.stream()
+                .map(user -> {
+                    UserSearchResponse response = new UserSearchResponse();
+                    response.setUserId(user.getUserId());
+                    response.setUserName(user.getUserName());
+                    response.setMail(user.getMail());
+                    response.setAvatar(user.getAvatar());
+                    response.setProfile(user.getProfile());
+                    return response;
+                })
+                .toList();
+    }
+
+    /**
+     * 检查清单ID是否存在并验证权限
+     */
+    private CloudTodoListsDO checkListId(String listId, boolean createFlag) {
+        CloudTodoListsDO todoList = todoListsMapper.selectByListId(listId);
+        if (ObjectUtils.isEmpty(todoList)) {
+            throw new BusinessException(OPERATE_FAILED, "待办清单不存在");
+        }
+        boolean permission = validateUserPermission(todoList.getUserId());
+        if (createFlag && !permission) {
+            throw new BusinessException(OPERATE_FAILED, "暂无权限");
+        }
+        if (permission) {
+            return todoList;
+        }
+        List<String> userId = joinTodoListsMapper.selectByListId(listId).stream().map(CloudJoinTodoListsDO::getUserId).collect(Collectors.toList());
+        permission = validateUserPermission(userId);
+        if (!permission) {
+            throw new BusinessException(OPERATE_FAILED, "暂无权限");
+        }
         return todoList;
     }
 
@@ -299,10 +495,13 @@ public class TodoListServiceImpl implements TodoListService {
         return item;
     }
 
-    private void validateUserPermission(String userId) {
-        String currentUserId = org.luckycloud.security.util.UserUtils.getUserId();
-        if (!currentUserId.equals(userId)) {
-            throw new BusinessException(OPERATE_FAILED, "无权限操作");
-        }
+    private boolean validateUserPermission(String userId) {
+        String currentUserId = UserUtils.getUserId();
+        return currentUserId.equals(userId);
+    }
+
+    private boolean validateUserPermission(List<String> userId) {
+        String currentUserId = UserUtils.getUserId();
+        return userId.contains(currentUserId);
     }
 }

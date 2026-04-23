@@ -1,9 +1,7 @@
 package org.luckycloud.blog.service;
 
 import org.luckycloud.blog.dto.request.*;
-import org.luckycloud.blog.dto.response.TodoActivityLogResponse;
-import org.luckycloud.blog.dto.response.TodoItemResponse;
-import org.luckycloud.blog.dto.response.TodoListResponse;
+import org.luckycloud.blog.dto.response.*;
 
 import java.util.List;
 
@@ -72,4 +70,34 @@ public interface TodoListService {
     List<TodoActivityLogResponse> getTodoListActivityLog(TodoItemQuery itemQuery);
 
     List<TodoItemResponse> getTodoItems(TodoItemQuery itemQuery);
+
+    /**
+     * 邀请用户参与清单
+     */
+    void inviteUser(TodoListInviteCommand command);
+
+    /**
+     * 获取清单的参与者列表
+     */
+    List<TodoListParticipantResponse> getListParticipants(String listId);
+
+    /**
+     * 退出清单
+     */
+    void quitList(String listId);
+
+    /**
+     * 移除参与者(清单创建者使用)
+     */
+    void removeParticipant(String listId, String userId);
+
+    /**
+     * 获取用户参与的清单列表
+     */
+    List<TodoListResponse> getJoinedTodoLists();
+
+    /**
+     * 搜索用户(通过用户名或邮箱)
+     */
+    List<UserSearchResponse> searchUsers(UserSearchCommand command);
 }

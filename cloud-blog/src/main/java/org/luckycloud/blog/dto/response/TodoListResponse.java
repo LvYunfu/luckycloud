@@ -19,6 +19,10 @@ public class TodoListResponse {
      */
     private String listId;
 
+    private String userId;
+
+    private String userName;
+
     /**
      * 清单标题
      */

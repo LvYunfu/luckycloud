@@ -58,6 +58,7 @@ public interface TodoConvert {
     @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "completedTime", ignore = true)
+    @Mapping(target = "status", constant = ENABLE)
     CloudTodoItemsDO convert2DO(TodoItemCreateCommand command);
 
     /**
