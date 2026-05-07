@@ -25,6 +25,7 @@ public class AiClientConfig {
 
 
     private String apiKey;
+
     private String baseUrl;
 
     private Chat chat;

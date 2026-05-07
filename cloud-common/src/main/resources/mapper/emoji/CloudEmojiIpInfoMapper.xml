@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.luckycloud.mapper.emoji.CloudEmojiIpInfoMapper">
+
+    <resultMap id="BaseResultMap" type="org.luckycloud.domain.emoji.CloudEmojiIpInfoDO">
+            <id property="ipId" column="ip_id" jdbcType="VARCHAR"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="ipUrl" column="ip_url" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ip_id,title,description,
+        ip_url,create_time,update_time,
+        status
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_ip_info
+        where ip_id = #{ipId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from cloud_emoji_ip_info
+        where ip_id = #{ipId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" keyColumn="ip_id" keyProperty="ipId" parameterType="org.luckycloud.domain.emoji.CloudEmojiIpInfoDO" useGeneratedKeys="true">
+        insert into cloud_emoji_ip_info
+        ( ip_id,title,description
+        ,ip_url,create_time,update_time
+        ,status)
+        values (#{ipId,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR}
+        ,#{ipUrl,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP}
+        ,#{status,jdbcType=CHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="ip_id" keyProperty="ipId" parameterType="org.luckycloud.domain.emoji.CloudEmojiIpInfoDO" useGeneratedKeys="true">
+        insert into cloud_emoji_ip_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="ipId != null">ip_id,</if>
+                <if test="title != null">title,</if>
+                <if test="description != null">description,</if>
+                <if test="ipUrl != null">ip_url,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="updateTime != null">update_time,</if>
+                <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="ipId != null">#{ipId,jdbcType=VARCHAR},</if>
+                <if test="title != null">#{title,jdbcType=VARCHAR},</if>
+                <if test="description != null">#{description,jdbcType=VARCHAR},</if>
+                <if test="ipUrl != null">#{ipUrl,jdbcType=VARCHAR},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="status != null">#{status,jdbcType=CHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.emoji.CloudEmojiIpInfoDO">
+        update cloud_emoji_ip_info
+        <set>
+                <if test="title != null">
+                    title = #{title,jdbcType=VARCHAR},
+                </if>
+                <if test="description != null">
+                    description = #{description,jdbcType=VARCHAR},
+                </if>
+                <if test="ipUrl != null">
+                    ip_url = #{ipUrl,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=CHAR},
+                </if>
+        </set>
+        where ip_id = #{ipId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.emoji.CloudEmojiIpInfoDO">
+        update cloud_emoji_ip_info
+        set
+            title =  #{title,jdbcType=VARCHAR},
+            description =  #{description,jdbcType=VARCHAR},
+            ip_url =  #{ipUrl,jdbcType=VARCHAR},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            update_time =  #{updateTime,jdbcType=TIMESTAMP},
+            status =  #{status,jdbcType=CHAR}
+        where ip_id = #{ipId,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询所有表情IP -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_ip_info
+        order by create_time desc
+    </select>
+
+    <!-- 根据条件查询表情IP列表 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_ip_info
+        <where>
+            <if test="status != null and status != ''">
+                and status = #{status,jdbcType=CHAR}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

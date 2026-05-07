@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.luckycloud.mapper.emoji.CloudEmojiGroupMapper">
+
+    <resultMap id="BaseResultMap" type="org.luckycloud.domain.emoji.CloudEmojiGroupDO">
+            <id property="emojiGroupId" column="emoji_group_id" jdbcType="VARCHAR"/>
+            <result property="ipId" column="ip_id" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="emojiType" column="emoji_type" jdbcType="VARCHAR"/>
+            <result property="emojiStyle" column="emoji_style" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        emoji_group_id,ip_id,description,emoji_type,
+        emoji_style,create_time,update_time,
+        status
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_group
+        where  emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from cloud_emoji_group
+        where  emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" keyColumn="emoji_group_id" keyProperty="emojiGroupId" parameterType="org.luckycloud.domain.emoji.CloudEmojiGroupDO" useGeneratedKeys="true">
+        insert into cloud_emoji_group
+        ( emoji_group_id,ip_id,description,emoji_type
+        ,emoji_style,create_time,update_time
+        ,status)
+        values (#{emojiGroupId,jdbcType=VARCHAR},#{ipId,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{emojiType,jdbcType=VARCHAR}
+        ,#{emojiStyle,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP}
+        ,#{status,jdbcType=CHAR})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.emoji.CloudEmojiGroupDO">
+        update cloud_emoji_group
+        <set>
+                <if test="ipId != null">
+                    ip_id = #{ipId,jdbcType=VARCHAR},
+                </if>
+                <if test="description != null">
+                    description = #{description,jdbcType=VARCHAR},
+                </if>
+                <if test="emojiType != null">
+                    emoji_type = #{emojiType,jdbcType=VARCHAR},
+                </if>
+                <if test="emojiStyle != null">
+                    emoji_style = #{emojiStyle,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=CHAR},
+                </if>
+        </set>
+        where   emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.emoji.CloudEmojiGroupDO">
+        update cloud_emoji_group
+        set
+            ip_id = #{ipId,jdbcType=VARCHAR},
+            description =  #{description,jdbcType=VARCHAR},
+            emoji_type =  #{emojiType,jdbcType=VARCHAR},
+            emoji_style =  #{emojiStyle,jdbcType=VARCHAR},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            update_time =  #{updateTime,jdbcType=TIMESTAMP},
+            status =  #{status,jdbcType=CHAR}
+        where   emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询所有表情包系列 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cloud_emoji_group
+        where status ='1'
+        order by create_time desc
+    </select>
+
+</mapper>

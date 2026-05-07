@@ -96,13 +96,4 @@ public class TrainingController {
         }
     }
 
-    /**
-
-    /**
-     * 健康检查接口
-     */
-    @GetMapping("/health")
-    public String healthCheck() {
-        return "AI陪练服务运行正常";
-    }
 }
