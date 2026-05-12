@@ -1,10 +1,13 @@
 package org.luckycloud.ai.controller;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.luckycloud.ai.dto.*;
 import org.luckycloud.ai.service.EmojiService;
 import org.luckycloud.dto.common.Response;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,91 +39,115 @@ public class EmojiController {
      * 更新表情包系列
      */
     @PostMapping("/group/update")
-    public Response<Void> updateEmojiGroup(@RequestBody EmojiGroupUpdateCommand command) {
+    public void updateEmojiGroup(@RequestBody EmojiGroupUpdateCommand command) {
         emojiService.updateEmojiGroup(command);
-        return Response.success("表情包系列更新成功");
     }
 
     /**
      * 删除表情包系列
      */
     @PostMapping("/group/delete")
-    public Response<Void> deleteEmojiGroup(@RequestParam String emojiGroupId) {
+    public void deleteEmojiGroup(@RequestParam String emojiGroupId) {
         emojiService.deleteEmojiGroup(emojiGroupId);
-        return Response.success("表情包系列删除成功");
     }
 
     /**
      * 获取单个表情包系列详情
      */
     @GetMapping("/group/get")
-    public Response<EmojiGroupResponse> getEmojiGroup(@RequestParam String emojiGroupId) {
-        EmojiGroupResponse group = emojiService.getEmojiGroup(emojiGroupId);
-        return Response.successData(group);
+    public EmojiGroupResponse getEmojiGroup(@RequestParam String emojiGroupId) {
+        return emojiService.getEmojiGroup(emojiGroupId);
     }
 
     /**
      * 获取表情包系列列表
      */
     @GetMapping("/group/list")
-    public Response<List<EmojiGroupResponse>> getEmojiGroupList() {
-        List<EmojiGroupResponse> list = emojiService.getEmojiGroupList();
-        return Response.successData(list);
+    public List<EmojiGroupResponse> getEmojiGroupList() {
+        return emojiService.getEmojiGroupList();
     }
 
+
     /**
-     * 创建表情包
+     * 利用大模型生成表情包描述
+     */
+    @PostMapping("/emoji/des-create")
+    public List<EmojiInfoResponse> emojiDesCreate(@RequestBody EmojiDescCreateCommand command) {
+        return emojiService.emojiDesCreate(command);
+    }
+
+
+    /**
+     * 利用大模型创造表情包
      */
     @PostMapping("/emoji/create")
-    public Response<String> createEmojiInfo(@RequestBody EmojiInfoCreateCommand command) {
-        String emojiId = emojiService.createEmojiInfo(command);
-        return Response.successData(emojiId, "表情包创建成功");
+    public void createEmojiInfo(@RequestBody List<EmojiInfoCreateCommand> list) {
+        emojiService.createEmojiInfo(list);
     }
 
     /**
-     * 批量创建表情包
+     * 保存表情包
      */
-    @PostMapping("/emoji/batch-create")
-    public Response<Integer> batchCreateEmojiInfo(@RequestBody List<EmojiInfoCreateCommand> commands) {
-        int count = emojiService.batchCreateEmojiInfo(commands);
-        return Response.successData(count, "批量创建成功，共创建" + count + "个表情包");
+    @PostMapping("/emoji/save")
+    public Response<String> saveEmojiInfo(@RequestBody EmojiInfoCreateCommand command) {
+        String emojiId = emojiService.saveEmojiInfo(command);
+        return Response.successData(emojiId, "表情包保存成功");
+    }
+
+    /**
+     * 批量保存表情包
+     */
+    @PostMapping("/emoji/batch-save")
+    public Response<Void> batchCreateEmojiInfo(@RequestBody List<EmojiInfoCreateCommand> commands) {
+        emojiService.batchSaveEmojiInfo(commands);
+        return Response.success("表情包保存成功");
     }
 
     /**
      * 更新表情包
      */
     @PostMapping("/emoji/update")
-    public Response<Void> updateEmojiInfo(@RequestBody EmojiInfoUpdateCommand command) {
+    public void updateEmojiInfo(@RequestBody EmojiInfoUpdateCommand command) {
         emojiService.updateEmojiInfo(command);
-        return Response.success("表情包更新成功");
     }
 
     /**
      * 删除表情包
      */
     @PostMapping("/emoji/delete")
-    public Response<Void> deleteEmojiInfo(@RequestParam String emojiId) {
+    public void deleteEmojiInfo(@RequestParam String emojiId) {
         emojiService.deleteEmojiInfo(emojiId);
-        return Response.success("表情包删除成功");
     }
 
     /**
      * 获取单个表情包详情
      */
     @GetMapping("/emoji/get")
-    public Response<EmojiInfoResponse> getEmojiInfo(@RequestParam String emojiId) {
-        EmojiInfoResponse info = emojiService.getEmojiInfo(emojiId);
-        return Response.successData(info);
+    public EmojiInfoResponse getEmojiInfo(@RequestParam String emojiId) {
+        return emojiService.getEmojiInfo(emojiId);
     }
 
     /**
      * 获取表情包列表（按系列）
      */
     @GetMapping("/emoji/list")
-    public Response<List<EmojiInfoResponse>> getEmojiInfoList(@RequestParam(required = false) String emojiGroupId) {
-        List<EmojiInfoResponse> list = emojiService.getEmojiInfoList(emojiGroupId);
-        return Response.successData(list);
+    public List<EmojiInfoResponse> getEmojiInfoList(@RequestParam(required = false) String emojiGroupId) {
+        return emojiService.getEmojiInfoList(emojiGroupId);
     }
+
+
+    /**
+     * 通过大模型创造主题IP
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/ip/create")
+    public void createIp(@Validated @RequestBody EmojiIpCreateCommand request, HttpServletResponse response) {
+        emojiService.createIp(request, response);
+
+    }
+
 
     /**
      * 上传emoji主题IP
@@ -129,17 +156,17 @@ public class EmojiController {
      * @return
      */
     @PostMapping("ip/upload")
-    public String uploadIp(EmojiIpCreateCommand request) {
-        return emojiService.uploadIp(request);
-
+    public Response<String> uploadIp(EmojiIpCreateCommand request, MultipartFile file) {
+        String ipId = emojiService.uploadIp(request, file);
+        return Response.successData(ipId, "主题IP上传成功");
     }
 
     /**
      * 创建表情IP
      */
     @PostMapping("/ip/create")
-    public Response<String> createEmojiIp(@RequestBody EmojiIpCreateCommand command) {
-        String ipId = emojiService.createEmojiIp(command);
+    public Response<String> saveEmojiIp(@RequestBody EmojiIpCreateCommand command) {
+        String ipId = emojiService.saveEmojiIp(command);
         return Response.successData(ipId, "表情IP创建成功");
     }
 
@@ -147,35 +174,31 @@ public class EmojiController {
      * 更新表情IP
      */
     @PostMapping("/ip/update")
-    public Response<Void> updateEmojiIp(@RequestBody EmojiIpUpdateCommand command) {
+    public void updateEmojiIp(@RequestBody EmojiIpUpdateCommand command) {
         emojiService.updateEmojiIp(command);
-        return Response.success("表情IP更新成功");
     }
 
     /**
      * 删除表情IP
      */
     @PostMapping("/ip/delete")
-    public Response<Void> deleteEmojiIp(@RequestParam String ipId) {
+    public void deleteEmojiIp(@RequestParam String ipId) {
         emojiService.deleteEmojiIp(ipId);
-        return Response.success("表情IP删除成功");
     }
 
     /**
      * 获取单个表情IP详情
      */
     @GetMapping("/ip/get")
-    public Response<EmojiIpResponse> getEmojiIp(@RequestParam String ipId) {
-        EmojiIpResponse ip = emojiService.getEmojiIp(ipId);
-        return Response.successData(ip);
+    public EmojiIpResponse getEmojiIp(@RequestParam String ipId) {
+        return emojiService.getEmojiIp(ipId);
     }
 
     /**
      * 获取表情IP列表
      */
     @GetMapping("/ip/list")
-    public Response<List<EmojiIpResponse>> getEmojiIpList() {
-        List<EmojiIpResponse> list = emojiService.getEmojiIpList();
-        return Response.successData(list);
+    public List<EmojiIpResponse> getEmojiIpList() {
+        return emojiService.getEmojiIpList();
     }
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * 待办清单控制器
+ *
  * @author lvyf
  * @date 2026/4/11
  */
@@ -56,37 +57,38 @@ public class TodoListController {
      * 获取用户的待办清单列表
      */
     @GetMapping("/get-user-todo")
-    public Response<List<TodoListResponse>> getUserTodoLists() {
-        List<TodoListResponse> lists = todoListService.getUserTodoLists();
-        return Response.successData(lists);
+    public List<TodoListResponse> getUserTodoLists() {
+        return todoListService.getUserTodoLists();
+
     }
 
     /**
      * 获取单个待办清单详情
      */
     @PostMapping("/get-todo")
-    public Response<TodoListResponse> getTodoTask(@RequestBody TodoItemQuery itemQuery) {
-        TodoListResponse detail = todoListService.getTodoTask(itemQuery);
-        return Response.successData(detail);
+    public TodoListResponse getTodoTask(@RequestBody TodoItemQuery itemQuery) {
+        return todoListService.getTodoTask(itemQuery);
     }
 
     /**
      * 获取单个待办清单详情
      */
     @PostMapping("/get-todo-items")
-    public Response<List<TodoItemResponse>> getTodoItems(@RequestBody TodoItemQuery itemQuery) {
-        List<TodoItemResponse> list = todoListService.getTodoItems(itemQuery);
-        return Response.successData(list);
+    public List<TodoItemResponse> getTodoItems(@RequestBody TodoItemQuery itemQuery) {
+        return todoListService.getTodoItems(itemQuery);
+
     }
+
     /**
      * 获取待办清单的动态日志
+     *
      * @param itemQuery
      * @return
      */
     @PostMapping("/get-activity-log")
-    public Response<List<TodoActivityLogResponse>> getTodoListActivityLog(@RequestBody TodoItemQuery itemQuery) {
-        List<TodoActivityLogResponse> list = todoListService.getTodoListActivityLog(itemQuery);
-        return Response.successData(list);
+    public List<TodoActivityLogResponse> getTodoListActivityLog(@RequestBody TodoItemQuery itemQuery) {
+        return todoListService.getTodoListActivityLog(itemQuery);
+
     }
 
 
@@ -139,9 +141,9 @@ public class TodoListController {
      * 从未完成的任务中随机选择一个
      */
     @PostMapping("/random-uncompleted")
-    public Response<TodoItemResponse> getRandomUncompletedItem(@RequestBody TodoItemQuery query) {
-        TodoItemResponse item = todoListService.getRandomUncompletedItem(query);
-        return Response.successData(item);
+    public TodoItemResponse getRandomUncompletedItem(@RequestBody TodoItemQuery query) {
+        return todoListService.getRandomUncompletedItem(query);
+
     }
 
     /**
@@ -157,9 +159,9 @@ public class TodoListController {
      * 获取清单的参与者列表
      */
     @GetMapping("/get-participants")
-    public Response<List<TodoListParticipantResponse>> getListParticipants(@RequestParam String listId) {
-        List<TodoListParticipantResponse> participants = todoListService.getListParticipants(listId);
-        return Response.successData(participants);
+    public List<TodoListParticipantResponse> getListParticipants(@RequestParam String listId) {
+        return todoListService.getListParticipants(listId);
+
     }
 
     /**
@@ -184,17 +186,17 @@ public class TodoListController {
      * 获取用户参与的清单列表
      */
     @GetMapping("/get-joined-todo")
-    public Response<List<TodoListResponse>> getJoinedTodoLists() {
-        List<TodoListResponse> lists = todoListService.getJoinedTodoLists();
-        return Response.successData(lists);
+    public List<TodoListResponse> getJoinedTodoLists() {
+        return todoListService.getJoinedTodoLists();
+
     }
 
     /**
      * 搜索用户(通过用户名或邮箱)
      */
     @PostMapping("/search-users")
-    public Response<List<UserSearchResponse>> searchUsers(@RequestBody UserSearchCommand command) {
-        List<UserSearchResponse> users = todoListService.searchUsers(command);
-        return Response.successData(users);
+    public List<UserSearchResponse> searchUsers(@RequestBody UserSearchCommand command) {
+        return todoListService.searchUsers(command);
+
     }
 }

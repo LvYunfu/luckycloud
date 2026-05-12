@@ -1,6 +1,7 @@
 package org.luckycloud.ai.service.impl;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.luckycloud.ai.convert.EmojiGroupConvert;
 import org.luckycloud.ai.convert.EmojiInfoConvert;
 import org.luckycloud.ai.convert.EmojiIpConvert;
@@ -15,6 +16,7 @@ import org.luckycloud.mapper.emoji.CloudEmojiIpInfoMapper;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
@@ -53,10 +55,6 @@ public class EmojiServiceImpl implements EmojiService {
     private EmojiIpConvert emojiIpConvert;
 
 
-    @Override
-    public String uploadIp(EmojiIpCreateCommand request) {
-        return null;
-    }
 
     @Override
     public String createEmojiGroup(EmojiGroupCreateCommand command) {
@@ -101,7 +99,7 @@ public class EmojiServiceImpl implements EmojiService {
     }
 
     @Override
-    public String createEmojiInfo(EmojiInfoCreateCommand command) {
+    public String saveEmojiInfo(EmojiInfoCreateCommand command) {
         CloudEmojiInfoDO infoDO = emojiInfoConvert.convert2DO(command);
         // 生成唯一ID
         infoDO.setEmojiId(GenerateIdUtils.generateId());
@@ -110,7 +108,7 @@ public class EmojiServiceImpl implements EmojiService {
     }
 
     @Override
-    public int batchCreateEmojiInfo(List<EmojiInfoCreateCommand> commands) {
+    public int batchSaveEmojiInfo(List<EmojiInfoCreateCommand> commands) {
         List<CloudEmojiInfoDO> infoDOList = commands.stream()
                 .map(command -> {
                     CloudEmojiInfoDO infoDO = emojiInfoConvert.convert2DO(command);
@@ -155,7 +153,7 @@ public class EmojiServiceImpl implements EmojiService {
     }
 
     @Override
-    public String createEmojiIp(EmojiIpCreateCommand command) {
+    public String saveEmojiIp(EmojiIpCreateCommand command) {
         CloudEmojiIpInfoDO ipInfoDO = emojiIpConvert.convert2DO(command);
         // 生成唯一ID
         ipInfoDO.setIpId(GenerateIdUtils.generateId());
@@ -195,10 +193,21 @@ public class EmojiServiceImpl implements EmojiService {
         return emojiIpConvert.convert2ResponseList(ipInfoDOList);
     }
 
-//    @Override
-//    public Flux<String> chat(EmojiIpCommand request) {
-//        return chatClient.prompt()
-//                .stream()
-//                 .content();
-//    }
+    @Override
+    public void createIp(EmojiIpCreateCommand request, HttpServletResponse response) {
+
+    }
+
+
+    @Override
+    public String uploadIp(EmojiIpCreateCommand request, MultipartFile file) {
+        // TODO: 实现上传表情IP的逻辑，返回文件的字节数组
+        // 这里需要根据实际业务逻辑来实现
+        return "";
+    }
+
+    @Override
+    public List<EmojiInfoResponse> emojiDesCreate(EmojiDescCreateCommand command) {
+        return null;
+    }
 }

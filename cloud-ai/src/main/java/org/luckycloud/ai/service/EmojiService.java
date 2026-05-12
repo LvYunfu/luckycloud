@@ -1,6 +1,8 @@
 package org.luckycloud.ai.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.luckycloud.ai.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,12 +42,12 @@ public interface EmojiService {
     /**
      * 创建表情包
      */
-    String createEmojiInfo(EmojiInfoCreateCommand command);
+    String saveEmojiInfo(EmojiInfoCreateCommand command);
 
     /**
      * 批量创建表情包
      */
-    int batchCreateEmojiInfo(List<EmojiInfoCreateCommand> commands);
+    int batchSaveEmojiInfo(List<EmojiInfoCreateCommand> commands);
 
     /**
      * 更新表情包
@@ -69,14 +71,9 @@ public interface EmojiService {
 
 
     /**
-     * 上传表情IP
-     */
-    String uploadIp(EmojiIpCreateCommand request);
-
-    /**
      * 创建表情IP
      */
-    String createEmojiIp(EmojiIpCreateCommand command);
+    String saveEmojiIp(EmojiIpCreateCommand command);
 
     /**
      * 更新表情IP
@@ -97,4 +94,30 @@ public interface EmojiService {
      * 获取表情IP列表
      */
     List<EmojiIpResponse> getEmojiIpList();
+
+    /**
+     * 通过大模型创造主题IP并返回文件
+     */
+    void createIp(EmojiIpCreateCommand request, HttpServletResponse response);
+
+
+    /**
+     * 上传表情IP
+     */
+    String uploadIp(EmojiIpCreateCommand request, MultipartFile file);
+
+    /**
+     * 利用大模型生成表情包描述
+     *
+     * @param command
+     * @return
+     */
+    List<EmojiInfoResponse> emojiDesCreate(EmojiDescCreateCommand command);
+
+    /**
+     * 利用大模型创造表情包
+     *
+     * @param list
+     */
+    void createEmojiInfo(List<EmojiInfoCreateCommand> list);
 }
