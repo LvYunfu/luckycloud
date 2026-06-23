@@ -6,78 +6,107 @@
 
     <resultMap id="BaseResultMap" type="org.luckycloud.domain.emoji.CloudEmojiInfoDO">
             <id property="emojiId" column="emoji_id" jdbcType="VARCHAR"/>
-            <result property="title" column="title" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="emojiGroupId" column="emoji_group_Id" jdbcType="VARCHAR"/>
-            <result property="emojiUrl" column="emoji_url" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="ipId" column="ip_id" jdbcType="VARCHAR"/>
+            <result property="emojiGroupId" column="emoji_group_id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="promptText" column="prompt_text" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="fileUrl" column="file_url" jdbcType="VARCHAR"/>
+            <result property="fileSize" column="file_size" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="status" column="status" jdbcType="CHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        emoji_id,title,description,
-        emoji_group_Id,emoji_url,create_time,
-        update_time,status
+        emoji_id,user_id,ip_id,
+        emoji_group_id,name,prompt_text,
+        type,file_url,file_size,
+        create_time,update_time,status
     </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from cloud_emoji_info
         where  emoji_id = #{emojiId,jdbcType=VARCHAR}
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from cloud_emoji_info
         where  emoji_id = #{emojiId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" keyColumn="emoji_id" keyProperty="emojiId" parameterType="org.luckycloud.domain.emoji.CloudEmojiInfoDO" useGeneratedKeys="true">
         insert into cloud_emoji_info
-        ( emoji_id,title,description
-        ,emoji_group_Id,emoji_url,create_time
-        ,update_time,status)
-        values (#{emojiId,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR}
-        ,#{emojiGroupId,jdbcType=VARCHAR},#{emojiUrl,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}
-        ,#{updateTime,jdbcType=TIMESTAMP},#{status,jdbcType=CHAR})
+        ( emoji_id,user_id,ip_id
+        ,emoji_group_id,name,prompt_text
+        ,type,file_url,file_size
+        ,create_time,update_time,status
+        )
+        values (#{emojiId,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{ipId,jdbcType=VARCHAR}
+        ,#{emojiGroupId,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{promptText,jdbcType=VARCHAR}
+        ,#{type,jdbcType=VARCHAR},#{fileUrl,jdbcType=VARCHAR},#{fileSize,jdbcType=INTEGER}
+        ,#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{status,jdbcType=CHAR}
+        )
     </insert>
     <insert id="insertSelective" keyColumn="emoji_id" keyProperty="emojiId" parameterType="org.luckycloud.domain.emoji.CloudEmojiInfoDO" useGeneratedKeys="true">
         insert into cloud_emoji_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="emojiId != null">emoji_id,</if>
-                <if test="title != null">title,</if>
-                <if test="description != null">description,</if>
-                <if test="emojiGroupId != null">emoji_group_Id,</if>
-                <if test="emojiUrl != null">emoji_url,</if>
+                <if test="userId != null">user_id,</if>
+                <if test="ipId != null">ip_id,</if>
+                <if test="emojiGroupId != null">emoji_group_id,</if>
+                <if test="name != null">name,</if>
+                <if test="promptText != null">prompt_text,</if>
+                <if test="type != null">type,</if>
+                <if test="fileUrl != null">file_url,</if>
+                <if test="fileSize != null">file_size,</if>
                 <if test="createTime != null">create_time,</if>
                 <if test="updateTime != null">update_time,</if>
                 <if test="status != null">status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="emojiId != null">#{emojiId,jdbcType=VARCHAR},</if>
-                <if test="title != null">#{title,jdbcType=VARCHAR},</if>
-                <if test="description != null">#{description,jdbcType=VARCHAR},</if>
-                <if test="emojiGroupId != null">#{emojiGroupId,jdbcType=VARCHAR},</if>
-                <if test="emojiUrl != null">#{emojiUrl,jdbcType=VARCHAR},</if>
-                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
-                <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
-                <if test="status != null">#{status,jdbcType=CHAR},</if>
+                <if test="emojiId != null">emoji_id = #{emojiId,jdbcType=VARCHAR},</if>
+                <if test="userId != null">user_id = #{userId,jdbcType=VARCHAR},</if>
+                <if test="ipId != null">ip_id = #{ipId,jdbcType=VARCHAR},</if>
+                <if test="emojiGroupId != null">emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR},</if>
+                <if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+                <if test="promptText != null">prompt_text = #{promptText,jdbcType=VARCHAR},</if>
+                <if test="type != null">type = #{type,jdbcType=VARCHAR},</if>
+                <if test="fileUrl != null">file_url = #{fileUrl,jdbcType=VARCHAR},</if>
+                <if test="fileSize != null">file_size = #{fileSize,jdbcType=INTEGER},</if>
+                <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="status != null">status = #{status,jdbcType=CHAR},</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.emoji.CloudEmojiInfoDO">
         update cloud_emoji_info
         <set>
-                <if test="title != null">
-                    title = #{title,jdbcType=VARCHAR},
+                <if test="userId != null">
+                    user_id = #{userId,jdbcType=VARCHAR},
                 </if>
-                <if test="description != null">
-                    description = #{description,jdbcType=VARCHAR},
+                <if test="ipId != null">
+                    ip_id = #{ipId,jdbcType=VARCHAR},
                 </if>
                 <if test="emojiGroupId != null">
-                    emoji_group_Id = #{emojiGroupId,jdbcType=VARCHAR},
+                    emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR},
                 </if>
-                <if test="emojiUrl != null">
-                    emoji_url = #{emojiUrl,jdbcType=VARCHAR},
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="promptText != null">
+                    prompt_text = #{promptText,jdbcType=VARCHAR},
+                </if>
+                <if test="type != null">
+                    type = #{type,jdbcType=VARCHAR},
+                </if>
+                <if test="fileUrl != null">
+                    file_url = #{fileUrl,jdbcType=VARCHAR},
+                </if>
+                <if test="fileSize != null">
+                    file_size = #{fileSize,jdbcType=INTEGER},
                 </if>
                 <if test="createTime != null">
                     create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -94,49 +123,17 @@
     <update id="updateByPrimaryKey" parameterType="org.luckycloud.domain.emoji.CloudEmojiInfoDO">
         update cloud_emoji_info
         set
-            title =  #{title,jdbcType=VARCHAR},
-            description =  #{description,jdbcType=VARCHAR},
-            emoji_group_Id =  #{emojiGroupId,jdbcType=VARCHAR},
-            emoji_url =  #{emojiUrl,jdbcType=VARCHAR},
+            user_id =  #{userId,jdbcType=VARCHAR},
+            ip_id =  #{ipId,jdbcType=VARCHAR},
+            emoji_group_id =  #{emojiGroupId,jdbcType=VARCHAR},
+            name =  #{name,jdbcType=VARCHAR},
+            prompt_text =  #{promptText,jdbcType=VARCHAR},
+            type =  #{type,jdbcType=VARCHAR},
+            file_url =  #{fileUrl,jdbcType=VARCHAR},
+            file_size =  #{fileSize,jdbcType=INTEGER},
             create_time =  #{createTime,jdbcType=TIMESTAMP},
             update_time =  #{updateTime,jdbcType=TIMESTAMP},
             status =  #{status,jdbcType=CHAR}
         where   emoji_id = #{emojiId,jdbcType=VARCHAR}
     </update>
-
-    <!-- 批量插入表情包 -->
-    <insert id="batchInsert" parameterType="java.util.List">
-        insert into cloud_emoji_info
-        (emoji_id,title,description,emoji_group_Id,emoji_url,create_time,update_time,status)
-        values
-        <foreach collection="list" item="item" separator=",">
-            (#{item.emojiId,jdbcType=VARCHAR},#{item.title,jdbcType=VARCHAR},#{item.description,jdbcType=VARCHAR},
-            #{item.emojiGroupId,jdbcType=VARCHAR},#{item.emojiUrl,jdbcType=VARCHAR},#{item.createTime,jdbcType=TIMESTAMP},
-            #{item.updateTime,jdbcType=TIMESTAMP},#{item.status,jdbcType=CHAR})
-        </foreach>
-    </insert>
-
-    <!-- 查询所有表情包 -->
-    <select id="selectAll" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from cloud_emoji_info
-        order by create_time desc
-    </select>
-
-    <!-- 根据条件查询表情包列表 -->
-    <select id="selectByCondition" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from cloud_emoji_info
-        <where>
-            <if test="status != null and status != ''">
-                and status = #{status,jdbcType=CHAR}
-            </if>
-            <if test="emojiGroupId != null and emojiGroupId != ''">
-                and emoji_group_Id = #{emojiGroupId,jdbcType=VARCHAR}
-            </if>
-        </where>
-        order by create_time desc
-    </select>
 </mapper>

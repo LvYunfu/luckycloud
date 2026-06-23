@@ -120,4 +120,6 @@ public interface EmojiService {
      * @param list
      */
     void createEmojiInfo(List<EmojiInfoCreateCommand> list);
+
+    String createIpDesc(EmojiIpCreateCommand request);
 }

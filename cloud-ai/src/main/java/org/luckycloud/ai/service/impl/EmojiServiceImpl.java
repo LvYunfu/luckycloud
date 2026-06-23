@@ -5,8 +5,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.luckycloud.ai.convert.EmojiGroupConvert;
 import org.luckycloud.ai.convert.EmojiInfoConvert;
 import org.luckycloud.ai.convert.EmojiIpConvert;
+import org.luckycloud.ai.domain.AIRequest;
 import org.luckycloud.ai.dto.*;
+import org.luckycloud.ai.service.AISupportService;
 import org.luckycloud.ai.service.EmojiService;
+import org.luckycloud.ai.service.PromptService;
 import org.luckycloud.domain.emoji.CloudEmojiGroupDO;
 import org.luckycloud.domain.emoji.CloudEmojiInfoDO;
 import org.luckycloud.domain.emoji.CloudEmojiIpInfoDO;
@@ -15,14 +18,15 @@ import org.luckycloud.mapper.emoji.CloudEmojiInfoMapper;
 import org.luckycloud.mapper.emoji.CloudEmojiIpInfoMapper;
 import org.luckycloud.utils.GenerateIdUtils;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.luckycloud.ai.config.PromptConfig.*;
 import static org.luckycloud.constant.SystemConstant.DISABLE;
 
 /**
@@ -55,6 +59,11 @@ public class EmojiServiceImpl implements EmojiService {
     private EmojiIpConvert emojiIpConvert;
 
 
+    @Resource
+    private AISupportService aiSupportService;
+
+    @Resource
+    private PromptService promptService;
 
     @Override
     public String createEmojiGroup(EmojiGroupCreateCommand command) {
@@ -208,6 +217,23 @@ public class EmojiServiceImpl implements EmojiService {
 
     @Override
     public List<EmojiInfoResponse> emojiDesCreate(EmojiDescCreateCommand command) {
-        return null;
+        AIRequest aiRequest = new AIRequest();
+        aiRequest.setQuestion(promptService.buildPrompt(IP_INPUT, command));
+        aiRequest.setSystemPrompt(EMOJI_DESCRIPTION);
+        return aiSupportService.generateStructuredEntity(aiRequest, new ParameterizedTypeReference<>() {
+        });
+    }
+
+    @Override
+    public void createEmojiInfo(List<EmojiInfoCreateCommand> list) {
+
+    }
+
+    @Override
+    public String createIpDesc(EmojiIpCreateCommand command) {
+        AIRequest aiRequest = new AIRequest();
+        aiRequest.setQuestion(promptService.buildPrompt(IP_INPUT, command));
+        aiRequest.setSystemPrompt(IP_DESCRIPTION);
+        return aiSupportService.generateAnswer(aiRequest);
     }
 }

@@ -1,14 +1,10 @@
 package org.luckycloud.ai.config;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 提示词配置属性类

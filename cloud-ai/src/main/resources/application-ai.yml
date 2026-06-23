@@ -3,7 +3,7 @@ spring:
     name: cloud-ai
   ai:
     openai:
-      api-key: cc67c086-0e8f-40aa-9825-e9df7c049d9a
+      api-key: ${OPENAI_API_KEY}
       base-url: https://ark.cn-beijing.volces.com
       chat:
         options:
@@ -23,20 +23,6 @@ ai-training:
   # 日志级别
   log-level: INFO
 
-# 模型配置
-#ai-models:
-#  - id: gpt-3.5-turbo
-#    name: GPT-3.5 Turbo
-#    enabled: true
-#    timeout: 30000
-#  - id: gpt-4
-#    name: GPT-4
-#    enabled: true
-#    timeout: 60000
-#  - id: doubao-seed-1-8-251228
-#    name: 豆包Seed
-#    enabled: true
-#    timeout: 30000
 
 
   # 客户画像配置

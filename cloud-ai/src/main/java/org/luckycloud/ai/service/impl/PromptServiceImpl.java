@@ -39,16 +39,20 @@ public class PromptServiceImpl implements PromptService {
 
         String template = promptConfig.getRolePromptTemplate();
         // 2. 创建 PromptTemplate 对象
+        return buildPrompt(template, profile);
+    }
+
+    @Override
+    public <T> String buildPrompt(String template, T params) {
+        // 2. 创建 PromptTemplate 对象
         PromptTemplate promptTemplate = new PromptTemplate(template);
         // 3. 准备参数 Map
-        Map<String, Object> variables = objectMapper.convertValue(profile, new TypeReference<>() {
+        Map<String, Object> variables = objectMapper.convertValue(params, new TypeReference<>() {
         });
         // 4. 渲染模板生成 Prompt 对象
         Prompt prompt = promptTemplate.create(variables);
         return prompt.toString();
     }
-
-
 
     @Override
     public String buildEvaluationPrompt(String promptType, CustomerProfile profile, String aiResponse) {
@@ -92,9 +96,6 @@ public class PromptServiceImpl implements PromptService {
     }
 
 
-
-
-
     /**
      * 获取测评提示词模板
      */
@@ -130,10 +131,10 @@ public class PromptServiceImpl implements PromptService {
                 profile.getDifficultyLevel());
     }
 
-    private String buildRoleConsistencyPrompt(PromptTemplate template, CustomerProfile profile,String aiResponse) {
+    private String buildRoleConsistencyPrompt(PromptTemplate template, CustomerProfile profile, String aiResponse) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("profile",buildProfileSummary(profile));
-        variables.put("aiResponse",aiResponse);
+        variables.put("profile", buildProfileSummary(profile));
+        variables.put("aiResponse", aiResponse);
         Prompt prompt = template.create(variables);
         return prompt.toString();
     }

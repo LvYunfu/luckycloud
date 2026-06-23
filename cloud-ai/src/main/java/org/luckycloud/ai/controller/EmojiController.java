@@ -135,6 +135,18 @@ public class EmojiController {
         return emojiService.getEmojiInfoList(emojiGroupId);
     }
 
+    /**
+     * 通过大模型创造主题IP提示词
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/ip/des-create")
+    public void createIpDesc(@Validated @RequestBody EmojiIpCreateCommand request) {
+        emojiService.createIpDesc(request);
+
+    }
+
 
     /**
      * 通过大模型创造主题IP
@@ -164,7 +176,7 @@ public class EmojiController {
     /**
      * 创建表情IP
      */
-    @PostMapping("/ip/create")
+    @PostMapping("/ip/save")
     public Response<String> saveEmojiIp(@RequestBody EmojiIpCreateCommand command) {
         String ipId = emojiService.saveEmojiIp(command);
         return Response.successData(ipId, "表情IP创建成功");

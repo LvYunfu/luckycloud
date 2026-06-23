@@ -1,8 +1,6 @@
 package org.luckycloud.ai.service;
 
 import org.luckycloud.ai.domain.CustomerProfile;
-import org.luckycloud.ai.domain.TrainingSession;
-import org.springframework.ai.chat.prompt.Prompt;
 
 /**
  * 提示词管理服务接口
@@ -15,6 +13,8 @@ public interface PromptService {
      * @return 角色设定提示词
      */
     String buildRolePrompt(CustomerProfile profile);
+
+    <T> String buildPrompt(String template,T profile);
 
 
 
