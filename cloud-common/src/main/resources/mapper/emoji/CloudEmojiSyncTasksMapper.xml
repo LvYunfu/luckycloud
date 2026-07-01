@@ -112,4 +112,29 @@
             update_time =  #{updateTime,jdbcType=TIMESTAMP}
         where   task_id = #{taskId,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectByTaskId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_sync_tasks
+        where task_id = #{taskId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectSyncTaskList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_sync_tasks
+        <where>
+            <if test="query.userId != null and query.userId != ''">
+                and user_id = #{query.userId,jdbcType=VARCHAR}
+            </if>
+            <if test="query.targetPlatform != null and query.targetPlatform != ''">
+                and target_platform = #{query.targetPlatform,jdbcType=VARCHAR}
+            </if>
+            <if test="query.taskStatus != null and query.taskStatus != ''">
+                and task_status = #{query.taskStatus,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>

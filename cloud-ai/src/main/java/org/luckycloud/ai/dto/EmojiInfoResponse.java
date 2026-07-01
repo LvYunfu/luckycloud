@@ -10,29 +10,44 @@ import java.time.LocalDateTime;
 @Data
 public class EmojiInfoResponse {
     /**
-     * 表情包ID
+     * 表情包唯一标识
      */
     private String emojiId;
 
     /**
-     * 表情包标题
+     * 关联的角色 IP ID
      */
-    private String title;
+    private String ipId;
 
     /**
-     * 表情包描述
-     */
-    private String description;
-
-    /**
-     * 表情包系列ID
+     * 所属系列 ID
      */
     private String emojiGroupId;
 
     /**
-     * 表情包路径
+     * 表情名称
      */
-    private String emojiUrl;
+    private String name;
+
+    /**
+     * AI扩写后的最终图像提示词
+     */
+    private String promptText;
+
+    /**
+     * 类型：static / dynamic
+     */
+    private String type;
+
+    /**
+     * 文件 URL（PNG 或 GIF）
+     */
+    private String fileUrl;
+
+    /**
+     * 文件大小（KB）
+     */
+    private Integer fileSize;
 
     /**
      * 创建时间
@@ -43,9 +58,4 @@ public class EmojiInfoResponse {
      * 更新时间
      */
     private LocalDateTime updateTime;
-
-    /**
-     * 状态 1 有效  0无效
-     */
-    private String status;
 }

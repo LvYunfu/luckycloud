@@ -112,4 +112,27 @@
             status =  #{status,jdbcType=CHAR}
         where   emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR}
     </update>
+
+    <!-- 根据条件查询表情包系列列表 -->
+    <select id="selectGroupList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_group
+        <where>
+            status = '1'
+            <if test="query.userId != null and query.userId != ''">
+                AND user_id = #{query.userId}
+            </if>
+            <if test="query.seriesKeywords != null and query.seriesKeywords != ''">
+                AND series_keywords LIKE CONCAT('%', #{query.seriesKeywords}, '%')
+            </if>
+            <if test="query.emojiType != null and query.emojiType != ''">
+                AND emoji_type = #{query.emojiType}
+            </if>
+            <if test="query.ipId != null and query.ipId != ''">
+                AND ip_id = #{query.ipId}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>

@@ -3,32 +3,27 @@ package org.luckycloud.ai.dto;
 import lombok.Data;
 
 /**
- * 表情IP更新命令
+ * 更新角色信息请求
  */
 @Data
 public class EmojiIpUpdateCommand {
     /**
-     * 主键
+     * 角色 ID
      */
     private String ipId;
 
     /**
-     * ip标题
+     * 新的角色名称
      */
-    private String title;
+    private String name;
 
     /**
-     * IP描述
+     * 新的角色描述
      */
     private String description;
 
     /**
-     * ip文件路径
+     * 是否设为默认：0-否，1-是
      */
-    private String ipUrl;
-
-    /**
-     * 状态 1 有效 0 无效
-     */
-    private String status;
+    private Integer isDefault;
 }

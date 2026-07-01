@@ -1,6 +1,10 @@
 package org.luckycloud.mapper.emoji;
 
+import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.emoji.CloudEmojiIpInfoDO;
+import org.luckycloud.dto.emoji.request.EmojiIpListQueryDTO;
+
+import java.util.List;
 
 /**
 * @author lvyf
@@ -21,5 +25,12 @@ public interface CloudEmojiIpInfoMapper {
     int updateByPrimaryKeySelective(CloudEmojiIpInfoDO record);
 
     int updateByPrimaryKey(CloudEmojiIpInfoDO record);
+
+    /**
+     * 根据条件查询角色IP列表
+     * @param query 查询条件（包含用户ID、角色名称、来源类型、分页信息）
+     * @return 角色IP列表
+     */
+    List<CloudEmojiIpInfoDO> selectIpList(@Param("query") EmojiIpListQueryDTO query);
 
 }

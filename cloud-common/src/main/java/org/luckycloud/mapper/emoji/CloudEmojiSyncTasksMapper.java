@@ -1,6 +1,10 @@
 package org.luckycloud.mapper.emoji;
 
+import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.emoji.CloudEmojiSyncTasksDO;
+import org.luckycloud.dto.emoji.request.SyncTaskQueryDTO;
+
+import java.util.List;
 
 /**
 * @author lvyf
@@ -21,5 +25,19 @@ public interface CloudEmojiSyncTasksMapper {
     int updateByPrimaryKeySelective(CloudEmojiSyncTasksDO record);
 
     int updateByPrimaryKey(CloudEmojiSyncTasksDO record);
+
+    /**
+     * 根据任务ID查询同步任务
+     * @param taskId 任务ID
+     * @return 同步任务
+     */
+    CloudEmojiSyncTasksDO selectByTaskId(@Param("taskId") String taskId);
+
+    /**
+     * 根据条件查询同步任务列表
+     * @param query 查询条件
+     * @return 同步任务列表
+     */
+    List<CloudEmojiSyncTasksDO> selectSyncTaskList(@Param("query") SyncTaskQueryDTO query);
 
 }

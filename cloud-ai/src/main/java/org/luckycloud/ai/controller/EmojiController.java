@@ -1,10 +1,11 @@
 package org.luckycloud.ai.controller;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import org.luckycloud.ai.dto.*;
+import org.luckycloud.ai.service.EmojiIpService;
 import org.luckycloud.ai.service.EmojiService;
-import org.luckycloud.dto.common.Response;
+import org.luckycloud.ai.service.EmojiSyncService;
+import org.luckycloud.dto.common.PageResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,205 +13,237 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 /**
+ * 表情包生成系统控制器
+ *
  * @author lvyf
- * @description:
  * @date 2026/2/27
  */
-
 @RestController
 @RequestMapping("/emoji")
 public class EmojiController {
 
-
     @Resource
     private EmojiService emojiService;
 
+    @Resource
+    private EmojiIpService emojiIpService;
+
+    @Resource
+    private EmojiSyncService emojiSyncService;
+
+    // ==================== 角色管理模块 ====================
 
     /**
-     * 创建表情包系列
+     * 2.1 AI 扩写角色提示词
+     * URL: /emoji/ip/expand-prompt
      */
-    @PostMapping("/group/create")
-    public Response<String> createEmojiGroup(@RequestBody EmojiGroupCreateCommand command) {
-        String groupId = emojiService.createEmojiGroup(command);
-        return Response.successData(groupId, "表情包系列创建成功");
+    @PostMapping("/ip/expand-prompt")
+    public ExpandPromptResponse expandPrompt(@Validated @RequestBody ExpandPromptRequest request) {
+        return emojiIpService.expandPrompt(request);
     }
 
     /**
-     * 更新表情包系列
+     * 2.2 保存角色 IP
+     * URL: /emoji/ip/save
+     */
+    @PostMapping("/ip/save")
+    public String saveEmojiIp(@Validated @RequestBody EmojiIpCreateCommand command) {
+        return emojiIpService.saveEmojiIp(command);
+    }
+
+    /**
+     * 2.3 获取我的角色列表
+     * URL: /emoji/ip/list
+     */
+    @PostMapping("/ip/list")
+    public PageResponse<EmojiIpResponse> getEmojiIpList(@RequestBody EmojiIpListQuery query) {
+        return emojiIpService.getEmojiIpList(query);
+    }
+
+    /**
+     * 2.4 更新角色信息
+     * URL: /emoji/ip/update
+     */
+    @PostMapping("/ip/update")
+    public void updateEmojiIp(@Validated @RequestBody EmojiIpUpdateCommand command) {
+        emojiIpService.updateEmojiIp(command);
+    }
+
+    /**
+     * 2.5 删除角色
+     * URL: /emoji/ip/delete
+     */
+    @PostMapping("/ip/delete")
+    public void deleteEmojiIp(@RequestBody DeleteRequest request) {
+        emojiIpService.deleteEmojiIp(request.getId());
+    }
+
+    // ==================== 表情包系列管理模块 ====================
+
+    /**
+     * 3.1 创建表情包系列
+     * URL: /emoji/group/create
+     */
+    @PostMapping("/group/create")
+    public String createEmojiGroup(@Validated @RequestBody EmojiGroupCreateCommand command) {
+        return emojiService.createEmojiGroup(command);
+    }
+
+    /**
+     * 3.2 更新表情包系列
+     * URL: /emoji/group/update
      */
     @PostMapping("/group/update")
-    public void updateEmojiGroup(@RequestBody EmojiGroupUpdateCommand command) {
+    public void updateEmojiGroup(@Validated @RequestBody EmojiGroupUpdateCommand command) {
         emojiService.updateEmojiGroup(command);
     }
 
     /**
-     * 删除表情包系列
+     * 3.3 获取我的系列列表（分页）
+     * URL: /emoji/group/list
+     */
+    @PostMapping("/group/list")
+    public PageResponse<EmojiGroupResponse> getEmojiGroupList(@RequestBody EmojiGroupListQuery query) {
+        return emojiService.getEmojiGroupList(query);
+    }
+
+    /**
+     * 3.4 获取系列详情
+     * URL: /emoji/group/detail
+     */
+    @PostMapping("/group/detail")
+    public EmojiGroupResponse getEmojiGroupDetail(@RequestBody IdRequest request) {
+        return emojiService.getEmojiGroup(request.getId());
+    }
+
+    /**
+     * 3.5 删除表情包系列（级联删除系列下所有表情包）
+     * URL: /emoji/group/delete
      */
     @PostMapping("/group/delete")
-    public void deleteEmojiGroup(@RequestParam String emojiGroupId) {
-        emojiService.deleteEmojiGroup(emojiGroupId);
+    public void deleteEmojiGroup(@RequestBody DeleteRequest request) {
+        emojiService.deleteEmojiGroup(request.getId());
     }
 
+    // ==================== 表情包生成与资产管理模块 ====================
+
     /**
-     * 获取单个表情包系列详情
+     * 4.1 批量生成并保存表情包（异步）
+     * URL: /emoji/emoji/batch-generate
      */
-    @GetMapping("/group/get")
-    public EmojiGroupResponse getEmojiGroup(@RequestParam String emojiGroupId) {
-        return emojiService.getEmojiGroup(emojiGroupId);
+    @PostMapping("/emoji/batch-generate")
+    public String batchGenerateEmoji(@Validated @RequestBody BatchGenerateRequest request) {
+        return emojiService.batchGenerateEmoji(request);
     }
 
     /**
-     * 获取表情包系列列表
+     * 4.2 重新生成单个表情包（异步）
+     * URL: /emoji/emoji/regenerate
      */
-    @GetMapping("/group/list")
-    public List<EmojiGroupResponse> getEmojiGroupList() {
-        return emojiService.getEmojiGroupList();
+    @PostMapping("/emoji/regenerate")
+    public void regenerateEmoji(@Validated @RequestBody RegenerateRequest request) {
+        emojiService.regenerateEmoji(request);
     }
 
-
     /**
-     * 利用大模型生成表情包描述
+     * 4.3 查询生成任务进度
+     * URL: /emoji/emoji/task-progress
      */
-    @PostMapping("/emoji/des-create")
-    public List<EmojiInfoResponse> emojiDesCreate(@RequestBody EmojiDescCreateCommand command) {
-        return emojiService.emojiDesCreate(command);
+    @PostMapping("/emoji/task-progress")
+    public TaskProgressResponse getTaskProgress(@RequestBody TaskProgressRequest request) {
+        return emojiService.getTaskProgress(request.getTaskId());
     }
 
-
     /**
-     * 利用大模型创造表情包
+     * 4.4 获取表情包资产列表（分页）
+     * URL: /emoji/emoji/list
      */
-    @PostMapping("/emoji/create")
-    public void createEmojiInfo(@RequestBody List<EmojiInfoCreateCommand> list) {
-        emojiService.createEmojiInfo(list);
+    @PostMapping("/emoji/list")
+    public PageResponse<EmojiInfoResponse> getEmojiInfoList(@RequestBody EmojiInfoListQuery query) {
+        return emojiService.getEmojiInfoList(query);
     }
 
     /**
-     * 保存表情包
+     * 4.5 获取表情包详情
+     * URL: /emoji/emoji/detail
      */
-    @PostMapping("/emoji/save")
-    public Response<String> saveEmojiInfo(@RequestBody EmojiInfoCreateCommand command) {
-        String emojiId = emojiService.saveEmojiInfo(command);
-        return Response.successData(emojiId, "表情包保存成功");
+    @PostMapping("/emoji/detail")
+    public EmojiInfoResponse getEmojiInfoDetail(@RequestBody IdRequest request) {
+        return emojiService.getEmojiInfo(request.getId());
     }
 
     /**
-     * 批量保存表情包
-     */
-    @PostMapping("/emoji/batch-save")
-    public Response<Void> batchCreateEmojiInfo(@RequestBody List<EmojiInfoCreateCommand> commands) {
-        emojiService.batchSaveEmojiInfo(commands);
-        return Response.success("表情包保存成功");
-    }
-
-    /**
-     * 更新表情包
+     * 4.6 更新表情包资产
+     * URL: /emoji/emoji/update
      */
     @PostMapping("/emoji/update")
-    public void updateEmojiInfo(@RequestBody EmojiInfoUpdateCommand command) {
+    public void updateEmojiInfo(@Validated @RequestBody EmojiInfoUpdateCommand command) {
         emojiService.updateEmojiInfo(command);
     }
 
     /**
-     * 删除表情包
+     * 4.7 删除表情包资产
+     * URL: /emoji/emoji/delete
      */
     @PostMapping("/emoji/delete")
-    public void deleteEmojiInfo(@RequestParam String emojiId) {
-        emojiService.deleteEmojiInfo(emojiId);
+    public void deleteEmojiInfo(@RequestBody DeleteBatchRequest request) {
+        for (String emojiId : request.getIds()) {
+            emojiService.deleteEmojiInfo(emojiId);
+        }
+    }
+
+    // ==================== 平台同步模块 ====================
+
+    /**
+     * 5.1 创建平台同步任务
+     * URL: /emoji/sync/create-task
+     */
+    @PostMapping("/sync/create-task")
+    public String createSyncTask(@Validated @RequestBody CreateSyncTaskRequest request) {
+        return emojiSyncService.createSyncTask(request);
     }
 
     /**
-     * 获取单个表情包详情
+     * 5.2 确认微信手动上传完成
+     * URL: /emoji/sync/confirm-wechat
      */
-    @GetMapping("/emoji/get")
-    public EmojiInfoResponse getEmojiInfo(@RequestParam String emojiId) {
-        return emojiService.getEmojiInfo(emojiId);
+    @PostMapping("/sync/confirm-wechat")
+    public void confirmWechatUpload(@Validated @RequestBody ConfirmWechatRequest request) {
+        emojiSyncService.confirmWechatUpload(request);
     }
 
     /**
-     * 获取表情包列表（按系列）
+     * 5.3 获取同步任务状态
+     * URL: /emoji/sync/task-status
      */
-    @GetMapping("/emoji/list")
-    public List<EmojiInfoResponse> getEmojiInfoList(@RequestParam(required = false) String emojiGroupId) {
-        return emojiService.getEmojiInfoList(emojiGroupId);
+    @PostMapping("/sync/task-status")
+    public SyncTaskResponse getSyncTaskStatus(@RequestBody IdRequest request) {
+        return emojiSyncService.getSyncTaskStatus(request.getId());
     }
 
     /**
-     * 通过大模型创造主题IP提示词
-     *
-     * @param request
-     * @return
+     * 5.4 获取我的同步任务列表
+     * URL: /emoji/sync/task-list
      */
-    @PostMapping("/ip/des-create")
-    public void createIpDesc(@Validated @RequestBody EmojiIpCreateCommand request) {
-        emojiService.createIpDesc(request);
-
+    @PostMapping("/sync/task-list")
+    public PageResponse<SyncTaskResponse> getSyncTaskList(@RequestBody(required = false) SyncTaskListQuery query) {
+        if (query == null) {
+            query = new SyncTaskListQuery();
+        }
+        return emojiSyncService.getSyncTaskList(query);
     }
 
+    // ==================== 通用基础模块 ====================
 
     /**
-     * 通过大模型创造主题IP
-     *
-     * @param request
-     * @return
+     * 6.1 文件上传
+     * URL: /emoji/common/upload
      */
-    @PostMapping("/ip/create")
-    public void createIp(@Validated @RequestBody EmojiIpCreateCommand request, HttpServletResponse response) {
-        emojiService.createIp(request, response);
-
-    }
-
-
-    /**
-     * 上传emoji主题IP
-     *
-     * @param request
-     * @return
-     */
-    @PostMapping("ip/upload")
-    public Response<String> uploadIp(EmojiIpCreateCommand request, MultipartFile file) {
-        String ipId = emojiService.uploadIp(request, file);
-        return Response.successData(ipId, "主题IP上传成功");
-    }
-
-    /**
-     * 创建表情IP
-     */
-    @PostMapping("/ip/save")
-    public Response<String> saveEmojiIp(@RequestBody EmojiIpCreateCommand command) {
-        String ipId = emojiService.saveEmojiIp(command);
-        return Response.successData(ipId, "表情IP创建成功");
-    }
-
-    /**
-     * 更新表情IP
-     */
-    @PostMapping("/ip/update")
-    public void updateEmojiIp(@RequestBody EmojiIpUpdateCommand command) {
-        emojiService.updateEmojiIp(command);
-    }
-
-    /**
-     * 删除表情IP
-     */
-    @PostMapping("/ip/delete")
-    public void deleteEmojiIp(@RequestParam String ipId) {
-        emojiService.deleteEmojiIp(ipId);
-    }
-
-    /**
-     * 获取单个表情IP详情
-     */
-    @GetMapping("/ip/get")
-    public EmojiIpResponse getEmojiIp(@RequestParam String ipId) {
-        return emojiService.getEmojiIp(ipId);
-    }
-
-    /**
-     * 获取表情IP列表
-     */
-    @GetMapping("/ip/list")
-    public List<EmojiIpResponse> getEmojiIpList() {
-        return emojiService.getEmojiIpList();
+    @PostMapping("/common/upload")
+    public Object uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("bizType") String bizType) {
+        // TODO: 实现文件上传逻辑
+        return null;
     }
 }

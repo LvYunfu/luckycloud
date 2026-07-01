@@ -136,4 +136,24 @@
             status =  #{status,jdbcType=CHAR}
         where   ip_id = #{ipId,jdbcType=VARCHAR}
     </update>
+
+    <!-- 根据条件查询角色IP列表 -->
+    <select id="selectIpList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_ip_info
+        <where>
+            status = '1'
+            <if test="query.userId != null and query.userId != ''">
+                AND user_id = #{query.userId}
+            </if>
+            <if test="query.name != null and query.name != ''">
+                AND name LIKE CONCAT('%', #{query.name}, '%')
+            </if>
+            <if test="query.sourceType != null and query.sourceType != ''">
+                AND source_type = #{query.sourceType}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>

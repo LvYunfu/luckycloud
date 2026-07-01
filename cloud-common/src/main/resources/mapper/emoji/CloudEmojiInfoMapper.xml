@@ -136,4 +136,50 @@
             status =  #{status,jdbcType=CHAR}
         where   emoji_id = #{emojiId,jdbcType=VARCHAR}
     </update>
+
+    <!-- 根据系列ID统计表情包数量 -->
+    <select id="countByGroupId" resultType="int">
+        select count(1)
+        from cloud_emoji_info
+        where emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR}
+          and status = '1'
+    </select>
+
+    <!-- 根据系列ID批量逻辑删除表情包 -->
+    <update id="deleteByGroupId">
+        update cloud_emoji_info
+        set status = '0',
+            update_time = now()
+        where emoji_group_id = #{emojiGroupId,jdbcType=VARCHAR}
+          and status = '1'
+    </update>
+
+    <!-- 根据条件查询表情包列表 -->
+    <select id="selectEmojiInfoList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cloud_emoji_info
+        <where>
+            status = '1'
+            <if test="query.userId != null and query.userId != ''">
+                AND user_id = #{query.userId}
+            </if>
+            <if test="query.name != null and query.name != ''">
+                AND name LIKE CONCAT('%', #{query.name}, '%')
+            </if>
+            <if test="query.type != null and query.type != ''">
+                AND type = #{query.type}
+            </if>
+            <if test="query.emojiGroupId != null and query.emojiGroupId != ''">
+                AND emoji_group_id = #{query.emojiGroupId}
+            </if>
+            <if test="query.ipId != null and query.ipId != ''">
+                AND ip_id = #{query.ipId}
+            </if>
+            <if test="query.promptText != null and query.promptText != ''">
+                AND prompt_text LIKE CONCAT('%', #{query.promptText}, '%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>

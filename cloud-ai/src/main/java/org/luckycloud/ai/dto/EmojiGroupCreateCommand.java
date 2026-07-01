@@ -8,22 +8,22 @@ import lombok.Data;
 @Data
 public class EmojiGroupCreateCommand {
     /**
-     * IP ID
+     * 关联的角色 IP ID
      */
     private String ipId;
 
     /**
-     * 表情系列描述
+     * 系列关键词（逗号分隔，≤100字符）
      */
-    private String description;
+    private String seriesKeywords;
 
     /**
-     * 表情包类型
+     * 生成类型：static(静态) / dynamic(动态)
      */
     private String emojiType;
 
     /**
-     * 表情包风格
+     * 表情风格（如"可爱"、"写实"）
      */
     private String emojiStyle;
 }

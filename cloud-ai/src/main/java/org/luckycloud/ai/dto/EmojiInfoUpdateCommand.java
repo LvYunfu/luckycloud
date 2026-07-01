@@ -1,5 +1,6 @@
 package org.luckycloud.ai.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -8,32 +9,28 @@ import lombok.Data;
 @Data
 public class EmojiInfoUpdateCommand {
     /**
-     * 表情包ID
+     * 表情包唯一标识
      */
+    @NotBlank(message = "表情包ID不能为空")
     private String emojiId;
 
     /**
-     * 表情包标题
+     * 表情名称
      */
-    private String title;
+    private String name;
 
     /**
-     * 表情包描述
+     * AI扩写后的最终图像提示词
      */
-    private String description;
+    private String promptText;
 
     /**
-     * 表情包系列ID
+     * 文件 URL（PNG 或 GIF）
      */
-    private String emojiGroupId;
+    private String fileUrl;
 
     /**
-     * 表情包路径
+     * 文件大小（KB）
      */
-    private String emojiUrl;
-
-    /**
-     * 状态 1 有效  0无效
-     */
-    private String status;
+    private Integer fileSize;
 }

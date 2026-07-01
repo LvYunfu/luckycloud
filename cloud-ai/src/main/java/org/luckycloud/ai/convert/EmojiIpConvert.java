@@ -1,9 +1,11 @@
 package org.luckycloud.ai.convert;
 
 import org.luckycloud.ai.dto.EmojiIpCreateCommand;
+import org.luckycloud.ai.dto.EmojiIpListQuery;
 import org.luckycloud.ai.dto.EmojiIpResponse;
 import org.luckycloud.ai.dto.EmojiIpUpdateCommand;
 import org.luckycloud.domain.emoji.CloudEmojiIpInfoDO;
+import org.luckycloud.dto.emoji.request.EmojiIpListQueryDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -26,6 +28,8 @@ public interface EmojiIpConvert {
      * DO转Response
      */
     EmojiIpResponse convert2Response(CloudEmojiIpInfoDO ipInfoDO);
+
+    EmojiIpListQueryDTO convert2QueryDto(EmojiIpListQuery ipInfoDO);
 
     List<EmojiIpResponse> convert2ResponseList(List<CloudEmojiIpInfoDO> ipInfoDOList);
 

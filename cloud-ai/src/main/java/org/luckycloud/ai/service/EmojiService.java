@@ -1,125 +1,107 @@
 package org.luckycloud.ai.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.luckycloud.ai.dto.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.luckycloud.dto.common.PageResponse;
 
 import java.util.List;
 
 /**
+ * 表情包系列与资产管理服务
  * @author lvyf
- * @description:
  * @date 2026/2/27
  */
 public interface EmojiService {
 
-
     /**
      * 创建表情包系列
+     * @param command 创建命令
+     * @return 系列ID
      */
     String createEmojiGroup(EmojiGroupCreateCommand command);
 
     /**
      * 更新表情包系列
+     * @param command 更新命令
      */
     void updateEmojiGroup(EmojiGroupUpdateCommand command);
 
     /**
-     * 删除表情包系列
+     * 删除表情包系列（级联删除系列下所有表情包）
+     * @param emojiGroupId 系列ID
      */
     void deleteEmojiGroup(String emojiGroupId);
 
     /**
      * 获取单个表情包系列详情
+     * @param emojiGroupId 系列ID
+     * @return 系列详情
      */
     EmojiGroupResponse getEmojiGroup(String emojiGroupId);
 
     /**
-     * 获取表情包系列列表
+     * 获取表情包系列列表（分页）
+     * @param query 查询条件
+     * @return 分页结果
      */
-    List<EmojiGroupResponse> getEmojiGroupList();
+    PageResponse<EmojiGroupResponse> getEmojiGroupList(EmojiGroupListQuery query);
 
     /**
      * 创建表情包
+     * @param command 创建命令
+     * @return 表情包ID
      */
     String saveEmojiInfo(EmojiInfoCreateCommand command);
 
     /**
      * 批量创建表情包
+     * @param commands 创建命令列表
+     * @return 成功创建数量
      */
     int batchSaveEmojiInfo(List<EmojiInfoCreateCommand> commands);
 
     /**
      * 更新表情包
+     * @param command 更新命令
      */
     void updateEmojiInfo(EmojiInfoUpdateCommand command);
 
     /**
      * 删除表情包
+     * @param emojiId 表情包ID
      */
     void deleteEmojiInfo(String emojiId);
 
     /**
      * 获取单个表情包详情
+     * @param emojiId 表情包ID
+     * @return 表情包详情
      */
     EmojiInfoResponse getEmojiInfo(String emojiId);
 
     /**
-     * 获取表情包列表
+     * 获取表情包资产列表（分页）
+     * @param query 查询条件
+     * @return 分页结果
      */
-    List<EmojiInfoResponse> getEmojiInfoList(String emojiGroupId);
-
+    PageResponse<EmojiInfoResponse> getEmojiInfoList(EmojiInfoListQuery query);
 
     /**
-     * 创建表情IP
+     * 批量生成表情包（异步）
+     * @param request 批量生成请求
+     * @return 任务ID
      */
-    String saveEmojiIp(EmojiIpCreateCommand command);
+    String batchGenerateEmoji(BatchGenerateRequest request);
 
     /**
-     * 更新表情IP
+     * 重新生成单个表情包
+     * @param request 重新生成请求
      */
-    void updateEmojiIp(EmojiIpUpdateCommand command);
+    void regenerateEmoji(RegenerateRequest request);
 
     /**
-     * 删除表情IP
+     * 查询生成任务进度
+     * @param taskId 任务ID
+     * @return 任务进度
      */
-    void deleteEmojiIp(String ipId);
-
-    /**
-     * 获取单个表情IP详情
-     */
-    EmojiIpResponse getEmojiIp(String ipId);
-
-    /**
-     * 获取表情IP列表
-     */
-    List<EmojiIpResponse> getEmojiIpList();
-
-    /**
-     * 通过大模型创造主题IP并返回文件
-     */
-    void createIp(EmojiIpCreateCommand request, HttpServletResponse response);
-
-
-    /**
-     * 上传表情IP
-     */
-    String uploadIp(EmojiIpCreateCommand request, MultipartFile file);
-
-    /**
-     * 利用大模型生成表情包描述
-     *
-     * @param command
-     * @return
-     */
-    List<EmojiInfoResponse> emojiDesCreate(EmojiDescCreateCommand command);
-
-    /**
-     * 利用大模型创造表情包
-     *
-     * @param list
-     */
-    void createEmojiInfo(List<EmojiInfoCreateCommand> list);
-
-    String createIpDesc(EmojiIpCreateCommand request);
+    TaskProgressResponse getTaskProgress(String taskId);
 }
