@@ -1,0 +1,2271 @@
+{
+  "item": [
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/ip/expand-prompt",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"keyword\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "ip",
+            "expand-prompt"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/ip/expand-prompt"
+        }
+      },
+      "response": [
+        {
+          "name": "2.1 AI 扩写角色提示词-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/ip/expand-prompt",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"keyword\": \"\" //角色关键词（≤50字符）\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "ip",
+                "expand-prompt"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/ip/expand-prompt"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"promptText\": \"\" //扩写后的英文图像提示词\n}"
+        }
+      ],
+      "name": "2.1 AI 扩写角色提示词"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/ip/save",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"name\": \"\",\n  \"imageUrl\": \"\",\n  \"sourceType\": \"\",\n  \"sourceKeyword\": \"\",\n  \"promptText\": \"\",\n  \"description\": \"\",\n  \"isDefault\": 0\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "ip",
+            "save"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/ip/save"
+        }
+      },
+      "response": [
+        {
+          "name": "2.2 保存角色 IP-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/ip/save",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"name\": \"\", //角色名称\n    \"imageUrl\": \"\", //角色图片 URL\n    \"sourceType\": \"\", //来源类型：ai_generated / user_upload\n    \"sourceKeyword\": \"\", //用户输入的角色关键词（AI生成时必填）\n    \"promptText\": \"\", //AI扩写后的提示词（AI生成时必填）\n    \"description\": \"\", //角色描述（≤1000字符）\n    \"isDefault\": 0 //是否默认角色：0-否，1-是，默认0\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "ip",
+                "save"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/ip/save"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "\"\""
+        }
+      ],
+      "name": "2.2 保存角色 IP"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/ip/list",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"userId\": \"\",\n  \"name\": \"\",\n  \"sourceType\": \"\",\n  \"pageNum\": 0,\n  \"pageSize\": 0\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "ip",
+            "list"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/ip/list"
+        }
+      },
+      "response": [
+        {
+          "name": "2.3 获取我的角色列表-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/ip/list",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"userId\": \"\", //用户ID（内部使用，不从前端传入）\n    \"name\": \"\", //按角色名称模糊搜索\n    \"sourceType\": \"\", //按来源类型筛选\n    \"pageNum\": 0, //页码\n    \"pageSize\": 0 //每页条数\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "ip",
+                "list"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/ip/list"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"total\": 0,\n    \"list\": [\n        {\n            \"ipId\": \"\", //角色 IP 唯一标识\n            \"userId\": \"\", //所属用户 ID\n            \"name\": \"\", //角色名称\n            \"imageUrl\": \"\", //角色图片 OSS/CDN URL\n            \"sourceType\": \"\", //来源类型：ai_generated / user_upload\n            \"sourceKeyword\": \"\", //用户输入的角色关键词（AI生成时记录）\n            \"promptText\": \"\", //AI扩写后的最终图像提示词\n            \"description\": \"\", //角色描述（用户补充）\n            \"isDefault\": 0, //是否默认角色：0-否，1-是\n            \"createTime\": \"\", //创建时间\n            \"updateTime\": \"\", //更新时间\n            \"status\": \"\" //状态：1-有效，0-无效\n        }\n    ]\n}"
+        }
+      ],
+      "name": "2.3 获取我的角色列表"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/ip/update",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"ipId\": \"\",\n  \"name\": \"\",\n  \"description\": \"\",\n  \"isDefault\": 0\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "ip",
+            "update"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/ip/update"
+        }
+      },
+      "response": [
+        {
+          "name": "2.4 更新角色信息-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/ip/update",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"ipId\": \"\", //角色 ID\n    \"name\": \"\", //新的角色名称\n    \"description\": \"\", //新的角色描述\n    \"isDefault\": 0 //是否设为默认：0-否，1-是\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "ip",
+                "update"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/ip/update"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "null"
+        }
+      ],
+      "name": "2.4 更新角色信息"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/ip/delete",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"id\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "ip",
+            "delete"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/ip/delete"
+        }
+      },
+      "response": [
+        {
+          "name": "2.5 删除角色-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/ip/delete",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"id\": \"\" //要删除的ID\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "ip",
+                "delete"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/ip/delete"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "null"
+        }
+      ],
+      "name": "2.5 删除角色"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/group/create",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"ipId\": \"\",\n  \"seriesKeywords\": \"\",\n  \"emojiType\": \"\",\n  \"emojiStyle\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "group",
+            "create"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/group/create"
+        }
+      },
+      "response": [
+        {
+          "name": "3.1 创建表情包系列-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/group/create",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"ipId\": \"\", //关联的角色 IP ID\n    \"seriesKeywords\": \"\", //系列关键词（逗号分隔，≤100字符）\n    \"emojiType\": \"\", //生成类型：static(静态) / dynamic(动态)\n    \"emojiStyle\": \"\" //表情风格（如\"可爱\"、\"写实\"）\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "group",
+                "create"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/group/create"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "\"\""
+        }
+      ],
+      "name": "3.1 创建表情包系列"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/group/update",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"emojiGroupId\": \"\",\n  \"ipId\": \"\",\n  \"seriesKeywords\": \"\",\n  \"emojiType\": \"\",\n  \"emojiStyle\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "group",
+            "update"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/group/update"
+        }
+      },
+      "response": [
+        {
+          "name": "3.2 更新表情包系列-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/group/update",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"emojiGroupId\": \"\", //系列唯一标识\n    \"ipId\": \"\", //关联的角色 IP ID\n    \"seriesKeywords\": \"\", //用户输入的系列关键词（逗号分隔）\n    \"emojiType\": \"\", //生成类型：static(静态) / dynamic(动态)\n    \"emojiStyle\": \"\" //表情风格（如\"可爱\"、\"写实\"）\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "group",
+                "update"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/group/update"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "null"
+        }
+      ],
+      "name": "3.2 更新表情包系列"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/group/list",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"seriesKeywords\": \"\",\n  \"emojiType\": \"\",\n  \"ipId\": \"\",\n  \"pageNum\": 0,\n  \"pageSize\": 0\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "group",
+            "list"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/group/list"
+        }
+      },
+      "response": [
+        {
+          "name": "3.3 获取我的系列列表（分页）-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/group/list",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"seriesKeywords\": \"\", //按系列关键词搜索\n    \"emojiType\": \"\", //按类型筛选\n    \"ipId\": \"\", //按角色筛选\n    \"pageNum\": 0, //页码\n    \"pageSize\": 0 //每页条数\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "group",
+                "list"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/group/list"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"total\": 0,\n    \"list\": [\n        {\n            \"emojiGroupId\": \"\", //系列唯一标识\n            \"ipId\": \"\", //关联的角色 IP ID\n            \"seriesKeywords\": \"\", //用户输入的系列关键词（逗号分隔）\n            \"emojiType\": \"\", //生成类型：static(静态) / dynamic(动态)\n            \"emojiStyle\": \"\", //表情风格（如\"可爱\"、\"写实\"）\n            \"emojiCount\": 0, //系列下表情包数量\n            \"createTime\": \"\", //创建时间\n            \"updateTime\": \"\" //更新时间\n        }\n    ]\n}"
+        }
+      ],
+      "name": "3.3 获取我的系列列表（分页）"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/group/detail",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"id\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "group",
+            "detail"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/group/detail"
+        }
+      },
+      "response": [
+        {
+          "name": "3.4 获取系列详情-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/group/detail",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"id\": \"\" //ID\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "group",
+                "detail"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/group/detail"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"emojiGroupId\": \"\", //系列唯一标识\n    \"ipId\": \"\", //关联的角色 IP ID\n    \"seriesKeywords\": \"\", //用户输入的系列关键词（逗号分隔）\n    \"emojiType\": \"\", //生成类型：static(静态) / dynamic(动态)\n    \"emojiStyle\": \"\", //表情风格（如\"可爱\"、\"写实\"）\n    \"emojiCount\": 0, //系列下表情包数量\n    \"createTime\": \"\", //创建时间\n    \"updateTime\": \"\" //更新时间\n}"
+        }
+      ],
+      "name": "3.4 获取系列详情"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/group/delete",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"id\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "group",
+            "delete"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/group/delete"
+        }
+      },
+      "response": [
+        {
+          "name": "3.5 删除表情包系列（级联删除系列下所有表情包）-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/group/delete",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"id\": \"\" //要删除的ID\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "group",
+                "delete"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/group/delete"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "null"
+        }
+      ],
+      "name": "3.5 删除表情包系列（级联删除系列下所有表情包）"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/emoji/batch-generate",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"emojiGroupId\": \"\",\n  \"ipId\": \"\",\n  \"descriptions\": [\n    {\n      \"name\": \"\",\n      \"promptText\": \"\"\n    }\n  ]\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "emoji",
+            "batch-generate"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/emoji/batch-generate"
+        }
+      },
+      "response": [
+        {
+          "name": "4.1 批量生成并保存表情包（异步）-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/emoji/batch-generate",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"emojiGroupId\": \"\", //系列 ID\n    \"ipId\": \"\", //角色 IP ID\n    \"descriptions\": [ //选中的描述列表对象数组\n        {\n            \"name\": \"\", //表情名称\n            \"promptText\": \"\" //前端拼接好的完整提示词（含情境/动作/元素）\n        }\n    ]\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "emoji",
+                "batch-generate"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/emoji/batch-generate"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "\"\""
+        }
+      ],
+      "name": "4.1 批量生成并保存表情包（异步）"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/emoji/regenerate",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"emojiId\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "emoji",
+            "regenerate"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/emoji/regenerate"
+        }
+      },
+      "response": [
+        {
+          "name": "4.2 重新生成单个表情包（异步）-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/emoji/regenerate",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"emojiId\": \"\" //表情包 ID\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "emoji",
+                "regenerate"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/emoji/regenerate"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "null"
+        }
+      ],
+      "name": "4.2 重新生成单个表情包（异步）"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/emoji/task-progress",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"taskId\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "emoji",
+            "task-progress"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/emoji/task-progress"
+        }
+      },
+      "response": [
+        {
+          "name": "4.3 查询生成任务进度-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/emoji/task-progress",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"taskId\": \"\" //任务 ID\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "emoji",
+                "task-progress"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/emoji/task-progress"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"taskId\": \"\", //任务ID\n    \"status\": \"\", //任务状态：pending / processing / completed / failed\n    \"total\": 0, //总数\n    \"completed\": 0, //已完成数\n    \"failed\": 0, //失败数\n    \"items\": [ //各子任务详情\n        {\n            \"name\": \"\", //表情名称\n            \"status\": \"\", //子任务状态：pending / success / failed\n            \"emojiId\": \"\", //生成的表情包ID（成功时）\n            \"fileUrl\": \"\", //生成的文件URL（成功时）\n            \"errorMsg\": \"\" //失败原因（失败时）\n        }\n    ],\n    \"createTime\": \"\" //任务创建时间\n}"
+        }
+      ],
+      "name": "4.3 查询生成任务进度"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/emoji/list",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"name\": \"\",\n  \"type\": \"\",\n  \"emojiGroupId\": \"\",\n  \"ipId\": \"\",\n  \"promptText\": \"\",\n  \"pageNum\": 0,\n  \"pageSize\": 0\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "emoji",
+            "list"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/emoji/list"
+        }
+      },
+      "response": [
+        {
+          "name": "4.4 获取表情包资产列表（分页）-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/emoji/list",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"name\": \"\", //按表情名称搜索\n    \"type\": \"\", //按类型筛选：static / dynamic\n    \"emojiGroupId\": \"\", //按所属系列筛选\n    \"ipId\": \"\", //按角色IP筛选\n    \"promptText\": \"\", //按提示词内容模糊搜索\n    \"pageNum\": 0, //页码\n    \"pageSize\": 0 //每页条数\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "emoji",
+                "list"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/emoji/list"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"total\": 0,\n    \"list\": [\n        {\n            \"emojiId\": \"\", //表情包唯一标识\n            \"ipId\": \"\", //关联的角色 IP ID\n            \"emojiGroupId\": \"\", //所属系列 ID\n            \"name\": \"\", //表情名称\n            \"promptText\": \"\", //AI扩写后的最终图像提示词\n            \"type\": \"\", //类型：static / dynamic\n            \"fileUrl\": \"\", //文件 URL（PNG 或 GIF）\n            \"fileSize\": 0, //文件大小（KB）\n            \"createTime\": \"\", //创建时间\n            \"updateTime\": \"\" //更新时间\n        }\n    ]\n}"
+        }
+      ],
+      "name": "4.4 获取表情包资产列表（分页）"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/emoji/detail",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"id\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "emoji",
+            "detail"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/emoji/detail"
+        }
+      },
+      "response": [
+        {
+          "name": "4.5 获取表情包详情-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/emoji/detail",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"id\": \"\" //ID\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "emoji",
+                "detail"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/emoji/detail"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"emojiId\": \"\", //表情包唯一标识\n    \"ipId\": \"\", //关联的角色 IP ID\n    \"emojiGroupId\": \"\", //所属系列 ID\n    \"name\": \"\", //表情名称\n    \"promptText\": \"\", //AI扩写后的最终图像提示词\n    \"type\": \"\", //类型：static / dynamic\n    \"fileUrl\": \"\", //文件 URL（PNG 或 GIF）\n    \"fileSize\": 0, //文件大小（KB）\n    \"createTime\": \"\", //创建时间\n    \"updateTime\": \"\" //更新时间\n}"
+        }
+      ],
+      "name": "4.5 获取表情包详情"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/emoji/update",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"emojiId\": \"\",\n  \"name\": \"\",\n  \"promptText\": \"\",\n  \"fileUrl\": \"\",\n  \"fileSize\": 0\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "emoji",
+            "update"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/emoji/update"
+        }
+      },
+      "response": [
+        {
+          "name": "4.6 更新表情包资产-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/emoji/update",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"emojiId\": \"\", //表情包唯一标识\n    \"name\": \"\", //表情名称\n    \"promptText\": \"\", //AI扩写后的最终图像提示词\n    \"fileUrl\": \"\", //文件 URL（PNG 或 GIF）\n    \"fileSize\": 0 //文件大小（KB）\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "emoji",
+                "update"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/emoji/update"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "null"
+        }
+      ],
+      "name": "4.6 更新表情包资产"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/emoji/delete",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"ids\": [\n    \"\"\n  ]\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "emoji",
+            "delete"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/emoji/delete"
+        }
+      },
+      "response": [
+        {
+          "name": "4.7 删除表情包资产-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/emoji/delete",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"ids\": [ //要删除的ID列表\n        \"\"\n    ]\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "emoji",
+                "delete"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/emoji/delete"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "null"
+        }
+      ],
+      "name": "4.7 删除表情包资产"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/sync/create-task",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"targetPlatform\": \"\",\n  \"emojiGroupId\": \"\",\n  \"syncIds\": [\n    \"\"\n  ],\n  \"metaData\": {}\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "sync",
+            "create-task"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/sync/create-task"
+        }
+      },
+      "response": [
+        {
+          "name": "5.1 创建平台同步任务-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/sync/create-task",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"targetPlatform\": \"\", //目标平台：wechat / douyin\n    \"emojiGroupId\": \"\", //关联系列 ID（按系列同步时传）\n    \"syncIds\": [ //表情包 ID 数组（对应表结构中的 sync_id，按单张/多选同步时传）\n        \"\"\n    ],\n    \"metaData\": {} //同步元数据（名称、简介、标签等）\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "sync",
+                "create-task"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/sync/create-task"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "\"\""
+        }
+      ],
+      "name": "5.1 创建平台同步任务"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/sync/confirm-wechat",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"taskId\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "sync",
+            "confirm-wechat"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/sync/confirm-wechat"
+        }
+      },
+      "response": [
+        {
+          "name": "5.2 确认微信手动上传完成-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/sync/confirm-wechat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"taskId\": \"\" //微信同步任务 ID\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "sync",
+                "confirm-wechat"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/sync/confirm-wechat"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "null"
+        }
+      ],
+      "name": "5.2 确认微信手动上传完成"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/sync/task-status",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"id\": \"\"\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "sync",
+            "task-status"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/sync/task-status"
+        }
+      },
+      "response": [
+        {
+          "name": "5.3 获取同步任务状态-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/sync/task-status",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"id\": \"\" //ID\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "sync",
+                "task-status"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/sync/task-status"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"taskId\": \"\", //任务 ID\n    \"userId\": \"\", //所属用户 ID\n    \"emojiGroupId\": \"\", //关联系列 ID\n    \"syncId\": \"\", //同步表情包 ID\n    \"targetPlatform\": \"\", //目标平台：wechat / douyin\n    \"taskStatus\": \"\", //任务状态：pending / processing / success / failed\n    \"platformResponse\": \"\", //平台返回信息或失败原因\n    \"createTime\": \"\", //任务创建时间\n    \"updateTime\": \"\" //任务更新时间\n}"
+        }
+      ],
+      "name": "5.3 获取同步任务状态"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/sync/task-list",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"targetPlatform\": \"\",\n  \"taskStatus\": \"\",\n  \"pageNum\": 0,\n  \"pageSize\": 0\n}"
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "sync",
+            "task-list"
+          ],
+          "query": [],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/sync/task-list"
+        }
+      },
+      "response": [
+        {
+          "name": "5.4 获取我的同步任务列表-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/sync/task-list",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n    \"targetPlatform\": \"\", //目标平台\n    \"taskStatus\": \"\", //任务状态\n    \"pageNum\": 0, //页码\n    \"pageSize\": 0 //每页条数\n}"
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "sync",
+                "task-list"
+              ],
+              "query": [],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/sync/task-list"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n    \"total\": 0,\n    \"list\": [\n        {\n            \"taskId\": \"\", //任务 ID\n            \"userId\": \"\", //所属用户 ID\n            \"emojiGroupId\": \"\", //关联系列 ID\n            \"syncId\": \"\", //同步表情包 ID\n            \"targetPlatform\": \"\", //目标平台：wechat / douyin\n            \"taskStatus\": \"\", //任务状态：pending / processing / success / failed\n            \"platformResponse\": \"\", //平台返回信息或失败原因\n            \"createTime\": \"\", //任务创建时间\n            \"updateTime\": \"\" //任务更新时间\n        }\n    ]\n}"
+        }
+      ],
+      "name": "5.4 获取我的同步任务列表"
+    },
+    {
+      "request": {
+        "method": "POST",
+        "description": "URL: /emoji/common/upload",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "multipart/form-data",
+            "type": "text",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "value": "",
+              "type": "file",
+              "description": ""
+            }
+          ]
+        },
+        "url": {
+          "path": [
+            "emoji",
+            "common",
+            "upload"
+          ],
+          "query": [
+            {
+              "key": "bizType",
+              "value": "",
+              "equals": true,
+              "description": ""
+            }
+          ],
+          "host": [
+            "{{cloud-ai}}"
+          ],
+          "raw": "{{cloud-ai}}/emoji/common/upload"
+        }
+      },
+      "response": [
+        {
+          "name": "6.1 文件上传-Example",
+          "originalRequest": {
+            "method": "POST",
+            "description": "URL: /emoji/common/upload",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data",
+                "type": "text",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "value": "",
+                  "type": "file",
+                  "description": ""
+                }
+              ]
+            },
+            "url": {
+              "path": [
+                "emoji",
+                "common",
+                "upload"
+              ],
+              "query": [
+                {
+                  "key": "bizType",
+                  "value": "",
+                  "equals": true,
+                  "description": ""
+                }
+              ],
+              "host": [
+                "{{cloud-ai}}"
+              ],
+              "raw": "{{cloud-ai}}/emoji/common/upload"
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "name": "date",
+              "key": "date",
+              "value": "周三, 01 7月 202623:45:01 GMT",
+              "description": "The date and time that the message was sent"
+            },
+            {
+              "name": "server",
+              "key": "server",
+              "value": "Apache-Coyote/1.1",
+              "description": "A name for the server"
+            },
+            {
+              "name": "transfer-encoding",
+              "key": "transfer-encoding",
+              "value": "chunked",
+              "description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+            },
+            {
+              "name": "content-type",
+              "key": "content-type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{}"
+        }
+      ],
+      "name": "6.1 文件上传"
+    }
+  ],
+  "info": {
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "name": "表情包生成系统控制器-20260701234501",
+    "description": "表情包生成系统控制器"
+  }
+}
