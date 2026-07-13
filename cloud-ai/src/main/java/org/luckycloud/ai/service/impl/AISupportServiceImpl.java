@@ -22,11 +22,12 @@ public class AISupportServiceImpl implements AISupportService {
 
     @Override
     public String generateAnswer(AIRequest aiRequest) {
-        return chatClient.prompt()
-                .system(aiRequest.getSystemPrompt())
-                .user(aiRequest.getQuestion())
-                .call()
-                .content();
+        return "mock llm answer";
+//        return chatClient.prompt()
+//                .system(aiRequest.getSystemPrompt())
+//                .user(aiRequest.getQuestion())
+//                .call()
+//                .content();
     }
 
     @Override

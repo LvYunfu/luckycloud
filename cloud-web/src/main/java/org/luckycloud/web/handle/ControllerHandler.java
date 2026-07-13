@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import java.lang.reflect.Type;
-
 import static org.luckycloud.dto.common.ResponseCode.SYS_ERROR;
 
 /**
@@ -61,11 +59,11 @@ public class ControllerHandler implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        Type resType = returnType.getGenericParameterType();
+//        Type resType = returnType.getGenericParameterType();
 //        if (resType.equals(String.class)) {
 //            ObjectMapper objectMapper = new ObjectMapper();
 //            try {
-//                return objectMapper.writeValueAsString(Response.success(body));
+//                return objectMapper.writeValueAsString(Response.successData(body));
 //            } catch (JsonProcessingException e) {
 //                throw new BusinessException(ResponseCode.OPERATE_FAILED,"");
 //            }

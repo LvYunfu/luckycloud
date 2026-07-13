@@ -46,4 +46,11 @@ public interface EmojiIpService {
      */
     void deleteEmojiIp(String ipId);
 
+    /**
+     * AI 生成图片
+     * @param request 生成请求，包含提示词
+     * @return 生成图片的文件ID
+     */
+    GenerateImageResponse generateImage(GenerateImageRequest request);
+
 }

@@ -11,4 +11,6 @@ public class ExpandPromptRequest {
      * 角色关键词（≤50字符）
      */
     private String keyword;
+
+    private String style;
 }

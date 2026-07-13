@@ -10,6 +10,9 @@ spring:
           model: doubao-seed-1-8-251228
           temperature: 0.7
           max-tokens: 500
+      image:
+        options:
+          model: doubao-seedream-3-0-t2i-250628
   config:
     import: "classpath:/prompts/chat-prompts.yml"
 # AI陪练服务配置
@@ -30,3 +33,9 @@ ai-training:
     config-path: profiles/customer-profiles.json
     cache-enabled: true
     reload-interval: 300 # 5分钟检查一次配置更新
+
+# 本地文件存储配置
+lucky:
+  cloud:
+    file:
+      upload-path: ./data/images

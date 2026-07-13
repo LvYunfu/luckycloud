@@ -6,8 +6,11 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.luckycloud.ai.convert.EmojiGroupConvert;
 import org.luckycloud.ai.convert.EmojiInfoConvert;
+import org.luckycloud.ai.domain.AIRequest;
 import org.luckycloud.ai.dto.*;
+import org.luckycloud.ai.service.AISupportService;
 import org.luckycloud.ai.service.EmojiService;
+import org.luckycloud.ai.service.PromptService;
 import org.luckycloud.domain.emoji.CloudEmojiGroupDO;
 import org.luckycloud.domain.emoji.CloudEmojiInfoDO;
 import org.luckycloud.dto.common.PageResponse;
@@ -17,6 +20,7 @@ import org.luckycloud.mapper.emoji.CloudEmojiGroupMapper;
 import org.luckycloud.mapper.emoji.CloudEmojiInfoMapper;
 import org.luckycloud.security.util.UserUtils;
 import org.luckycloud.utils.GenerateIdUtils;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static org.luckycloud.ai.config.PromptConfig.*;
 import static org.luckycloud.constant.SystemConstant.DISABLE;
 
 /**
@@ -54,6 +59,12 @@ public class EmojiServiceImpl implements EmojiService {
 
     @Resource
     private EmojiInfoConvert emojiInfoConvert;
+
+    @Resource
+    private AISupportService aiSupportService;
+
+    @Resource
+    private PromptService promptService;
 
     @Override
     public String createEmojiGroup(EmojiGroupCreateCommand command) {
@@ -335,5 +346,23 @@ public class EmojiServiceImpl implements EmojiService {
     @Override
     public TaskProgressResponse getTaskProgress(String taskId) {
         return taskCache.get(taskId);
+    }
+
+    @Override
+    public ExpandGroupPromptResponse expandGroupPrompt(ExpandGroupPromptRequest request) {
+        // 构建AI请求
+        AIRequest aiRequest = new AIRequest();
+        // 使用表情包系列提示词扩写的系统提示
+        aiRequest.setSystemPrompt(GROUP_EXPAND_DESCRIPTION);
+        // 构建用户输入，将参数转换为模板所需格式
+        aiRequest.setQuestion(promptService.buildPrompt(GROUP_EXPAND_INPUT, request));
+        // 调用AI服务生成结构化提示词列表
+        List<ExpandGroupPromptResponse.PromptItem> items = aiSupportService.generateStructuredEntity(
+                aiRequest,
+                new ParameterizedTypeReference<List<ExpandGroupPromptResponse.PromptItem>>() {});
+        // 构建响应对象
+        ExpandGroupPromptResponse response = new ExpandGroupPromptResponse();
+        response.setItems(items);
+        return response;
     }
 }

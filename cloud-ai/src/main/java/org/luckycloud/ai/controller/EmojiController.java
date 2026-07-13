@@ -6,11 +6,10 @@ import org.luckycloud.ai.service.EmojiIpService;
 import org.luckycloud.ai.service.EmojiService;
 import org.luckycloud.ai.service.EmojiSyncService;
 import org.luckycloud.dto.common.PageResponse;
+import org.luckycloud.dto.common.Response;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
  * 表情包生成系统控制器
@@ -47,8 +46,8 @@ public class EmojiController {
      * URL: /emoji/ip/save
      */
     @PostMapping("/ip/save")
-    public String saveEmojiIp(@Validated @RequestBody EmojiIpCreateCommand command) {
-        return emojiIpService.saveEmojiIp(command);
+    public Response<String> saveEmojiIp(@Validated @RequestBody EmojiIpCreateCommand command) {
+        return Response.successData(emojiIpService.saveEmojiIp(command));
     }
 
     /**
@@ -78,6 +77,19 @@ public class EmojiController {
         emojiIpService.deleteEmojiIp(request.getId());
     }
 
+    /**
+     * 2.6 AI 生成图片
+     * URL: /emoji/ip/generate-image
+     */
+    @PostMapping("/ip/generate-image")
+    public GenerateImageResponse generateImage(@Validated @RequestBody GenerateImageRequest request) {
+        GenerateImageResponse res=  new GenerateImageResponse();
+        res.setFileName("测试");
+        res.setFileUrl("https://raw.githubusercontent.com/LvYunfu/lucky-picture/main/images/13/2_cfd86110b1ea470ba1c2543ea29e99f3.png");
+        return res;
+//        return emojiIpService.generateImage(request);
+    }
+
     // ==================== 表情包系列管理模块 ====================
 
     /**
@@ -85,8 +97,8 @@ public class EmojiController {
      * URL: /emoji/group/create
      */
     @PostMapping("/group/create")
-    public String createEmojiGroup(@Validated @RequestBody EmojiGroupCreateCommand command) {
-        return emojiService.createEmojiGroup(command);
+    public Response<String> createEmojiGroup(@Validated @RequestBody EmojiGroupCreateCommand command) {
+        return Response.successData(emojiService.createEmojiGroup(command));
     }
 
     /**
@@ -125,6 +137,15 @@ public class EmojiController {
         emojiService.deleteEmojiGroup(request.getId());
     }
 
+    /**
+     * 3.6 AI 扩写表情包系列提示词
+     * URL: /emoji/group/expand-prompt
+     */
+    @PostMapping("/group/expand-prompt")
+    public ExpandGroupPromptResponse expandGroupPrompt(@Validated @RequestBody ExpandGroupPromptRequest request) {
+        return emojiService.expandGroupPrompt(request);
+    }
+
     // ==================== 表情包生成与资产管理模块 ====================
 
     /**
@@ -132,8 +153,8 @@ public class EmojiController {
      * URL: /emoji/emoji/batch-generate
      */
     @PostMapping("/emoji/batch-generate")
-    public String batchGenerateEmoji(@Validated @RequestBody BatchGenerateRequest request) {
-        return emojiService.batchGenerateEmoji(request);
+    public Response<String> batchGenerateEmoji(@Validated @RequestBody BatchGenerateRequest request) {
+        return Response.successData(emojiService.batchGenerateEmoji(request));
     }
 
     /**
@@ -199,8 +220,8 @@ public class EmojiController {
      * URL: /emoji/sync/create-task
      */
     @PostMapping("/sync/create-task")
-    public String createSyncTask(@Validated @RequestBody CreateSyncTaskRequest request) {
-        return emojiSyncService.createSyncTask(request);
+    public Response<String> createSyncTask(@Validated @RequestBody CreateSyncTaskRequest request) {
+        return Response.successData(emojiSyncService.createSyncTask(request));
     }
 
     /**

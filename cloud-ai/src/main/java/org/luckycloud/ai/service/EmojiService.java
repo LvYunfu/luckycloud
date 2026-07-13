@@ -104,4 +104,11 @@ public interface EmojiService {
      * @return 任务进度
      */
     TaskProgressResponse getTaskProgress(String taskId);
+
+    /**
+     * AI扩写表情包系列提示词
+     * @param request 扩写请求，包含IP描述、系列关键词、数量、风格
+     * @return 扩写后的提示词列表（标题、情景、元素、提示词）
+     */
+    ExpandGroupPromptResponse expandGroupPrompt(ExpandGroupPromptRequest request);
 }
