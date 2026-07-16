@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 import static org.luckycloud.ai.config.PromptConfig.*;
@@ -60,21 +61,45 @@ public class EmojiServiceImpl implements EmojiService {
     @Resource
     private EmojiInfoConvert emojiInfoConvert;
 
-    @Resource
-    private AISupportService aiSupportService;
+    @Resource(name = "syncThreadPool")
+    private ThreadPoolExecutor syncThreadPool;
 
     @Resource
     private PromptService promptService;
 
     @Override
-    public String createEmojiGroup(EmojiGroupCreateCommand command) {
+    public EmojiGroupCreateResponse createEmojiGroup(EmojiGroupCreateCommand command) {
         CloudEmojiGroupDO groupDO = emojiGroupConvert.convert2DO(command);
         // 生成唯一ID
-        groupDO.setEmojiGroupId(GenerateIdUtils.generateId());
+        String groupId = GenerateIdUtils.generateId();
+        groupDO.setEmojiGroupId(groupId);
         // 设置当前用户ID
         groupDO.setUserId(UserUtils.getUserId());
         emojiGroupMapper.insert(groupDO);
-        return groupDO.getEmojiGroupId();
+
+        // 构建响应
+        EmojiGroupCreateResponse response = new EmojiGroupCreateResponse();
+        response.setGroupId(groupId);
+
+        // 同时保存表情包列表到 cloud_emoji_info 表
+        List<EmojiInfoCreateCommand> emojiList = command.getEmojiList();
+        if (emojiList != null && !emojiList.isEmpty()) {
+            String userId = UserUtils.getUserId();
+            List<String> emojiIds = new ArrayList<>();
+            for (EmojiInfoCreateCommand emojiCommand : emojiList) {
+                emojiCommand.setEmojiGroupId(groupId);
+                emojiCommand.setIpId(command.getIpId());
+                CloudEmojiInfoDO infoDO = emojiInfoConvert.convert2DO(emojiCommand);
+                infoDO.setEmojiId(GenerateIdUtils.generateId());
+                infoDO.setUserId(userId);
+                infoDO.setGenerateStatus("processing");
+                emojiInfoMapper.insert(infoDO);
+                emojiIds.add(infoDO.getEmojiId());
+            }
+            response.setEmojiIds(emojiIds);
+        }
+
+        return response;
     }
 
     @Override
@@ -213,81 +238,35 @@ public class EmojiServiceImpl implements EmojiService {
     }
 
     @Override
-    public String batchGenerateEmoji(BatchGenerateRequest request) {
-        String taskId = "task_" + GenerateIdUtils.generateId();
-        String userId = UserUtils.getUserId();
-
-        // 初始化任务进度
-        TaskProgressResponse task = new TaskProgressResponse();
-        task.setTaskId(taskId);
-        task.setStatus("processing");
-        task.setTotal(request.getDescriptions().size());
-        task.setCompleted(0);
-        task.setFailed(0);
-        task.setCreateTime(LocalDateTime.now());
-
-        List<TaskProgressResponse.TaskItem> items = new ArrayList<>();
-        for (BatchGenerateRequest.DescriptionItem desc : request.getDescriptions()) {
-            TaskProgressResponse.TaskItem item = new TaskProgressResponse.TaskItem();
-            item.setName(desc.getName());
-            item.setStatus("pending");
-            items.add(item);
-        }
-        task.setItems(items);
-        taskCache.put(taskId, task);
-
+    public void batchGenerateEmoji(List<BatchGenerateCommand> commands) {
         // 异步执行生成
-        executeBatchGeneration(taskId, request, userId);
-
-        return taskId;
+        syncThreadPool.execute(()->executeBatchGeneration(commands));
     }
 
     /**
      * 异步执行批量生成
      */
-    @Async
-    public void executeBatchGeneration(String taskId, BatchGenerateRequest request, String userId) {
-        TaskProgressResponse task = taskCache.get(taskId);
+    public void executeBatchGeneration(List<BatchGenerateCommand> commands) {
 
-        for (int i = 0; i < request.getDescriptions().size(); i++) {
-            BatchGenerateRequest.DescriptionItem desc = request.getDescriptions().get(i);
-            TaskProgressResponse.TaskItem item = task.getItems().get(i);
-
+        for (BatchGenerateCommand command : commands) {
+            CloudEmojiInfoDO infoDO = new CloudEmojiInfoDO();
+            // 生成成功，更新表情包记录
+            infoDO.setEmojiId(command.getEmojiId());
+            infoDO.setUpdateTime(LocalDateTime.now());
             try {
-                item.setStatus("processing");
-
                 // TODO: 调用图像生成模型（静态: 图生图 / 动态: 图生视频转GIF）
                 // 根据系列的 emojiType 调用不同的生成接口
-                String fileUrl = generateImage(request.getIpId(), desc.getPromptText());
-
-                // 生成成功，保存表情包记录
-                CloudEmojiInfoDO infoDO = new CloudEmojiInfoDO();
-                infoDO.setEmojiId(GenerateIdUtils.generateId());
-                infoDO.setUserId(userId);
-                infoDO.setIpId(request.getIpId());
-                infoDO.setEmojiGroupId(request.getEmojiGroupId());
-                infoDO.setName(desc.getName());
-                infoDO.setPromptText(desc.getPromptText());
+                String fileUrl = generateImage(command.getIpId(), command.getPromptText());
                 infoDO.setFileUrl(fileUrl);
-                infoDO.setCreateTime(LocalDateTime.now());
-                infoDO.setUpdateTime(LocalDateTime.now());
-                infoDO.setStatus("1");
-                emojiInfoMapper.insert(infoDO);
-
-                item.setStatus("success");
-                item.setEmojiId(infoDO.getEmojiId());
-                item.setFileUrl(fileUrl);
-                task.setCompleted(task.getCompleted() + 1);
+                infoDO.setGenerateStatus("success");
+                emojiInfoMapper.updateByPrimaryKeySelective(infoDO);
             } catch (Exception e) {
-                log.error("表情包生成失败: {}", desc.getName(), e);
-                item.setStatus("failed");
-                item.setErrorMsg(e.getMessage());
-                task.setFailed(task.getFailed() + 1);
+                infoDO.setGenerateStatus("failed");
+                log.error("表情包生成失败: {}", command.getTitle(), e);
             }
+            emojiInfoMapper.updateByPrimaryKeySelective(infoDO);
         }
 
-        // 更新任务状态
-        task.setStatus(task.getFailed() == task.getTotal() ? "failed" : "completed");
     }
 
     /**
@@ -298,7 +277,7 @@ public class EmojiServiceImpl implements EmojiService {
         // TODO: 根据角色IP获取角色图片URL，结合提示词调用图像生成模型
         // 静态: 调用图生图模型 -> 返回 PNG URL
         // 动态: 调用图生视频模型 -> 转 GIF -> 返回 GIF URL
-        throw new UnsupportedOperationException("图像生成模型尚未对接");
+        return  "https://raw.githubusercontent.com/LvYunfu/lucky-picture/main/images/13/2_cfd86110b1ea470ba1c2543ea29e99f3.png";
     }
 
     @Override
@@ -309,18 +288,13 @@ public class EmojiServiceImpl implements EmojiService {
             throw new IllegalArgumentException("表情包不存在: " + request.getEmojiId());
         }
 
-        // 逻辑删除原表情包
-        deleteEmojiInfo(request.getEmojiId());
-
         // 使用原参数重新生成
-        BatchGenerateRequest batchRequest = new BatchGenerateRequest();
-        batchRequest.setEmojiGroupId(originalInfo.getEmojiGroupId());
-        batchRequest.setIpId(originalInfo.getIpId());
-
-        BatchGenerateRequest.DescriptionItem descItem = new BatchGenerateRequest.DescriptionItem();
-        descItem.setName(originalInfo.getName());
-        descItem.setPromptText(originalInfo.getPromptText());
-        batchRequest.setDescriptions(List.of(descItem));
+        BatchGenerateCommand command = new BatchGenerateCommand();
+        command.setEmojiId(originalInfo.getEmojiId());
+        command.setEmojiGroupId(originalInfo.getEmojiGroupId());
+        command.setIpId(originalInfo.getIpId());
+        command.setTitle(originalInfo.getName());
+        command.setPromptText(originalInfo.getPromptText());
 
         // 异步重新生成
         String userId = UserUtils.getUserId();
@@ -335,12 +309,12 @@ public class EmojiServiceImpl implements EmojiService {
         task.setCreateTime(LocalDateTime.now());
 
         TaskProgressResponse.TaskItem item = new TaskProgressResponse.TaskItem();
-        item.setName(descItem.getName());
+        item.setName(originalInfo.getName());
         item.setStatus("pending");
         task.setItems(List.of(item));
         taskCache.put(taskId, task);
 
-        executeBatchGeneration(taskId, batchRequest, userId);
+        executeBatchGeneration( List.of(command));
     }
 
     @Override
@@ -349,7 +323,7 @@ public class EmojiServiceImpl implements EmojiService {
     }
 
     @Override
-    public ExpandGroupPromptResponse expandGroupPrompt(ExpandGroupPromptRequest request) {
+    public List<ExpandGroupPromptResponse> expandGroupPrompt(ExpandGroupPromptRequest request) {
         // 构建AI请求
         AIRequest aiRequest = new AIRequest();
         // 使用表情包系列提示词扩写的系统提示
@@ -357,12 +331,21 @@ public class EmojiServiceImpl implements EmojiService {
         // 构建用户输入，将参数转换为模板所需格式
         aiRequest.setQuestion(promptService.buildPrompt(GROUP_EXPAND_INPUT, request));
         // 调用AI服务生成结构化提示词列表
-        List<ExpandGroupPromptResponse.PromptItem> items = aiSupportService.generateStructuredEntity(
-                aiRequest,
-                new ParameterizedTypeReference<List<ExpandGroupPromptResponse.PromptItem>>() {});
+//        List<ExpandGroupPromptResponse> items = aiSupportService.generateStructuredEntity(
+//                aiRequest,
+//                new ParameterizedTypeReference<>() {
+//                });
         // 构建响应对象
-        ExpandGroupPromptResponse response = new ExpandGroupPromptResponse();
-        response.setItems(items);
-        return response;
+        List<ExpandGroupPromptResponse> items = new ArrayList<>();
+        for (int i = 0; i < request.getQuantity(); i++) {
+            ExpandGroupPromptResponse item = new ExpandGroupPromptResponse();
+            item.setTitle(request.getKeywords());
+            item.setScenario(request.getStyle());
+            item.setElements(request.getIpDescription());
+            item.setPromptText(request.getKeywords() + " " + request.getStyle() + " " + request.getIpDescription());
+            items.add(item);
+        }
+
+        return items;
     }
 }

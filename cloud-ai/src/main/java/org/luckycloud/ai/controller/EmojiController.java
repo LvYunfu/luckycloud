@@ -11,6 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * 表情包生成系统控制器
  *
@@ -97,7 +99,7 @@ public class EmojiController {
      * URL: /emoji/group/create
      */
     @PostMapping("/group/create")
-    public Response<String> createEmojiGroup(@Validated @RequestBody EmojiGroupCreateCommand command) {
+    public Response<EmojiGroupCreateResponse> createEmojiGroup(@Validated @RequestBody EmojiGroupCreateCommand command) {
         return Response.successData(emojiService.createEmojiGroup(command));
     }
 
@@ -142,7 +144,7 @@ public class EmojiController {
      * URL: /emoji/group/expand-prompt
      */
     @PostMapping("/group/expand-prompt")
-    public ExpandGroupPromptResponse expandGroupPrompt(@Validated @RequestBody ExpandGroupPromptRequest request) {
+    public List<ExpandGroupPromptResponse> expandGroupPrompt(@Validated @RequestBody ExpandGroupPromptRequest request) {
         return emojiService.expandGroupPrompt(request);
     }
 
@@ -153,8 +155,9 @@ public class EmojiController {
      * URL: /emoji/emoji/batch-generate
      */
     @PostMapping("/emoji/batch-generate")
-    public Response<String> batchGenerateEmoji(@Validated @RequestBody BatchGenerateRequest request) {
-        return Response.successData(emojiService.batchGenerateEmoji(request));
+    public Response<Void> batchGenerateEmoji(@Validated @RequestBody List<BatchGenerateCommand> commands) {
+        emojiService.batchGenerateEmoji(commands);
+        return Response.success("生成任务已开始");
     }
 
     /**

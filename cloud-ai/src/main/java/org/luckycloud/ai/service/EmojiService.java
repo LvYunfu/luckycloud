@@ -15,9 +15,9 @@ public interface EmojiService {
     /**
      * 创建表情包系列
      * @param command 创建命令
-     * @return 系列ID
+     * @return 创建结果（系列ID + 表情包ID列表）
      */
-    String createEmojiGroup(EmojiGroupCreateCommand command);
+    EmojiGroupCreateResponse createEmojiGroup(EmojiGroupCreateCommand command);
 
     /**
      * 更新表情包系列
@@ -87,10 +87,10 @@ public interface EmojiService {
 
     /**
      * 批量生成表情包（异步）
-     * @param request 批量生成请求
+     * @param commands 批量生成命令列表
      * @return 任务ID
      */
-    String batchGenerateEmoji(BatchGenerateRequest request);
+    void batchGenerateEmoji(List<BatchGenerateCommand> commands);
 
     /**
      * 重新生成单个表情包
@@ -110,5 +110,5 @@ public interface EmojiService {
      * @param request 扩写请求，包含IP描述、系列关键词、数量、风格
      * @return 扩写后的提示词列表（标题、情景、元素、提示词）
      */
-    ExpandGroupPromptResponse expandGroupPrompt(ExpandGroupPromptRequest request);
+    List<ExpandGroupPromptResponse> expandGroupPrompt(ExpandGroupPromptRequest request);
 }

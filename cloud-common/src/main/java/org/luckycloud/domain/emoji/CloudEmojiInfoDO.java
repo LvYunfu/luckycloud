@@ -69,4 +69,9 @@ public class CloudEmojiInfoDO {
      * 状态：1-有效，0-无效
      */
     private String status;
+
+    /**
+     * 生成状态：processing-生成中，success-生成成功，failed-生成失败
+     */
+    private String generateStatus;
 }

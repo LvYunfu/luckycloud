@@ -17,13 +17,14 @@
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="status" column="status" jdbcType="CHAR"/>
+            <result property="generateStatus" column="generate_status" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         emoji_id,user_id,ip_id,
         emoji_group_id,name,prompt_text,
         type,file_url,file_size,
-        create_time,update_time,status
+        create_time,update_time,status,generate_status
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -42,12 +43,13 @@
         ( emoji_id,user_id,ip_id
         ,emoji_group_id,name,prompt_text
         ,type,file_url,file_size
-        ,create_time,update_time,status
+        ,create_time,update_time,status,generate_status
         )
         values (#{emojiId,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{ipId,jdbcType=VARCHAR}
         ,#{emojiGroupId,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{promptText,jdbcType=VARCHAR}
         ,#{type,jdbcType=VARCHAR},#{fileUrl,jdbcType=VARCHAR},#{fileSize,jdbcType=INTEGER}
         ,#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{status,jdbcType=CHAR}
+        ,#{generateStatus,jdbcType=VARCHAR}
         )
     </insert>
     <insert id="insertSelective" keyColumn="emoji_id" keyProperty="emojiId" parameterType="org.luckycloud.domain.emoji.CloudEmojiInfoDO" useGeneratedKeys="true">
@@ -65,6 +67,7 @@
                 <if test="createTime != null">create_time,</if>
                 <if test="updateTime != null">update_time,</if>
                 <if test="status != null">status,</if>
+                <if test="generateStatus != null">generate_status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="emojiId != null">emoji_id = #{emojiId,jdbcType=VARCHAR},</if>
@@ -79,6 +82,7 @@
                 <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
                 <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
                 <if test="status != null">status = #{status,jdbcType=CHAR},</if>
+                <if test="generateStatus != null">generate_status = #{generateStatus,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.luckycloud.domain.emoji.CloudEmojiInfoDO">
@@ -117,6 +121,9 @@
                 <if test="status != null">
                     status = #{status,jdbcType=CHAR},
                 </if>
+                <if test="generateStatus != null">
+                    generate_status = #{generateStatus,jdbcType=VARCHAR},
+                </if>
         </set>
         where   emoji_id = #{emojiId,jdbcType=VARCHAR}
     </update>
@@ -133,7 +140,8 @@
             file_size =  #{fileSize,jdbcType=INTEGER},
             create_time =  #{createTime,jdbcType=TIMESTAMP},
             update_time =  #{updateTime,jdbcType=TIMESTAMP},
-            status =  #{status,jdbcType=CHAR}
+            status =  #{status,jdbcType=CHAR},
+            generate_status =  #{generateStatus,jdbcType=VARCHAR}
         where   emoji_id = #{emojiId,jdbcType=VARCHAR}
     </update>
 

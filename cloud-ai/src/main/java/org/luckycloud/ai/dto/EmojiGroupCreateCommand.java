@@ -2,6 +2,8 @@ package org.luckycloud.ai.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 表情包系列创建命令
  */
@@ -26,4 +28,9 @@ public class EmojiGroupCreateCommand {
      * 表情风格（如"可爱"、"写实"）
      */
     private String emojiStyle;
+
+    /**
+     * 表情包列表（创建系列时同时保存）
+     */
+    private List<EmojiInfoCreateCommand> emojiList;
 }
