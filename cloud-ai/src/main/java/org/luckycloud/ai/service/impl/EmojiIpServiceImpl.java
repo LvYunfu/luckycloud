@@ -3,34 +3,27 @@ package org.luckycloud.ai.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.page.PageMethod;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.luckycloud.ai.convert.EmojiGroupConvert;
-import org.luckycloud.ai.convert.EmojiInfoConvert;
 import org.luckycloud.ai.convert.EmojiIpConvert;
 import org.luckycloud.ai.domain.AIRequest;
 import org.luckycloud.ai.dto.*;
 import org.luckycloud.ai.service.AISupportService;
 import org.luckycloud.ai.service.EmojiIpService;
-import org.luckycloud.ai.service.EmojiService;
 import org.luckycloud.ai.service.PromptService;
-import org.luckycloud.domain.emoji.CloudEmojiGroupDO;
-import org.luckycloud.domain.emoji.CloudEmojiInfoDO;
 import org.luckycloud.domain.emoji.CloudEmojiIpInfoDO;
 import org.luckycloud.dto.common.PageResponse;
+import org.luckycloud.dto.common.UploadFileDTO;
 import org.luckycloud.dto.emoji.request.EmojiIpListQueryDTO;
-import org.luckycloud.mapper.emoji.CloudEmojiGroupMapper;
-import org.luckycloud.mapper.emoji.CloudEmojiInfoMapper;
+import org.luckycloud.dto.emoji.response.EmojiIpStatistic;
 import org.luckycloud.mapper.emoji.CloudEmojiIpInfoMapper;
 import org.luckycloud.security.util.UserUtils;
 import org.luckycloud.utils.GenerateIdUtils;
-import org.springframework.ai.chat.client.ChatClient;
+import org.luckycloud.utils.UploadUtils;
 import org.springframework.ai.image.Image;
 import org.springframework.ai.image.ImageModel;
 import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.image.ImageResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,9 +35,9 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.luckycloud.ai.config.PromptConfig.*;
+import static org.luckycloud.ai.config.PromptConfig.IP_DESCRIPTION;
+import static org.luckycloud.ai.config.PromptConfig.IP_INPUT;
 import static org.luckycloud.constant.SystemConstant.DISABLE;
 
 /**
@@ -74,6 +67,9 @@ public class EmojiIpServiceImpl implements EmojiIpService {
 
     @Value("${lucky.cloud.file.upload-path:./data/images}")
     private String uploadPath;
+
+    @Resource
+    private UploadUtils   uploadUtils;
 
     @Override
     public ExpandPromptResponse expandPrompt(ExpandPromptRequest request) {
@@ -124,6 +120,14 @@ public class EmojiIpServiceImpl implements EmojiIpService {
 
         // 封装分页响应
         return new PageResponse<>(pageInfo.getTotal(), responseList);
+    }
+
+    @Override
+    public EmojiIpStatisticResponse statisticEmojiIp() {
+        EmojiIpListQueryDTO queryDTO = new EmojiIpListQueryDTO();
+        queryDTO.setUserId(UserUtils.getUserId());
+        EmojiIpStatistic statistic = emojiIpInfoMapper.statisticIp(queryDTO);
+        return emojiIpConvert.convert2StatisticResponse(statistic);
     }
 
     @Override
@@ -199,4 +203,14 @@ public class EmojiIpServiceImpl implements EmojiIpService {
         }
     }
 
+
+    @Override
+    public UploadFileDTO uploadFile(MultipartFile file) {
+        UploadUtils.FileInfo fileInfo = new UploadUtils.FileInfo();
+        fileInfo.setFile(file);
+        fileInfo.setUserId(UserUtils.getUserId());
+        fileInfo.setPrefix("emoji_ip");
+        return uploadUtils.uploadFile(fileInfo);
+
+    }
 }

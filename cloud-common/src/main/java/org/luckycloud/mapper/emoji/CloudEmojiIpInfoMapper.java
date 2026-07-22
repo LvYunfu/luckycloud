@@ -3,6 +3,7 @@ package org.luckycloud.mapper.emoji;
 import org.apache.ibatis.annotations.Param;
 import org.luckycloud.domain.emoji.CloudEmojiIpInfoDO;
 import org.luckycloud.dto.emoji.request.EmojiIpListQueryDTO;
+import org.luckycloud.dto.emoji.response.EmojiIpStatistic;
 
 import java.util.List;
 
@@ -33,4 +34,5 @@ public interface CloudEmojiIpInfoMapper {
      */
     List<CloudEmojiIpInfoDO> selectIpList(@Param("query") EmojiIpListQueryDTO query);
 
+    EmojiIpStatistic statisticIp(EmojiIpListQueryDTO queryDTO);
 }

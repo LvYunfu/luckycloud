@@ -209,7 +209,7 @@ public class BlogServiceImpl implements BlogService {
         response.setUserId(cloudUserInfoDO.getUserId());
         response.setUserName(cloudUserInfoDO.getUserName());
         response.setProfile(cloudUserInfoDO.getProfile());
-        response.setAvatar(uploadUtils.getFileUrl(cloudUserInfoDO.getUserId(), cloudUserInfoDO.getAvatar()));
+        response.setAvatar(uploadUtils.getFileUrl(cloudUserInfoDO.getUserId(),"user", cloudUserInfoDO.getAvatar()));
         response.setFanCount(followUserMapper.countFollowFans(userId));
         response.setBlogCount(blogInfoMapper.countBlogByUserId(userId));
         response.setLikeCount(blogInfoMapper.countLikeByUserId(userId));

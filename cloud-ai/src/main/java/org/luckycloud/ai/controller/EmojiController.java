@@ -7,6 +7,7 @@ import org.luckycloud.ai.service.EmojiService;
 import org.luckycloud.ai.service.EmojiSyncService;
 import org.luckycloud.dto.common.PageResponse;
 import org.luckycloud.dto.common.Response;
+import org.luckycloud.dto.common.UploadFileDTO;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,6 +60,10 @@ public class EmojiController {
     @PostMapping("/ip/list")
     public PageResponse<EmojiIpResponse> getEmojiIpList(@RequestBody EmojiIpListQuery query) {
         return emojiIpService.getEmojiIpList(query);
+    }
+    @PostMapping("/ip/statistic")
+    public EmojiIpStatisticResponse statisticEmojiIp() {
+        return emojiIpService.statisticEmojiIp();
     }
 
     /**
@@ -169,14 +174,6 @@ public class EmojiController {
         emojiService.regenerateEmoji(request);
     }
 
-    /**
-     * 4.3 查询生成任务进度
-     * URL: /emoji/emoji/task-progress
-     */
-    @PostMapping("/emoji/task-progress")
-    public TaskProgressResponse getTaskProgress(@RequestBody TaskProgressRequest request) {
-        return emojiService.getTaskProgress(request.getTaskId());
-    }
 
     /**
      * 4.4 获取表情包资产列表（分页）
@@ -264,10 +261,7 @@ public class EmojiController {
      * URL: /emoji/common/upload
      */
     @PostMapping("/common/upload")
-    public Object uploadFile(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("bizType") String bizType) {
-        // TODO: 实现文件上传逻辑
-        return null;
+    public UploadFileDTO uploadFile(@RequestParam("file") MultipartFile file) {
+        return emojiIpService.uploadFile(file);
     }
 }

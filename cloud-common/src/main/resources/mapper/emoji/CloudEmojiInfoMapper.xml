@@ -27,14 +27,14 @@
         create_time,update_time,status,generate_status
     </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from cloud_emoji_info
         where  emoji_id = #{emojiId,jdbcType=VARCHAR}
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete from cloud_emoji_info
         where  emoji_id = #{emojiId,jdbcType=VARCHAR}
     </delete>

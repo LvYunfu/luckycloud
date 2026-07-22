@@ -156,4 +156,11 @@
         </where>
         order by create_time desc
     </select>
+    <select id="statisticIp" resultType="org.luckycloud.dto.emoji.response.EmojiIpStatistic">
+
+        select count(1)                                                      as total,
+               sum(case when source_type = 'ai_generated' then 1 else 0 end) as aiGenerated,
+               sum(case when source_type = 'user_upload' then 1 else 0 end)  as userUpload
+        from cloud_emoji_ip_info
+    </select>
 </mapper>

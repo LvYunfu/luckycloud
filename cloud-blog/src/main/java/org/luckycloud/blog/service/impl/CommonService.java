@@ -9,5 +9,5 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2025/12/3
  */
 public interface CommonService {
-    UploadFileDTO uploadFile(MultipartFile file);
+    UploadFileDTO uploadFile(MultipartFile file,String type);
 }

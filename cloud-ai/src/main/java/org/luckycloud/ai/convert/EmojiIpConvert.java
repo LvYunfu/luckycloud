@@ -1,11 +1,11 @@
 package org.luckycloud.ai.convert;
 
-import org.luckycloud.ai.dto.EmojiIpCreateCommand;
-import org.luckycloud.ai.dto.EmojiIpListQuery;
-import org.luckycloud.ai.dto.EmojiIpResponse;
-import org.luckycloud.ai.dto.EmojiIpUpdateCommand;
+import jakarta.annotation.Resource;
+import org.luckycloud.ai.dto.*;
 import org.luckycloud.domain.emoji.CloudEmojiIpInfoDO;
 import org.luckycloud.dto.emoji.request.EmojiIpListQueryDTO;
+import org.luckycloud.dto.emoji.response.EmojiIpStatistic;
+import org.luckycloud.utils.UploadUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -20,18 +20,21 @@ import static org.luckycloud.constant.SystemConstant.ENABLE;
  * @date 2026/5/7
  */
 @Mapper(componentModel = "spring")
-public interface EmojiIpConvert {
+public abstract class EmojiIpConvert {
 
-    EmojiIpConvert INSTANCE = Mappers.getMapper(EmojiIpConvert.class);
+    @Resource
+    protected UploadUtils uploadUtils;
 
     /**
      * DO转Response
      */
-    EmojiIpResponse convert2Response(CloudEmojiIpInfoDO ipInfoDO);
+    @Mapping(target = "imageUrl", expression = "java(uploadUtils.getFileUrl(ipInfoDO.getUserId(),\"emoji_ip\",ipInfoDO.getImageUrl()))")
+    public abstract EmojiIpResponse convert2Response(CloudEmojiIpInfoDO ipInfoDO);
 
-    EmojiIpListQueryDTO convert2QueryDto(EmojiIpListQuery ipInfoDO);
 
-    List<EmojiIpResponse> convert2ResponseList(List<CloudEmojiIpInfoDO> ipInfoDOList);
+    public abstract  EmojiIpListQueryDTO convert2QueryDto(EmojiIpListQuery ipInfoDO);
+
+    public abstract  List<EmojiIpResponse> convert2ResponseList(List<CloudEmojiIpInfoDO> ipInfoDOList);
 
     /**
      * Command转DO - 创建表情IP
@@ -40,11 +43,13 @@ public interface EmojiIpConvert {
     @Mapping(target = "createTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "status", constant = ENABLE)
-    CloudEmojiIpInfoDO convert2DO(EmojiIpCreateCommand command);
+    public abstract CloudEmojiIpInfoDO convert2DO(EmojiIpCreateCommand command);
 
     /**
      * Command转DO - 更新表情IP
      */
     @Mapping(target = "updateTime", expression = "java(java.time.LocalDateTime.now())")
-    CloudEmojiIpInfoDO convert2DO(EmojiIpUpdateCommand command);
+    public abstract CloudEmojiIpInfoDO convert2DO(EmojiIpUpdateCommand command);
+
+    public abstract EmojiIpStatisticResponse convert2StatisticResponse(EmojiIpStatistic statistic);
 }

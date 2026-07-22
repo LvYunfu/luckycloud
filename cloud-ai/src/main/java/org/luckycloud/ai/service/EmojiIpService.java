@@ -1,11 +1,9 @@
 package org.luckycloud.ai.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.luckycloud.ai.dto.*;
 import org.luckycloud.dto.common.PageResponse;
+import org.luckycloud.dto.common.UploadFileDTO;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
  * @author lvyf
@@ -53,4 +51,7 @@ public interface EmojiIpService {
      */
     GenerateImageResponse generateImage(GenerateImageRequest request);
 
+    EmojiIpStatisticResponse statisticEmojiIp();
+
+    UploadFileDTO uploadFile(MultipartFile file);
 }

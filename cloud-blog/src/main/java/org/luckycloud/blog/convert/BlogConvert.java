@@ -53,7 +53,7 @@ public abstract class BlogConvert {
     public abstract BlogCommentResponse convertToBlogCommentResponse(CloudBlogCommentsDO commentDO);
 
 
-    @Mapping(target = "coverImage", expression = "java(uploadUtils.getFileUrl(blogInfoDO.getUserId(), blogInfoDO.getCoverImage()))")
+    @Mapping(target = "coverImage", expression = "java(uploadUtils.getFileUrl(blogInfoDO.getUserId(),\"blog\", blogInfoDO.getCoverImage()))")
     public abstract BlogInfoResponse toBlogInfo(CloudBlogInfoDO blogInfoDO);
 
     public abstract BlogStaticsResponse convertStatics(BlogStatics statics);

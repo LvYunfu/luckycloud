@@ -8,7 +8,6 @@ import org.luckycloud.ai.convert.EmojiGroupConvert;
 import org.luckycloud.ai.convert.EmojiInfoConvert;
 import org.luckycloud.ai.domain.AIRequest;
 import org.luckycloud.ai.dto.*;
-import org.luckycloud.ai.service.AISupportService;
 import org.luckycloud.ai.service.EmojiService;
 import org.luckycloud.ai.service.PromptService;
 import org.luckycloud.domain.emoji.CloudEmojiGroupDO;
@@ -20,8 +19,6 @@ import org.luckycloud.mapper.emoji.CloudEmojiGroupMapper;
 import org.luckycloud.mapper.emoji.CloudEmojiInfoMapper;
 import org.luckycloud.security.util.UserUtils;
 import org.luckycloud.utils.GenerateIdUtils;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,7 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
-import static org.luckycloud.ai.config.PromptConfig.*;
+import static org.luckycloud.ai.config.PromptConfig.GROUP_EXPAND_DESCRIPTION;
+import static org.luckycloud.ai.config.PromptConfig.GROUP_EXPAND_INPUT;
 import static org.luckycloud.constant.SystemConstant.DISABLE;
 
 /**
@@ -44,10 +42,6 @@ import static org.luckycloud.constant.SystemConstant.DISABLE;
 @Service
 public class EmojiServiceImpl implements EmojiService {
 
-    /**
-     * 生成任务缓存（taskId -> TaskProgressResponse）
-     */
-    private final Map<String, TaskProgressResponse> taskCache = new ConcurrentHashMap<>();
 
     @Resource
     private CloudEmojiGroupMapper emojiGroupMapper;
@@ -209,9 +203,6 @@ public class EmojiServiceImpl implements EmojiService {
     @Override
     public EmojiInfoResponse getEmojiInfo(String emojiId) {
         CloudEmojiInfoDO infoDO = emojiInfoMapper.selectByPrimaryKey(emojiId);
-        if (infoDO == null) {
-            return null;
-        }
         return emojiInfoConvert.convert2Response(infoDO);
     }
 
@@ -287,7 +278,6 @@ public class EmojiServiceImpl implements EmojiService {
         if (originalInfo == null) {
             throw new IllegalArgumentException("表情包不存在: " + request.getEmojiId());
         }
-
         // 使用原参数重新生成
         BatchGenerateCommand command = new BatchGenerateCommand();
         command.setEmojiId(originalInfo.getEmojiId());
@@ -295,32 +285,9 @@ public class EmojiServiceImpl implements EmojiService {
         command.setIpId(originalInfo.getIpId());
         command.setTitle(originalInfo.getName());
         command.setPromptText(originalInfo.getPromptText());
-
-        // 异步重新生成
-        String userId = UserUtils.getUserId();
-        String taskId = "task_" + GenerateIdUtils.generateId();
-
-        TaskProgressResponse task = new TaskProgressResponse();
-        task.setTaskId(taskId);
-        task.setStatus("processing");
-        task.setTotal(1);
-        task.setCompleted(0);
-        task.setFailed(0);
-        task.setCreateTime(LocalDateTime.now());
-
-        TaskProgressResponse.TaskItem item = new TaskProgressResponse.TaskItem();
-        item.setName(originalInfo.getName());
-        item.setStatus("pending");
-        task.setItems(List.of(item));
-        taskCache.put(taskId, task);
-
         executeBatchGeneration( List.of(command));
     }
 
-    @Override
-    public TaskProgressResponse getTaskProgress(String taskId) {
-        return taskCache.get(taskId);
-    }
 
     @Override
     public List<ExpandGroupPromptResponse> expandGroupPrompt(ExpandGroupPromptRequest request) {

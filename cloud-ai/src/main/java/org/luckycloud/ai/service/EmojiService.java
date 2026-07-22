@@ -98,12 +98,6 @@ public interface EmojiService {
      */
     void regenerateEmoji(RegenerateRequest request);
 
-    /**
-     * 查询生成任务进度
-     * @param taskId 任务ID
-     * @return 任务进度
-     */
-    TaskProgressResponse getTaskProgress(String taskId);
 
     /**
      * AI扩写表情包系列提示词

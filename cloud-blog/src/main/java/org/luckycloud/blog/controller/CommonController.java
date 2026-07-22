@@ -6,11 +6,9 @@ import org.luckycloud.dto.common.Response;
 import org.luckycloud.dto.common.UploadFileDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author lvyf
@@ -27,7 +25,7 @@ public class CommonController {
      * 上传文件
      */
     @PostMapping("/upload-file")
-    public Response<UploadFileDTO> uploadFile(MultipartFile file) {
-        return Response.successData(commonService.uploadFile(file));
+    public Response<UploadFileDTO> uploadFile(MultipartFile file, @RequestParam String type) {
+        return Response.successData(commonService.uploadFile(file,type));
     }
 }

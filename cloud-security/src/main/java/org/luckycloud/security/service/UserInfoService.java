@@ -47,7 +47,7 @@ public class UserInfoService {
         CloudUserInfoDO cloudUserInfoDO = userMapper.findByUserId(sysUserDetail.getUserId());
         response.setMail(cloudUserInfoDO.getMail());
         response.setProfile(cloudUserInfoDO.getProfile());
-        response.setAvatar(uploadUtils.getFileUrl(sysUserDetail.getUserId(), cloudUserInfoDO.getAvatar()));
+        response.setAvatar(uploadUtils.getFileUrl(sysUserDetail.getUserId(), "user", cloudUserInfoDO.getAvatar()));
         return response;
     }
 
